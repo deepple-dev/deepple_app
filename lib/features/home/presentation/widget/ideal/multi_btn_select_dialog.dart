@@ -69,7 +69,7 @@ class _MultiBtnSelectDialogState extends State<MultiBtnSelectDialog> {
                 ),
                 const Gap(6),
                 Text(
-                  '${widget.maxSelectableCount}개까지 중복 선택이 가능해요',
+                  '최대 ${widget.maxSelectableCount}개까지 선택이 가능해요',
                   style: Fonts.body02Medium().copyWith(
                     fontWeight: FontWeight.w400,
                     color: const Color(0xff8D92A0),

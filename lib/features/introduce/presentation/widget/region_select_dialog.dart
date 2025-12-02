@@ -57,7 +57,7 @@ class Regionselectdialog extends ConsumerWidget {
                   ),
                 ),
                 Text(
-                  '최대 2개 선택이 가능해요',
+                  '최대 2개까지 선택이 가능해요',
                   style: Fonts.body02Regular().copyWith(
                     color: Palette.colorGrey500,
                   ),
