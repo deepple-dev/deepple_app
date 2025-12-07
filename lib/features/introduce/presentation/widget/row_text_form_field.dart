@@ -51,11 +51,11 @@ class _RowTextFormFieldState extends State<RowTextFormField> {
       textStyle: widget.textStyle,
       context: context,
       label: widget.label,
-      child: _showDialog(),
+      child: _buildSelectionField(),
     );
   }
 
-  Widget _showDialog() {
+  Widget _buildSelectionField() {
     return GestureDetector(
       onTap: () => showDialog(
         context: context,
@@ -66,7 +66,9 @@ class _RowTextFormFieldState extends State<RowTextFormField> {
           selectedValues: selectedValues,
           onSubmit: (selectedItems) {
             widget.onSubmit(selectedItems);
-            context.pop();
+            if (context.mounted) {
+              context.pop();
+            }
           },
         ),
       ),
