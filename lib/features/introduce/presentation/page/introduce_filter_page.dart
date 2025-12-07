@@ -55,9 +55,12 @@ class IntroduceFilterPage extends ConsumerWidget {
                   label: '선호 지역',
                   textStyle: Fonts.body02Medium(),
                   hintText: '선호 지역을 선택해주세요',
-                  initialValue: selectedCityList.isNotEmpty
-                      ? selectedCityList.join(', ')
-                      : null,
+                  initialValues: selectedCityList,
+                  onSubmit: (updatedSelections) {
+                    ref
+                        .read(filterProvider.notifier)
+                        .updateCitys(updatedSelections);
+                  },
                 ),
 
                 Gap(24.h),

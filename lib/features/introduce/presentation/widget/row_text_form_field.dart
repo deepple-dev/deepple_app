@@ -1,20 +1,25 @@
+import 'package:deepple_app/app/constants/region_data.dart';
+import 'package:deepple_app/features/home/presentation/widget/ideal/multi_btn_select_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:deepple_app/app/widget/input/default_text_form_field.dart';
-import 'package:deepple_app/features/introduce/presentation/widget/region_select_dialog.dart';
+
 import 'package:deepple_app/app/constants/constants.dart';
+import 'package:go_router/go_router.dart';
 
 class RowTextFormField extends StatefulWidget {
   final String label;
   final String hintText;
-  final String? initialValue;
+  final List<String> initialValues;
   final TextStyle? textStyle;
+  final void Function(List<String>) onSubmit;
 
   const RowTextFormField({
     super.key,
     required this.label,
     required this.hintText,
-    this.initialValue,
+    required this.initialValues,
     this.textStyle,
+    required this.onSubmit,
   });
 
   @override
@@ -22,11 +27,10 @@ class RowTextFormField extends StatefulWidget {
 }
 
 class _RowTextFormFieldState extends State<RowTextFormField> {
-  late TextEditingController controller;
+  late List<String> selectedValues;
 
   @override
   void initState() {
-    controller = TextEditingController(text: widget.initialValue);
     super.initState();
   }
 
@@ -37,23 +41,48 @@ class _RowTextFormFieldState extends State<RowTextFormField> {
 
   @override
   Widget build(BuildContext context) {
-    controller.text = widget.initialValue ?? "";
+    selectedValues = widget.initialValues;
     return buildLabeledRow(
       textStyle: widget.textStyle,
       context: context,
       label: widget.label,
-      child: DefaultTextFormField(
-        initialValue: widget.initialValue,
-        controller: controller,
-        onTap: () {
-          Regionselectdialog.open(context);
-        },
-        enabled: true,
-        readOnly: true,
-        autofocus: false,
-        keyboardType: TextInputType.text,
-        hintText: widget.hintText,
-        fillColor: Palette.colorGrey100,
+      child: Row(
+        children: [
+          Expanded(
+            child: _showDialog(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _showDialog() {
+    return GestureDetector(
+      onTap: () => showDialog(
+        context: context,
+        builder: (context) => MultiBtnSelectDialog(
+          btnNames: addressData.cities.map((e) => e.label).toList(),
+          maxSelectableCount: 2,
+          title: '선호 지역',
+          selectedValues: selectedValues,
+          onSubmit: (selectedItems) {
+            widget.onSubmit(selectedItems);
+            context.pop();
+          },
+        ),
+      ),
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Palette.colorGrey100,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Text(
+          selectedValues.isEmpty ? widget.hintText : selectedValues.join(", "),
+          style: Fonts.body02Regular(
+            selectedValues.isEmpty ? Palette.colorGrey500 : Palette.colorBlack,
+          ),
+        ),
       ),
     );
   }

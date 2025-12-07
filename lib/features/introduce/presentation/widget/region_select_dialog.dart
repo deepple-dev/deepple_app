@@ -1,9 +1,11 @@
+import 'package:deepple_app/app/widget/icon/default_icon.dart';
 import 'package:deepple_app/app/widget/list/list_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:deepple_app/app/constants/constants.dart';
 import 'package:deepple_app/app/widget/button/button.dart';
 import 'package:deepple_app/features/introduce/domain/provider/filter_notifier.dart';
+import 'package:go_router/go_router.dart';
 
 class Regionselectdialog extends ConsumerWidget {
   const Regionselectdialog({super.key});
@@ -43,41 +45,55 @@ class Regionselectdialog extends ConsumerWidget {
       child: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
-          spacing: 20.0,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Column(
-              spacing: 14.0,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Text(
-                  '지역',
-                  style: Fonts.header03().copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: Palette.colorBlack,
-                  ),
-                ),
-                Text(
-                  '최대 2개까지 선택이 가능해요',
-                  style: Fonts.body02Regular().copyWith(
-                    color: Palette.colorGrey500,
-                  ),
-                ),
-                ListChip(
-                  options: _cityList,
-                  selectedOptions: selectedCityList,
-                  onSelectionChanged: (updatedSelections) {
-                    if (updatedSelections.length > 2) return;
-                    ref
-                        .read(filterProvider.notifier)
-                        .updateCitys(updatedSelections);
-                  },
+                GestureDetector(
+                  onTap: context.pop,
+                  child: const DefaultIcon(IconPath.close),
                 ),
               ],
             ),
-            DefaultElevatedButton(
-              onPressed: Navigator.of(context).pop,
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: const Text('확인'),
+            Column(
+              spacing: 20.0,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Column(
+                  spacing: 14.0,
+                  children: [
+                    Text(
+                      '지역',
+                      style: Fonts.semibold(
+                        fontSize: 18,
+                        color: Palette.colorBlack,
+                      ),
+                    ),
+                    Text(
+                      '최대 2개까지 선택이 가능해요',
+                      style: Fonts.body02Regular().copyWith(
+                        color: Palette.colorGrey500,
+                      ),
+                    ),
+                    ListChip(
+                      options: _cityList,
+                      selectedOptions: selectedCityList,
+                      onSelectionChanged: (updatedSelections) {
+                        if (updatedSelections.length > 2) return;
+                        ref
+                            .read(filterProvider.notifier)
+                            .updateCitys(updatedSelections);
+                      },
+                    ),
+                  ],
+                ),
+                DefaultElevatedButton(
+                  onPressed: Navigator.of(context).pop,
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  child: const Text('확인'),
+                ),
+              ],
             ),
           ],
         ),
