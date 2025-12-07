@@ -22,17 +22,6 @@ class IntroduceFilterPageState extends ConsumerState<IntroduceFilterPage> {
   static const String ALL = "전체 보기";
   static const String OPPOSITE = "이성만 보기";
 
-  late bool isMale = false;
-  late FilterNotifier filterNotifer;
-
-  @override
-  void initState() {
-    super.initState();
-
-    filterNotifer = ref.read(filterProvider.notifier);
-    isMale = ref.read(globalProvider).profile.isMale;
-  }
-
   @override
   void dispose() {
     super.dispose();
@@ -40,6 +29,8 @@ class IntroduceFilterPageState extends ConsumerState<IntroduceFilterPage> {
 
   @override
   Widget build(BuildContext context) {
+    final filterNotifer = ref.read(filterProvider.notifier);
+    final isMale = ref.read(globalProvider).profile.isMale;
     final ageRange = ref.watch(filterProvider).newRangeValues;
     final selectedCityList = ref.watch(filterProvider).newSelectedCitys;
     final selectedGender = ref.watch(filterProvider).newSelectedGender;
