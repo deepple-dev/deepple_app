@@ -40,19 +40,18 @@ class _RowTextFormFieldState extends State<RowTextFormField> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  void didUpdateWidget(covariant RowTextFormField oldWidget) {
     selectedValues = widget.initialValues;
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return buildLabeledRow(
       textStyle: widget.textStyle,
       context: context,
       label: widget.label,
-      child: Row(
-        children: [
-          Expanded(
-            child: _showDialog(),
-          ),
-        ],
-      ),
+      child: _showDialog(),
     );
   }
 
@@ -72,6 +71,7 @@ class _RowTextFormFieldState extends State<RowTextFormField> {
         ),
       ),
       child: Container(
+        width: double.infinity,
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: Palette.colorGrey100,

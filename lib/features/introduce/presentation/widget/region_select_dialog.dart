@@ -89,7 +89,7 @@ class Regionselectdialog extends ConsumerWidget {
                   ],
                 ),
                 DefaultElevatedButton(
-                  onPressed: Navigator.of(context).pop,
+                  onPressed: context.pop,
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   child: const Text('확인'),
                 ),
