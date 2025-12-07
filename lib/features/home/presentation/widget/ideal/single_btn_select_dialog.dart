@@ -69,8 +69,8 @@ class _SingleBtnSelectDialogState extends ConsumerState<SingleBtnSelectDialg> {
                 ),
                 Text(
                   widget.label,
-                  style: Fonts.header03().copyWith(
-                    fontWeight: FontWeight.w600,
+                  style: Fonts.semibold(
+                    fontSize: 18,
                     color: Palette.colorBlack,
                   ),
                 ),
