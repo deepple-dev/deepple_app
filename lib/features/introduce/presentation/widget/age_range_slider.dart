@@ -8,7 +8,7 @@ class AgeRangeSlider extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final range = ref.watch(filterProvider).rangeValues;
+    final RangeValues range = ref.watch(filterProvider).newRangeValues;
 
     return RangeSlider(
       values: range,

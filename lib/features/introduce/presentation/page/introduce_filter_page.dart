@@ -9,24 +9,51 @@ import 'package:deepple_app/app/constants/constants.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 
-class IntroduceFilterPage extends ConsumerWidget {
+class IntroduceFilterPage extends ConsumerStatefulWidget {
   const IntroduceFilterPage({super.key});
 
+  @override
+  IntroduceFilterPageState createState() => IntroduceFilterPageState();
+}
+
+class IntroduceFilterPageState extends ConsumerState<IntroduceFilterPage> {
   static const String ALL = "전체 보기";
   static const String OPPOSITE = "이성만 보기";
 
+  late bool isMale = false;
+  late FilterNotifier filterNotifer;
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    FilterNotifier filterNotifer = ref.read(filterProvider.notifier);
-    final isMale = ref.read(globalProvider).profile.isMale;
-    final ageRange = ref.watch(filterProvider).rangeValues;
-    final selectedCityList = ref.watch(filterProvider).selectedCitys;
-    final selectedGender = ref.watch(filterProvider).selectedGender;
+  void initState() {
+    super.initState();
+
+    filterNotifer = ref.read(filterProvider.notifier);
+    isMale = ref.read(globalProvider).profile.isMale;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final ageRange = ref.watch(filterProvider).newRangeValues;
+    final selectedCityList = ref.watch(filterProvider).newSelectedCitys;
+    final selectedGender = ref.watch(filterProvider).newSelectedGender;
     final hasChanged = ref.watch(filterProvider).hasChanged;
 
     return Scaffold(
-      appBar: const DefaultAppBar(title: '필터 설정'),
+      appBar: DefaultAppBar(
+        title: '필터 설정',
+        leadingAction: (context) {
+          // 초기화
+          filterNotifer.initChangedState();
+          context.pop();
+        },
+      ),
       body: Column(
         children: [
           Padding(
@@ -57,9 +84,7 @@ class IntroduceFilterPage extends ConsumerWidget {
                   hintText: '선호 지역을 선택해주세요',
                   initialValues: selectedCityList,
                   onSubmit: (updatedSelections) {
-                    ref
-                        .read(filterProvider.notifier)
-                        .updateCitys(updatedSelections);
+                    filterNotifer.updateCitys(updatedSelections);
                   },
                 ),
 
@@ -72,7 +97,6 @@ class IntroduceFilterPage extends ConsumerWidget {
                     options: [ALL, OPPOSITE],
                     initialOptions: selectedGender == null ? ALL : OPPOSITE,
                     onChange: (str) {
-                      // hive 저장?
                       if (str == ALL) {
                         filterNotifer.updateGender(null);
                       } else {
@@ -93,7 +117,7 @@ class IntroduceFilterPage extends ConsumerWidget {
               onPressed: hasChanged
                   ? () {
                       filterNotifer.saveFilter();
-                      Navigator.of(context).pop();
+                      context.pop();
                     }
                   : null,
               child: const Text("필터 적용하기"),

@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$FilterState {
 
- RangeValues get rangeValues; List<String> get selectedCitys; Gender? get selectedGender; bool get hasChanged;
+ RangeValues get rangeValues; List<String> get selectedCitys; Gender? get selectedGender; RangeValues get newRangeValues; List<String> get newSelectedCitys; Gender? get newSelectedGender; bool get hasChanged;
 /// Create a copy of FilterState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $FilterStateCopyWith<FilterState> get copyWith => _$FilterStateCopyWithImpl<Filt
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FilterState&&(identical(other.rangeValues, rangeValues) || other.rangeValues == rangeValues)&&const DeepCollectionEquality().equals(other.selectedCitys, selectedCitys)&&(identical(other.selectedGender, selectedGender) || other.selectedGender == selectedGender)&&(identical(other.hasChanged, hasChanged) || other.hasChanged == hasChanged));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FilterState&&(identical(other.rangeValues, rangeValues) || other.rangeValues == rangeValues)&&const DeepCollectionEquality().equals(other.selectedCitys, selectedCitys)&&(identical(other.selectedGender, selectedGender) || other.selectedGender == selectedGender)&&(identical(other.newRangeValues, newRangeValues) || other.newRangeValues == newRangeValues)&&const DeepCollectionEquality().equals(other.newSelectedCitys, newSelectedCitys)&&(identical(other.newSelectedGender, newSelectedGender) || other.newSelectedGender == newSelectedGender)&&(identical(other.hasChanged, hasChanged) || other.hasChanged == hasChanged));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,rangeValues,const DeepCollectionEquality().hash(selectedCitys),selectedGender,hasChanged);
+int get hashCode => Object.hash(runtimeType,rangeValues,const DeepCollectionEquality().hash(selectedCitys),selectedGender,newRangeValues,const DeepCollectionEquality().hash(newSelectedCitys),newSelectedGender,hasChanged);
 
 @override
 String toString() {
-  return 'FilterState(rangeValues: $rangeValues, selectedCitys: $selectedCitys, selectedGender: $selectedGender, hasChanged: $hasChanged)';
+  return 'FilterState(rangeValues: $rangeValues, selectedCitys: $selectedCitys, selectedGender: $selectedGender, newRangeValues: $newRangeValues, newSelectedCitys: $newSelectedCitys, newSelectedGender: $newSelectedGender, hasChanged: $hasChanged)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $FilterStateCopyWith<$Res>  {
   factory $FilterStateCopyWith(FilterState value, $Res Function(FilterState) _then) = _$FilterStateCopyWithImpl;
 @useResult
 $Res call({
- RangeValues rangeValues, List<String> selectedCitys, Gender? selectedGender, bool hasChanged
+ RangeValues rangeValues, List<String> selectedCitys, Gender? selectedGender, RangeValues newRangeValues, List<String> newSelectedCitys, Gender? newSelectedGender, bool hasChanged
 });
 
 
@@ -62,11 +62,14 @@ class _$FilterStateCopyWithImpl<$Res>
 
 /// Create a copy of FilterState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? rangeValues = null,Object? selectedCitys = null,Object? selectedGender = freezed,Object? hasChanged = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? rangeValues = null,Object? selectedCitys = null,Object? selectedGender = freezed,Object? newRangeValues = null,Object? newSelectedCitys = null,Object? newSelectedGender = freezed,Object? hasChanged = null,}) {
   return _then(_self.copyWith(
 rangeValues: null == rangeValues ? _self.rangeValues : rangeValues // ignore: cast_nullable_to_non_nullable
 as RangeValues,selectedCitys: null == selectedCitys ? _self.selectedCitys : selectedCitys // ignore: cast_nullable_to_non_nullable
 as List<String>,selectedGender: freezed == selectedGender ? _self.selectedGender : selectedGender // ignore: cast_nullable_to_non_nullable
+as Gender?,newRangeValues: null == newRangeValues ? _self.newRangeValues : newRangeValues // ignore: cast_nullable_to_non_nullable
+as RangeValues,newSelectedCitys: null == newSelectedCitys ? _self.newSelectedCitys : newSelectedCitys // ignore: cast_nullable_to_non_nullable
+as List<String>,newSelectedGender: freezed == newSelectedGender ? _self.newSelectedGender : newSelectedGender // ignore: cast_nullable_to_non_nullable
 as Gender?,hasChanged: null == hasChanged ? _self.hasChanged : hasChanged // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
@@ -153,10 +156,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( RangeValues rangeValues,  List<String> selectedCitys,  Gender? selectedGender,  bool hasChanged)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( RangeValues rangeValues,  List<String> selectedCitys,  Gender? selectedGender,  RangeValues newRangeValues,  List<String> newSelectedCitys,  Gender? newSelectedGender,  bool hasChanged)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _FilterState() when $default != null:
-return $default(_that.rangeValues,_that.selectedCitys,_that.selectedGender,_that.hasChanged);case _:
+return $default(_that.rangeValues,_that.selectedCitys,_that.selectedGender,_that.newRangeValues,_that.newSelectedCitys,_that.newSelectedGender,_that.hasChanged);case _:
   return orElse();
 
 }
@@ -174,10 +177,10 @@ return $default(_that.rangeValues,_that.selectedCitys,_that.selectedGender,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( RangeValues rangeValues,  List<String> selectedCitys,  Gender? selectedGender,  bool hasChanged)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( RangeValues rangeValues,  List<String> selectedCitys,  Gender? selectedGender,  RangeValues newRangeValues,  List<String> newSelectedCitys,  Gender? newSelectedGender,  bool hasChanged)  $default,) {final _that = this;
 switch (_that) {
 case _FilterState():
-return $default(_that.rangeValues,_that.selectedCitys,_that.selectedGender,_that.hasChanged);case _:
+return $default(_that.rangeValues,_that.selectedCitys,_that.selectedGender,_that.newRangeValues,_that.newSelectedCitys,_that.newSelectedGender,_that.hasChanged);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -194,10 +197,10 @@ return $default(_that.rangeValues,_that.selectedCitys,_that.selectedGender,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( RangeValues rangeValues,  List<String> selectedCitys,  Gender? selectedGender,  bool hasChanged)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( RangeValues rangeValues,  List<String> selectedCitys,  Gender? selectedGender,  RangeValues newRangeValues,  List<String> newSelectedCitys,  Gender? newSelectedGender,  bool hasChanged)?  $default,) {final _that = this;
 switch (_that) {
 case _FilterState() when $default != null:
-return $default(_that.rangeValues,_that.selectedCitys,_that.selectedGender,_that.hasChanged);case _:
+return $default(_that.rangeValues,_that.selectedCitys,_that.selectedGender,_that.newRangeValues,_that.newSelectedCitys,_that.newSelectedGender,_that.hasChanged);case _:
   return null;
 
 }
@@ -209,7 +212,7 @@ return $default(_that.rangeValues,_that.selectedCitys,_that.selectedGender,_that
 
 
 class _FilterState extends FilterState {
-  const _FilterState({required this.rangeValues, required final  List<String> selectedCitys, required this.selectedGender, required this.hasChanged}): _selectedCitys = selectedCitys,super._();
+  const _FilterState({required this.rangeValues, required final  List<String> selectedCitys, required this.selectedGender, required this.newRangeValues, final  List<String> newSelectedCitys = const [], this.newSelectedGender, required this.hasChanged}): _selectedCitys = selectedCitys,_newSelectedCitys = newSelectedCitys,super._();
   
 
 @override final  RangeValues rangeValues;
@@ -221,6 +224,15 @@ class _FilterState extends FilterState {
 }
 
 @override final  Gender? selectedGender;
+@override final  RangeValues newRangeValues;
+ final  List<String> _newSelectedCitys;
+@override@JsonKey() List<String> get newSelectedCitys {
+  if (_newSelectedCitys is EqualUnmodifiableListView) return _newSelectedCitys;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_newSelectedCitys);
+}
+
+@override final  Gender? newSelectedGender;
 @override final  bool hasChanged;
 
 /// Create a copy of FilterState
@@ -233,16 +245,16 @@ _$FilterStateCopyWith<_FilterState> get copyWith => __$FilterStateCopyWithImpl<_
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FilterState&&(identical(other.rangeValues, rangeValues) || other.rangeValues == rangeValues)&&const DeepCollectionEquality().equals(other._selectedCitys, _selectedCitys)&&(identical(other.selectedGender, selectedGender) || other.selectedGender == selectedGender)&&(identical(other.hasChanged, hasChanged) || other.hasChanged == hasChanged));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FilterState&&(identical(other.rangeValues, rangeValues) || other.rangeValues == rangeValues)&&const DeepCollectionEquality().equals(other._selectedCitys, _selectedCitys)&&(identical(other.selectedGender, selectedGender) || other.selectedGender == selectedGender)&&(identical(other.newRangeValues, newRangeValues) || other.newRangeValues == newRangeValues)&&const DeepCollectionEquality().equals(other._newSelectedCitys, _newSelectedCitys)&&(identical(other.newSelectedGender, newSelectedGender) || other.newSelectedGender == newSelectedGender)&&(identical(other.hasChanged, hasChanged) || other.hasChanged == hasChanged));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,rangeValues,const DeepCollectionEquality().hash(_selectedCitys),selectedGender,hasChanged);
+int get hashCode => Object.hash(runtimeType,rangeValues,const DeepCollectionEquality().hash(_selectedCitys),selectedGender,newRangeValues,const DeepCollectionEquality().hash(_newSelectedCitys),newSelectedGender,hasChanged);
 
 @override
 String toString() {
-  return 'FilterState(rangeValues: $rangeValues, selectedCitys: $selectedCitys, selectedGender: $selectedGender, hasChanged: $hasChanged)';
+  return 'FilterState(rangeValues: $rangeValues, selectedCitys: $selectedCitys, selectedGender: $selectedGender, newRangeValues: $newRangeValues, newSelectedCitys: $newSelectedCitys, newSelectedGender: $newSelectedGender, hasChanged: $hasChanged)';
 }
 
 
@@ -253,7 +265,7 @@ abstract mixin class _$FilterStateCopyWith<$Res> implements $FilterStateCopyWith
   factory _$FilterStateCopyWith(_FilterState value, $Res Function(_FilterState) _then) = __$FilterStateCopyWithImpl;
 @override @useResult
 $Res call({
- RangeValues rangeValues, List<String> selectedCitys, Gender? selectedGender, bool hasChanged
+ RangeValues rangeValues, List<String> selectedCitys, Gender? selectedGender, RangeValues newRangeValues, List<String> newSelectedCitys, Gender? newSelectedGender, bool hasChanged
 });
 
 
@@ -270,11 +282,14 @@ class __$FilterStateCopyWithImpl<$Res>
 
 /// Create a copy of FilterState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? rangeValues = null,Object? selectedCitys = null,Object? selectedGender = freezed,Object? hasChanged = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? rangeValues = null,Object? selectedCitys = null,Object? selectedGender = freezed,Object? newRangeValues = null,Object? newSelectedCitys = null,Object? newSelectedGender = freezed,Object? hasChanged = null,}) {
   return _then(_FilterState(
 rangeValues: null == rangeValues ? _self.rangeValues : rangeValues // ignore: cast_nullable_to_non_nullable
 as RangeValues,selectedCitys: null == selectedCitys ? _self._selectedCitys : selectedCitys // ignore: cast_nullable_to_non_nullable
 as List<String>,selectedGender: freezed == selectedGender ? _self.selectedGender : selectedGender // ignore: cast_nullable_to_non_nullable
+as Gender?,newRangeValues: null == newRangeValues ? _self.newRangeValues : newRangeValues // ignore: cast_nullable_to_non_nullable
+as RangeValues,newSelectedCitys: null == newSelectedCitys ? _self._newSelectedCitys : newSelectedCitys // ignore: cast_nullable_to_non_nullable
+as List<String>,newSelectedGender: freezed == newSelectedGender ? _self.newSelectedGender : newSelectedGender // ignore: cast_nullable_to_non_nullable
 as Gender?,hasChanged: null == hasChanged ? _self.hasChanged : hasChanged // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
