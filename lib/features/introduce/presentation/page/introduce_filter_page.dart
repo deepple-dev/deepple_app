@@ -42,7 +42,9 @@ class IntroduceFilterPageState extends ConsumerState<IntroduceFilterPage> {
         leadingAction: (context) {
           // 초기화
           filterNotifer.initChangedState();
-          context.pop();
+          if (context.mounted) {
+            context.pop();
+          }
         },
       ),
       body: Column(
