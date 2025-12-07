@@ -52,6 +52,8 @@ class FilterNotifier extends _$FilterNotifier {
         preferredAgeStart.toDouble(),
         preferredAgeEnd.toDouble(),
       ),
+      newSelectedCitys: preferredCities,
+      newSelectedGender: selectedGender,
       hasChanged: false,
     );
   }
