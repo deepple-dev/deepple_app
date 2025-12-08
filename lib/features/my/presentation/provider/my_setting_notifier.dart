@@ -10,7 +10,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import 'my_settings.dart';
+import 'package:deepple_app/features/my/presentation/provider/my_settings.dart';
 
 part 'my_setting_notifier.g.dart';
 

@@ -50,7 +50,7 @@ class IntroduceDetailNotifier extends _$IntroduceDetailNotifier {
       await ref
           .read(favoriteRepositoryProvider)
           .requestFavorite(memberId, type: type);
-    } catch (e, s) {
+    } catch (e) {
       Log.e('좋아요 설정 실패: $e');
       rethrow;
     }

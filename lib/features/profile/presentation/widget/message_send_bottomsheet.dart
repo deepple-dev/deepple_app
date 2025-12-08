@@ -10,8 +10,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../domain/common/model.dart';
-import 'common_button_group.dart';
+import 'package:deepple_app/features/profile/domain/common/model.dart';
+import 'package:deepple_app/features/profile/presentation/widget/common_button_group.dart';
 
 class MessageSendBottomSheet extends ConsumerStatefulWidget {
   const MessageSendBottomSheet(

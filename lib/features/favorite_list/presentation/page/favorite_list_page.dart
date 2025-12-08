@@ -23,7 +23,7 @@ class FavoriteListPage extends StatelessWidget {
                   height: 1.2,
                 ),
               ),
-              actions: [DefaultAppBarActionGroup()],
+              actions: [const DefaultAppBarActionGroup()],
               automaticallyImplyLeading: false,
               pinned: false,
               bottom: TabBar(

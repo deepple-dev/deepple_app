@@ -2,8 +2,8 @@ import 'package:deepple_app/app/widget/icon/default_icon.dart';
 import 'package:deepple_app/app/widget/overlay/bubble.dart';
 import 'package:flutter/material.dart';
 
-import '../../constants/constants.dart';
-import 'default_overlay.dart';
+import 'package:deepple_app/app/constants/constants.dart';
+import 'package:deepple_app/app/widget/overlay/default_overlay.dart';
 
 class ToolTip extends DefaultOverlay {
   ToolTip({

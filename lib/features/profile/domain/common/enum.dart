@@ -7,15 +7,15 @@ part 'enum.g.dart';
 @HiveType(typeId: 11, adapterName: 'SmokingStatusAdapter')
 enum SmokingStatus {
   @HiveField(0)
-  none("비흡연"),
+  none('비흡연'),
   @HiveField(1)
-  quit("금연"),
+  quit('금연'),
   @HiveField(2)
-  occasional("가끔 피움"),
+  occasional('가끔 피움'),
   @HiveField(3)
-  daily("매일 피움"),
+  daily('매일 피움'),
   @HiveField(4)
-  vape("전자담배");
+  vape('전자담배');
 
   final String label;
   const SmokingStatus(this.label);
@@ -40,15 +40,15 @@ enum SmokingStatus {
 @HiveType(typeId: 12, adapterName: 'DrinkingStatusAdapter')
 enum DrinkingStatus {
   @HiveField(0)
-  none("전혀 마시지 않음"),
+  none('전혀 마시지 않음'),
   @HiveField(1)
-  quit("금주"),
+  quit('금주'),
   @HiveField(2)
-  social("사회적 음주"),
+  social('사회적 음주'),
   @HiveField(3)
-  occasional("가끔 마심"),
+  occasional('가끔 마심'),
   @HiveField(4)
-  frequent("술자리를 즐김");
+  frequent('술자리를 즐김');
 
   final String label;
   const DrinkingStatus(this.label);
@@ -71,15 +71,15 @@ enum DrinkingStatus {
 }
 
 enum EducationLevel {
-  highSchool("고등학교 졸업"),
-  associate("전문대 졸업"),
-  bachelorsLocal("지방 4년제 대학 졸업"),
-  bachelorsSeoul("서울 4년제 대학 졸업"),
-  bachelorsOverseas("해외 4년제 대학 졸업"),
-  lawSchool("로스쿨 졸업"),
-  masters("석사 졸업"),
-  doctorate("박사 졸업"),
-  other("기타");
+  highSchool('고등학교 졸업'),
+  associate('전문대 졸업'),
+  bachelorsLocal('지방 4년제 대학 졸업'),
+  bachelorsSeoul('서울 4년제 대학 졸업'),
+  bachelorsOverseas('해외 4년제 대학 졸업'),
+  lawSchool('로스쿨 졸업'),
+  masters('석사 졸업'),
+  doctorate('박사 졸업'),
+  other('기타');
 
   final String label;
   const EducationLevel(this.label);
@@ -96,15 +96,15 @@ enum EducationLevel {
 @HiveType(typeId: 13, adapterName: 'ReligionAdapter')
 enum Religion {
   @HiveField(0)
-  none("무교"),
+  none('무교'),
   @HiveField(1)
-  christian("기독교"),
+  christian('기독교'),
   @HiveField(2)
-  catholic("천주교"),
+  catholic('천주교'),
   @HiveField(3)
-  buddhist("불교"),
+  buddhist('불교'),
   @HiveField(4)
-  other("기타");
+  other('기타');
 
   final String label;
   const Religion(this.label);
@@ -146,9 +146,9 @@ enum FavoriteType {
 }
 
 enum InterviewCategory {
-  personal("나"),
-  romantic("연인"),
-  social("관계");
+  personal('나'),
+  romantic('연인'),
+  social('관계');
 
   final String label;
   const InterviewCategory(this.label);

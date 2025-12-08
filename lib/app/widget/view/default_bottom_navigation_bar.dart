@@ -4,7 +4,6 @@ import 'package:deepple_app/core/extension/extended_context.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gap/gap.dart';
 
 class DefaultBottomNavigationBar extends StatelessWidget {
   const DefaultBottomNavigationBar({

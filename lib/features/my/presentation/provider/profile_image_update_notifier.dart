@@ -97,7 +97,7 @@ class ProfileImageUpdateNotifier extends _$ProfileImageUpdateNotifier {
 
       return isSuccess;
     } catch (e) {
-      Log.e("❌ 프로필 이미지 저장 중 오류 발생: $e");
+      Log.e('❌ 프로필 이미지 저장 중 오류 발생: $e');
       return false;
     }
   }

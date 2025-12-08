@@ -22,8 +22,8 @@ class PhotoGuideBottomSheet extends ConsumerWidget {
           children: [
             SizedBox(
               height: 400.h,
-              child: SingleChildScrollView(
-                child: const Column(
+              child: const SingleChildScrollView(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     AuthPhotoGuideWidget(
@@ -81,7 +81,7 @@ class PhotoGuideBottomSheet extends ConsumerWidget {
                 ),
               ),
             ),
-            Gap(24),
+            const Gap(24),
             DefaultElevatedButton(
               primary: Palette.colorPrimary500,
               onPressed: onSubmit,

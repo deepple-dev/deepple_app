@@ -18,7 +18,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 
-import 'message_send_bottomsheet.dart';
+import 'package:deepple_app/features/profile/presentation/widget/message_send_bottomsheet.dart';
 
 class ProfileMainInformation extends StatelessWidget {
   const ProfileMainInformation({

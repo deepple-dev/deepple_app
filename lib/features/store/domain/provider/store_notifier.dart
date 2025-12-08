@@ -7,7 +7,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:flutter/material.dart';
 
-import 'store_state.dart';
+import 'package:deepple_app/features/store/domain/provider/store_state.dart';
 
 part 'store_notifier.g.dart';
 
@@ -41,7 +41,7 @@ class StoreNotifier extends _$StoreNotifier {
     _subscription = InAppPurchase.instance.purchaseStream.listen(
       onPurchaseUpdated,
       onError: (error) {
-        Log.e("구매 스트림 에러: $error");
+        Log.e('구매 스트림 에러: $error');
       },
     );
   }

@@ -1,7 +1,7 @@
 import 'package:deepple_app/app/constants/region_data.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../domain/model/my_profile.dart';
+import 'package:deepple_app/features/my/domain/model/my_profile.dart';
 
 part 'profile_manage_state.freezed.dart';
 

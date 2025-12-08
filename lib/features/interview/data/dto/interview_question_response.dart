@@ -18,13 +18,13 @@ abstract class InterviewQuestionResponse with _$InterviewQuestionResponse {
 
 @JsonEnum(fieldRename: FieldRename.none)
 enum InterviewCategory {
-  @JsonValue("PERSONAL")
+  @JsonValue('PERSONAL')
   personal,
 
-  @JsonValue("SOCIAL")
+  @JsonValue('SOCIAL')
   social,
 
-  @JsonValue("ROMANTIC")
+  @JsonValue('ROMANTIC')
   romantic,
 }
 

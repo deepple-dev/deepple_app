@@ -40,7 +40,7 @@ class ProfileManageInfoArea extends ConsumerWidget {
         children: [
           DefaultElevatedButton(
             child: Text(
-              isRejectedProfile ? "재심사 요청하기" : "프로필 미리보기",
+              isRejectedProfile ? '재심사 요청하기' : '프로필 미리보기',
               style: Fonts.body01Regular().copyWith(
                 color: Colors.white,
                 fontWeight: FontWeight.w500,
@@ -63,7 +63,7 @@ class ProfileManageInfoArea extends ConsumerWidget {
           ),
           const Gap(24),
           Text(
-            "프로필 정보",
+            '프로필 정보',
             style: Fonts.header03().copyWith(fontWeight: FontWeight.w600),
           ),
           const Gap(16),
@@ -108,11 +108,11 @@ class ProfileManageInfoArea extends ConsumerWidget {
           ),
           const Gap(8),
           DefaultOutlinedButton(
-            child: Text("인터뷰 수정하기"),
             expandedWidth: true,
             onPressed: () {
               navigate(context, route: AppRoute.interview);
             },
+            child: const Text('인터뷰 수정하기'),
           ),
           ProfileManageBasicInfoArea(profile: profile),
         ],

@@ -30,7 +30,7 @@ class InterviewPageState extends BaseConsumerStatefulPageState<InterviewPage> {
     final EdgeInsets contentPadding = EdgeInsets.symmetric(
       horizontal: horizontalPadding,
     );
-    final double tagSpacing = 16;
+    const double tagSpacing = 16;
 
     return Padding(
       padding: EdgeInsets.only(top: screenHeight * 0.1),
@@ -44,7 +44,7 @@ class InterviewPageState extends BaseConsumerStatefulPageState<InterviewPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Padding(
-                  padding: EdgeInsets.only(top: 4.0),
+                  padding: const EdgeInsets.only(top: 4.0),
                   child: Text(
                     '나를 소개해볼까요?',
                     style: Fonts.header03().copyWith(
@@ -52,7 +52,7 @@ class InterviewPageState extends BaseConsumerStatefulPageState<InterviewPage> {
                     ),
                   ),
                 ),
-                DefaultAppBarActionGroup(),
+                const DefaultAppBarActionGroup(),
               ],
             ),
           ),

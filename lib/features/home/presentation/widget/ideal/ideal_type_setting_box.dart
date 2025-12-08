@@ -62,9 +62,9 @@ class IdealTypeSettingBox extends ConsumerWidget {
     switch (item.type) {
       case IdealTypeDialogType.single:
         int initialIndex = switch (label) {
-          "흡연" => options.indexOf(item.placeholder),
-          "음주" => options.indexOf(item.placeholder),
-          "종교" => options.indexOf(item.placeholder),
+          '흡연' => options.indexOf(item.placeholder),
+          '음주' => options.indexOf(item.placeholder),
+          '종교' => options.indexOf(item.placeholder),
           _ => 0,
         };
 
@@ -93,8 +93,8 @@ class IdealTypeSettingBox extends ConsumerWidget {
 
       case IdealTypeDialogType.multi:
         List<String> selectedValues = switch (label) {
-          "지역" => idealType?.cities.map((e) => e.label).toList() ?? [],
-          "취미" => idealType?.hobbies.map((e) => e.label).toList() ?? [],
+          '지역' => idealType?.cities.map((e) => e.label).toList() ?? [],
+          '취미' => idealType?.hobbies.map((e) => e.label).toList() ?? [],
           _ => [],
         };
         showDialog(

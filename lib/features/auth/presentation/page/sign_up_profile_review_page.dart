@@ -51,7 +51,7 @@ class SignUpProfileReviewPage extends ConsumerWidget {
                       ),
                     ),
                     Container(
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Palette.colorGrey50,
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                       ),

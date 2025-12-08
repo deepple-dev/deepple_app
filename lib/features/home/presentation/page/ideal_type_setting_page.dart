@@ -20,7 +20,7 @@ class IdealTypeSettingPage extends ConsumerWidget {
 
     return idealTypeAsync.when(
       data: (data) => Scaffold(
-        appBar: const DefaultAppBar(title: "이상형 설정"),
+        appBar: const DefaultAppBar(title: '이상형 설정'),
         body: SafeArea(
           child: SingleChildScrollView(
             child: Column(

@@ -2,7 +2,7 @@ import 'package:deepple_app/core/util/log.dart';
 import 'package:deepple_app/features/message_list/data/repository/message_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import 'message_list_state.dart';
+import 'package:deepple_app/features/message_list/domain/message_list_state.dart';
 
 part 'message_list_notifier.g.dart';
 

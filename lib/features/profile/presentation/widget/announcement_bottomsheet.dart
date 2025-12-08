@@ -3,7 +3,7 @@ import 'package:deepple_app/core/extension/extended_context.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
-import 'common_button_group.dart';
+import 'package:deepple_app/features/profile/presentation/widget/common_button_group.dart';
 
 class AnnouncementBottomSheet extends StatelessWidget {
   const AnnouncementBottomSheet({

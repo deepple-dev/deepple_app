@@ -26,10 +26,10 @@ abstract class ExamQuestionItem with _$ExamQuestionItem {
 }
 
 enum ExamType {
-  @JsonValue("REQUIRED")
+  @JsonValue('REQUIRED')
   required,
 
-  @JsonValue("OPTIONAL")
+  @JsonValue('OPTIONAL')
   optional,
 }
 

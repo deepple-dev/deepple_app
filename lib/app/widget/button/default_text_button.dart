@@ -2,8 +2,8 @@ import 'package:deepple_app/core/extension/extended_context.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../constants/constants.dart';
-import '../view/default_progress_indicator.dart';
+import 'package:deepple_app/app/constants/constants.dart';
+import 'package:deepple_app/app/widget/view/default_progress_indicator.dart';
 
 class DefaultTextButton extends ConsumerWidget {
   const DefaultTextButton({

@@ -1,11 +1,10 @@
 import 'package:deepple_app/app/constants/enum.dart';
-import 'package:deepple_app/app/constants/region_data.dart';
 import 'package:deepple_app/app/enum/enum.dart';
 import 'package:deepple_app/features/profile/data/dto/profile_detail_response.dart';
 import 'package:equatable/equatable.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'enum.dart';
+import 'package:deepple_app/features/profile/domain/common/enum.dart';
 
 part 'model.freezed.dart';
 
