@@ -11,6 +11,7 @@ import 'package:deepple_app/features/home/data/dto/introduced_profile_dto.dart';
 import 'package:deepple_app/features/home/domain/model/cached_user_profile.dart';
 import 'package:deepple_app/features/my/domain/model/my_profile_image.dart';
 import 'package:deepple_app/features/profile/domain/common/enum.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,8 +21,6 @@ import 'package:deepple_app/app/app.dart';
 
 void main() {
   runZonedGuarded(() async {
-    /// Splash 화면
-
     App.preserveSplash(
       widgetsBinding: WidgetsFlutterBinding.ensureInitialized(),
     );

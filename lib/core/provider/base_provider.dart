@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import 'package:deepple_app/core/util/log.dart';
+
 /*
 비동기 작업을 실행하기 전에 onStart, 성공 시 onSuccess, 실패 시 onError,
 완료 시 onComplete를 선택적으로 제공 가능
@@ -36,7 +38,7 @@ abstract class BaseNotifier<T> extends AsyncNotifier<T> {
           gravity: ToastGravity.BOTTOM,
         );
       }
-      debugPrint('Error: $e\nStackTrace: $stackTrace');
+      Log.e('Error in BaseNotifier: ${e.runtimeType}');
     } finally {
       if (onComplete != null) await onComplete();
     }
@@ -65,7 +67,7 @@ class ExampleNotifier extends BaseNotifier<String> {
       },
       onSuccess: () async {
         // 성공 시 로그
-        debugPrint("Data loaded successfully.");
+        Log.d("Data loaded successfully.");
       },
       onError: (error) async {
         // 에러 발생 시 상태 설정

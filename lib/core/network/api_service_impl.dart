@@ -72,7 +72,7 @@ class ApiServiceImpl implements ApiService {
         ),
         [
           if (enableAuth) TokenInterceptor(ref),
-          if (!kReleaseMode) LoggingInterceptor(),
+          LoggingInterceptor(),
           CookieManager(_cookieJar),
         ],
       );
