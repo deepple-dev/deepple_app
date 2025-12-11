@@ -1,7 +1,6 @@
 import 'package:deepple_app/core/util/util.dart';
 import 'package:deepple_app/features/my/domain/usecase/save_profile_images_to_hive_use_case.dart';
 import 'package:deepple_app/features/my/my.dart';
-import 'package:deepple_app/features/photo/data/repository/photo_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_ce/hive.dart';
 
@@ -35,7 +34,7 @@ class FetchProfileImagesUseCase {
 
       return profileImages;
     } catch (e) {
-      Log.e("❌ 프로필 이미지 가져오기 중 오류 발생: $e");
+      Log.e('❌ 프로필 이미지 가져오기 중 오류 발생: $e');
       return [];
     }
   }

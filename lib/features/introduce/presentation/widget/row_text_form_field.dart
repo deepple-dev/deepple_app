@@ -37,7 +37,7 @@ class _RowTextFormFieldState extends State<RowTextFormField> {
 
   @override
   Widget build(BuildContext context) {
-    controller.text = widget.initialValue ?? "";
+    controller.text = widget.initialValue ?? '';
     return buildLabeledRow(
       textStyle: widget.textStyle,
       context: context,

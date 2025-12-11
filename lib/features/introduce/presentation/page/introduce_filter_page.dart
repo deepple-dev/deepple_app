@@ -13,8 +13,8 @@ import 'package:gap/gap.dart';
 class IntroduceFilterPage extends ConsumerWidget {
   const IntroduceFilterPage({super.key});
 
-  static const String ALL = "전체 보기";
-  static const String OPPOSITE = "이성만 보기";
+  static const String ALL = '전체 보기';
+  static const String OPPOSITE = '이성만 보기';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -39,7 +39,7 @@ class IntroduceFilterPage extends ConsumerWidget {
                   style: Fonts.body02Medium(),
                 ),
                 Text(
-                  "${ageRange.start.toInt()}세~${ageRange.end.toInt()}세",
+                  '${ageRange.start.toInt()}세~${ageRange.end.toInt()}세',
                   style: Fonts.body02Regular(Palette.colorBlack),
                 ),
               ],
@@ -93,7 +93,7 @@ class IntroduceFilterPage extends ConsumerWidget {
                       Navigator.of(context).pop();
                     }
                   : null,
-              child: const Text("필터 적용하기"),
+              child: const Text('필터 적용하기'),
             ),
           ),
         ],

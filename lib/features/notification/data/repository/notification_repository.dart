@@ -6,7 +6,7 @@ import 'package:deepple_app/features/notification/domain/model/notification_item
 import 'package:deepple_app/features/notification/domain/model/server_notification_type.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/util/shared_preference/shared_preference.dart';
+import 'package:deepple_app/core/util/shared_preference/shared_preference.dart';
 
 final notificationRepositoryProvider = Provider<NotificationRepository>(
   (ref) => NotificationRepository(ref),

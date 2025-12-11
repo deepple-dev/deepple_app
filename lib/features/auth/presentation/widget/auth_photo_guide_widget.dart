@@ -25,8 +25,8 @@ class AuthPhotoGuideWidget extends StatelessWidget {
         const Gap(16),
         GridView.builder(
           shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             crossAxisSpacing: 16,
             mainAxisSpacing: 16,
@@ -56,7 +56,7 @@ class AuthPhotoGuideWidget extends StatelessWidget {
                     height: 40, // 텍스트 컨테이너 높이
                     decoration: BoxDecoration(
                       color: Palette.colorBlack.withAlpha(180),
-                      borderRadius: BorderRadius.only(
+                      borderRadius: const BorderRadius.only(
                         bottomLeft: Radius.circular(8),
                         bottomRight: Radius.circular(8),
                       ),

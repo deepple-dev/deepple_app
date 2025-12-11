@@ -1,4 +1,3 @@
-import 'package:deepple_app/app/constants/enum.dart';
 import 'package:deepple_app/app/constants/region_data.dart';
 import 'package:deepple_app/core/util/log.dart';
 import 'package:flutter/material.dart';
@@ -184,23 +183,23 @@ class _ProfileUpdateInfoSelectorState
 String _getTitleByType(String type) {
   switch (type) {
     case '직업':
-      return "직업이 어떻게 되세요?";
+      return '직업이 어떻게 되세요?';
     case '지역':
-      return "지역이 어떻게 되세요?";
+      return '지역이 어떻게 되세요?';
     case '학력':
-      return "학력이 어떻게 되세요?";
+      return '학력이 어떻게 되세요?';
     case '흡연여부':
-      return "흡연 여부가 어떻게 되세요?";
+      return '흡연 여부가 어떻게 되세요?';
     case '음주빈도':
-      return "음주 빈도가 어떻게 되세요?";
+      return '음주 빈도가 어떻게 되세요?';
     case '종교':
-      return "종교가 어떻게 되세요?";
+      return '종교가 어떻게 되세요?';
     case 'MBTI':
-      return "MBTI가 어떻게 되세요?";
+      return 'MBTI가 어떻게 되세요?';
     case '취미':
-      return "취미가 어떻게 되세요?";
+      return '취미가 어떻게 되세요?';
     case '닉네임':
-      return "닉네임이 어떻게 되세요?";
+      return '닉네임이 어떻게 되세요?';
     default:
       return '';
   }

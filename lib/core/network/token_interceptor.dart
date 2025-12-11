@@ -2,7 +2,6 @@ import 'package:deepple_app/app/router/router.dart';
 import 'package:deepple_app/core/mixin/log_mixin.dart';
 import 'package:deepple_app/core/util/log.dart';
 import 'package:deepple_app/features/auth/data/usecase/auth_usecase_impl.dart';
-import 'package:deepple_app/features/auth/domain/usecase/auth_usecase.dart';
 import 'package:deepple_app/app/router/routing.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

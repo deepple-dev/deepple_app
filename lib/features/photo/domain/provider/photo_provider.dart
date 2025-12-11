@@ -41,7 +41,7 @@ class Photo extends _$Photo with ChangeNotifier, WidgetsBindingObserver {
       // 설정에서 돌아온 후 권한 상태 확인
       _permissionHandler.checkPhotoPermissionStatus().then((isGranted) {
         if (!isGranted) {
-          Log.i("설정에서 돌아온 후에도 권한이 허용되지 않았습니다.");
+          Log.i('설정에서 돌아온 후에도 권한이 허용되지 않았습니다.');
         }
       });
     } else if (state == AppLifecycleState.inactive) {
@@ -68,12 +68,12 @@ class Photo extends _$Photo with ChangeNotifier, WidgetsBindingObserver {
       final permissionStatus = await _permissionHandler
           .checkPhotoPermissionStatus();
       if (!permissionStatus) {
-        Log.i("권한이 허용되지 않았습니다.");
+        Log.i('권한이 허용되지 않았습니다.');
         return null;
       }
       return await _imagePicker.pickImage(source: source);
     } catch (e) {
-      Log.e("사진 선택 중 오류 발생: $e");
+      Log.e('사진 선택 중 오류 발생: $e');
       return null;
     }
   }

@@ -82,7 +82,7 @@ class Log {
       return json.toString();
     }
     try {
-      final encoder = JsonEncoder.withIndent('\t');
+      const encoder = JsonEncoder.withIndent('\t');
       if (json is Map<String, dynamic> || json is List<dynamic>) {
         return encoder.convert(json);
       }

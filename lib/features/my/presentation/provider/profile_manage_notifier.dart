@@ -56,7 +56,7 @@ class ProfileManageNotifier extends _$ProfileManageNotifier {
           .read(getCurrentLocationUseCaseProvider)
           .execute();
 
-      if (!state.hasValue) return "";
+      if (!state.hasValue) return '';
 
       final updatedProfile = state.requireValue.profile.copyWith(
         region: location,

@@ -11,7 +11,7 @@ import 'package:deepple_app/features/profile/domain/common/enum.dart';
 import 'package:deepple_app/features/profile/domain/common/model.dart';
 import 'package:deepple_app/features/profile/domain/usecase/usecase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'profile_state.dart';
+import 'package:deepple_app/features/profile/domain/provider/profile_state.dart';
 
 part 'profile_notifier.g.dart';
 
@@ -77,7 +77,7 @@ class ProfileNotifier extends _$ProfileNotifier {
           .requestFavorite(state.profile!.id, type: type);
 
       if (hasProcessedMission) {
-        showToastMessage("좋아요 보내기 미션 완료! 하트 2개를 받았어요");
+        showToastMessage('좋아요 보내기 미션 완료! 하트 2개를 받았어요');
         await ref.read(globalProvider.notifier).fetchHeartBalance();
       }
 

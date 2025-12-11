@@ -71,7 +71,7 @@ class _ProfileExchangeDialogState extends ConsumerState<ProfileExchangeDialog> {
                     primary: const Color(0xFFE1E1E1),
                     textColor: const Color(0xFF7E7E7E),
                     child: Text(
-                      "취소",
+                      '취소',
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 14.0.sp,
@@ -87,7 +87,7 @@ class _ProfileExchangeDialogState extends ConsumerState<ProfileExchangeDialog> {
                       children: [
                         const DefaultIcon(IconPath.heartLine),
                         Text(
-                          "${Dimens.profileExchangeHeartCount}",
+                          '${Dimens.profileExchangeHeartCount}',
                           style: TextStyle(
                             color: Palette.colorWhite,
                             fontWeight: FontWeight.w600,

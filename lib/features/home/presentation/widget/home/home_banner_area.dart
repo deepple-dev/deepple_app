@@ -22,7 +22,7 @@ class HomeBannerArea extends ConsumerWidget {
             ? navigate(
                 context,
                 route: AppRoute.examResult,
-                extra: ExamResultArguments(isFromDirectAccess: true),
+                extra: const ExamResultArguments(isFromDirectAccess: true),
               )
             : navigate(context, route: AppRoute.exam);
       },

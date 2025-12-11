@@ -8,7 +8,7 @@ import 'package:deepple_app/features/exam/domain/usecase/exam_soulmate_fetch_use
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:deepple_app/features/exam/domain/model/subject_answer.dart';
 
-import 'exam_state.dart';
+import 'package:deepple_app/features/exam/domain/provider/exam_state.dart';
 
 part 'exam_notifier.g.dart';
 

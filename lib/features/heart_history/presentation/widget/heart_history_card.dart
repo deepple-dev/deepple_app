@@ -1,5 +1,4 @@
 import 'package:deepple_app/app/constants/constants.dart';
-import 'package:deepple_app/app/constants/fonts.dart';
 import 'package:flutter/material.dart';
 
 class HeartHistoryCard extends StatelessWidget {
@@ -48,7 +47,7 @@ class HeartHistoryCard extends StatelessWidget {
             Expanded(
               flex: 2,
               child: Text(
-                '${heartAmount}',
+                '$heartAmount',
                 textAlign: TextAlign.right,
                 style: Fonts.body01Medium(
                   heartAmount.sign < 0

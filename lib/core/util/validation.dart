@@ -49,7 +49,7 @@ class Validation {
   static String? validRePassword(String? value, String oldPass) {
     if (value != oldPass) {
       // 입력값이 기존 비밀번호와 일치하지 않으면 오류 메시지를 반환
-      return "비밀번호가 일치하지 않습니다.";
+      return '비밀번호가 일치하지 않습니다.';
     }
     return null;
   }
@@ -63,9 +63,9 @@ class Validation {
     String? message,
   ) {
     if (value == null || value.trim().isEmpty) {
-      return "중복된 닉네임입니다.";
+      return '중복된 닉네임입니다.';
     } else if (value.length < 3 || value.length > 20) {
-      return "닉네임은 3자에서 20자 사이여야 합니다.";
+      return '닉네임은 3자에서 20자 사이여야 합니다.';
     } else if (validNickname != null && !validNickname) {
       return message;
     }
@@ -74,9 +74,9 @@ class Validation {
 
   static String? validEmail(String? value) {
     if (value == null) {
-      return "이메일 형식에 맞게 입력해 주십시오.";
+      return '이메일 형식에 맞게 입력해 주십시오.';
     } else if (!email.hasMatch(value)) {
-      return "이메일 형식에 맞게 입력해 주십시오.";
+      return '이메일 형식에 맞게 입력해 주십시오.';
     }
     return null;
   }
@@ -87,7 +87,7 @@ class Validation {
     String? message,
   ) {
     if (!phoneMobile.hasMatch(value ?? '')) {
-      return "잘못된 형식입니다.";
+      return '잘못된 형식입니다.';
     } else if (validPhone != null && !validPhone) {
       return message;
     }
@@ -96,14 +96,14 @@ class Validation {
 
   static String? validRegisterationPath(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return "가입 경로를 입력해 주십시오.";
+      return '가입 경로를 입력해 주십시오.';
     }
     return null;
   }
 
   static String? validOtp(String? value, bool? validOtp, String? message) {
     if (value == null || value.trim().isEmpty) {
-      return "OTP(임시 비밀번호)를 입력해 주십시오.";
+      return 'OTP(임시 비밀번호)를 입력해 주십시오.';
     } else if (validOtp != null && !validOtp) {
       return message;
     }
@@ -113,14 +113,14 @@ class Validation {
   static String? validName(String? value) {
     value = value?.trim() ?? '';
     if (value.isEmpty || value.length > 50) {
-      return "이름은 {from}~{to}자 사이여야 합니다.";
+      return '이름은 {from}~{to}자 사이여야 합니다.';
     }
     return null;
   }
 
   static String? validNotEmpty(String? value) {
     if (value?.trim().isEmpty ?? false) {
-      return "이 필드를 입력해 주십시오.";
+      return '이 필드를 입력해 주십시오.';
     }
     return null;
   }
@@ -128,7 +128,7 @@ class Validation {
   // 6자리 숫자인지 확인
   static String? validSixDigitNumber(String? value) {
     if (!sixDigitNumber.hasMatch(value ?? '')) {
-      return "6자리 숫자를 입력해 주십시오.";
+      return '6자리 숫자를 입력해 주십시오.';
     }
     return null;
   }

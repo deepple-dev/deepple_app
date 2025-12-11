@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:deepple_app/app/constants/constants.dart';
-import '../../../../app/constants/icon_path.dart';
-import '../../../../app/widget/icon/default_icon.dart';
+import 'package:deepple_app/app/widget/icon/default_icon.dart';
 
 class EmptyList extends StatelessWidget {
   const EmptyList({super.key});

@@ -9,7 +9,7 @@ class CommunityGuidePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const DefaultAppBar(title: "커뮤니티 가이드"),
+      appBar: const DefaultAppBar(title: '커뮤니티 가이드'),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16),

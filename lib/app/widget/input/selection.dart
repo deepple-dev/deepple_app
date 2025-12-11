@@ -61,8 +61,9 @@ class SelectionWidgetState extends AppBaseWidgetState<SelectionWidget> {
           return Expanded(
             child: GestureDetector(
               onTap: () {
-                if (_selectedValue == option)
+                if (_selectedValue == option) {
                   return; // 동일한 값이면 불필요한 State 변경 방지
+                }
 
                 safeSetState(() {
                   _selectedValue = option;

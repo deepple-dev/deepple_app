@@ -1,6 +1,6 @@
 import 'package:intl/intl.dart';
 
-import '../extension/extended_num.dart';
+import 'package:deepple_app/core/extension/extended_num.dart';
 
 /// 자주 사용하는 [String] 유틸리티 클래스
 class StringUtil {

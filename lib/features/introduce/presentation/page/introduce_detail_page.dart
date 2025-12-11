@@ -55,7 +55,7 @@ class IntroduceDetailPageState
         data: (data) {
           if (data.introduceDetail == null) {
             // TODO: 에러 처리
-            showToastMessage("상대방 정보를 불러오는데 실패했습니다.");
+            showToastMessage('상대방 정보를 불러오는데 실패했습니다.');
             return const SizedBox.shrink();
           }
 
@@ -106,7 +106,7 @@ class IntroduceDetailPageState
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "$nickname, $age",
+                                '$nickname, $age',
                                 style: Fonts.header02(
                                   const Color(0xFF1F1E23),
                                 ),
@@ -132,7 +132,7 @@ class IntroduceDetailPageState
                         children: [
                           introduceDetail.profileExchangeStatus ==
                                   ProfileExchangeStatus.none
-                              ? _InteractionButton("프로필 교환하기", () {
+                              ? _InteractionButton('프로필 교환하기', () {
                                   // TODO: dialog 오픈할 때 "보유하트조회"를 해야할까요??
                                   ProfileExchangeDialog.open(
                                     context,
@@ -155,7 +155,7 @@ class IntroduceDetailPageState
                                     },
                                   );
                                 })
-                              : _WaitingButton("상대방의 수락을 기다리고 있어요", () {}),
+                              : _WaitingButton('상대방의 수락을 기다리고 있어요', () {}),
                           const Gap(8.0),
                           SizedBox(
                             width: 44.0,

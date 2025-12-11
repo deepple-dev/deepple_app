@@ -15,7 +15,7 @@ class HomeCategoryButtonsArea extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "이런 분들은 어떠세요? 🧐",
+          '이런 분들은 어떠세요? 🧐',
           style: Fonts.header03().copyWith(fontWeight: FontWeight.w600),
         ),
         const Gap(16),

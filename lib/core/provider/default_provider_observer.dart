@@ -8,7 +8,7 @@ final class DefaultProviderObserver extends ProviderObserver {
   @override
   void didAddProvider(ProviderObserverContext context, Object? value) {
     final provider = context.provider;
-    debugPrint("✨프로바이더 추가✨: ${provider.name ?? provider.runtimeType}");
+    debugPrint('✨프로바이더 추가✨: ${provider.name ?? provider.runtimeType}');
     super.didAddProvider(context, value);
   }
 
@@ -23,7 +23,7 @@ final class DefaultProviderObserver extends ProviderObserver {
     String formattedNewValue = _formatState(newValue);
 
     debugPrint(
-      "🔨프로바이더 업데이트🔨: ${provider.name ?? provider.runtimeType} / new value: $formattedNewValue}",
+      '🔨프로바이더 업데이트🔨: ${provider.name ?? provider.runtimeType} / new value: $formattedNewValue}',
     );
     super.didUpdateProvider(context, previousValue, newValue);
   }
@@ -32,7 +32,7 @@ final class DefaultProviderObserver extends ProviderObserver {
   void didDisposeProvider(ProviderObserverContext context) {
     final provider = context.provider;
     debugPrint(
-      "👋🏻프로바이더 삭제(dispose)👋🏻: ${provider.name ?? provider.runtimeType}",
+      '👋🏻프로바이더 삭제(dispose)👋🏻: ${provider.name ?? provider.runtimeType}',
     );
     super.didDisposeProvider(context);
   }
@@ -44,11 +44,11 @@ final class DefaultProviderObserver extends ProviderObserver {
     StackTrace stackTrace,
   ) {
     final provider = context.provider;
-    debugPrint(""""🐛 프로바이더 에러 🐛: ${provider.name ?? provider.runtimeType}
+    debugPrint('''"🐛 프로바이더 에러 🐛: ${provider.name ?? provider.runtimeType}
     Error: $error
     StackTrace: $stackTrace");
     super.providerDidFail(provider, error, stackTrace, container
-    """);
+    ''');
   }
 
   // JSON 형식으로 변환하는 헬퍼 함수

@@ -24,7 +24,7 @@ class ProfileManagePhotoArea extends ConsumerWidget {
         children: [
           const Gap(24),
           Text(
-            "프로필 사진",
+            '프로필 사진',
             style: Fonts.header03().copyWith(
               color: Palette.colorBlack,
               fontWeight: FontWeight.w600,
@@ -83,7 +83,7 @@ class ProfileManagePhotoArea extends ConsumerWidget {
                             borderRadius: BorderRadius.circular(2),
                           ),
                           child: Text(
-                            "대표",
+                            '대표',
                             style: Fonts.body03Regular().copyWith(
                               color: Colors.white,
                               fontWeight: FontWeight.w500,

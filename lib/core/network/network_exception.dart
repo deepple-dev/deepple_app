@@ -4,7 +4,7 @@ import 'package:deepple_app/core/config/config.dart';
 import 'package:dio/dio.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../util/log.dart';
+import 'package:deepple_app/core/util/log.dart';
 
 part 'network_exception.freezed.dart';
 

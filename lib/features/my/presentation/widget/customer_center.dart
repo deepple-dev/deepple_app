@@ -1,7 +1,7 @@
 import 'package:deepple_app/app/constants/icon_path.dart';
 import 'package:deepple_app/app/widget/icon/default_icon.dart';
 import 'package:flutter/material.dart';
-import '../page/customer_center_page.dart' show Message;
+import 'package:deepple_app/features/my/presentation/page/customer_center_page.dart' show Message;
 import 'package:gap/gap.dart';
 
 typedef OptionSelectedCallback =

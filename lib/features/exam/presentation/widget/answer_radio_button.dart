@@ -27,15 +27,15 @@ class AnswerRadioButton extends StatelessWidget {
                 ? Palette.colorPrimary100
                 : Palette.colorWhite,
             foregroundColor: Palette.colorBlack,
-            side: BorderSide(color: Palette.colorGrey100, width: 1.0),
+            side: const BorderSide(color: Palette.colorGrey100, width: 1.0),
             elevation: 0,
             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            padding: EdgeInsets.symmetric(horizontal: 18, vertical: 16),
-            shape: RoundedRectangleBorder(
+            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+            shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10)),
             ),
             textStyle: Fonts.body01Medium(),
-            minimumSize: Size(double.infinity, 0),
+            minimumSize: const Size(double.infinity, 0),
             alignment: Alignment.centerLeft,
           ).copyWith(
             overlayColor: WidgetStateProperty.all(Colors.transparent),
@@ -56,7 +56,7 @@ class AnswerRadioButton extends StatelessWidget {
                   : Border.all(color: Palette.colorGrey200, width: 1.5),
             ),
           ),
-          Gap(8),
+          const Gap(8),
           Flexible(
             child: Text(
               content,

@@ -6,7 +6,7 @@ final idealTypeRepository = Provider<MockIdealTypeRepository>((ref) {
 });
 
 class MockIdealTypeRepository {
-  IdealTypeDto _mockData = IdealTypeDto(
+  IdealTypeDto _mockData = const IdealTypeDto(
     // TODO: api 연동 시 제거
     minAge: 20,
     maxAge: 30,

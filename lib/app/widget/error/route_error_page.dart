@@ -13,7 +13,7 @@ class RouteErrorPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBar(title: Text("Page not found")),
+      appBar: AppBar(title: const Text('Page not found')),
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -25,7 +25,7 @@ class RouteErrorPage extends ConsumerWidget {
             DefaultTextButton(
               expandedWidth: false,
               onPressed: () => goToHome(context), // goToHome 함수 호출
-              child: Text("메인으로"),
+              child: const Text('메인으로'),
             ),
           ],
         ),

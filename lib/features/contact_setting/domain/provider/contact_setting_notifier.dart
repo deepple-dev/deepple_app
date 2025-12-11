@@ -2,8 +2,8 @@ import 'package:deepple_app/features/profile/data/repository/profile_repository.
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:deepple_app/app/enum/enum.dart';
 
-import '../../../../core/util/log.dart';
-import 'contact_setting_state.dart';
+import 'package:deepple_app/core/util/log.dart';
+import 'package:deepple_app/features/contact_setting/domain/provider/contact_setting_state.dart';
 
 part 'contact_setting_notifier.g.dart';
 

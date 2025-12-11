@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:deepple_app/app/router/route_arguments.dart';
 import 'package:deepple_app/app/widget/dialogue/confirm_dialogue.dart';
 import 'package:deepple_app/core/util/toast.dart';
-import 'package:deepple_app/core/util/util.dart';
 import 'package:deepple_app/features/auth/data/data.dart';
 import 'package:deepple_app/features/contact_setting/domain/provider/contact_setting_notifier.dart';
 import 'package:deepple_app/features/onboarding/domain/enum/auth_status.dart';

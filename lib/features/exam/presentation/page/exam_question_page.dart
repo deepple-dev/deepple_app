@@ -181,7 +181,7 @@ class _QuestionHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "${currentPage + 1}. ",
+                '${currentPage + 1}. ',
                 style: Fonts.header03().copyWith(
                   color: Palette.colorBlack,
                   fontWeight: FontWeight.w700,

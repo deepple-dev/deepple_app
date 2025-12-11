@@ -24,7 +24,7 @@ class IntroduceMyList extends ConsumerStatefulWidget {
 
 class _IntroduceMyListState extends ConsumerState<IntroduceMyList> {
   final _scrollController = ScrollController();
-  String nickname = "";
+  String nickname = '';
   bool _isLoadingMore = false;
 
   @override
@@ -54,7 +54,7 @@ class _IntroduceMyListState extends ConsumerState<IntroduceMyList> {
       ref.read(introduceProvider.notifier).fetchMyIntroduceMore();
     } catch (e) {
       // TODO: 에러 처리
-      Log.e("내 셀프소개 추가 조회 시 오류 발생 : $e");
+      Log.e('내 셀프소개 추가 조회 시 오류 발생 : $e');
     } finally {
       _isLoadingMore = false;
     }
@@ -122,7 +122,7 @@ class IntroduceHistoryListItem extends ConsumerWidget {
         CustomDialogue.showTwoChoiceDialogue(
           context: context,
           content: '삭제 버튼을 누르면\n내 셀프소개 글이 삭제됩니다.',
-          elevatedButtonText: "삭제",
+          elevatedButtonText: '삭제',
           onElevatedButtonPressed: () async {
             try {
               await ref

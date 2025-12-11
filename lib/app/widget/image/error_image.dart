@@ -2,8 +2,8 @@ import 'package:deepple_app/core/extension/extended_context.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../constants/constants.dart';
-import '../icon/default_icon.dart';
+import 'package:deepple_app/app/constants/constants.dart';
+import 'package:deepple_app/app/widget/icon/default_icon.dart';
 
 class ErrorImage extends ConsumerWidget {
   const ErrorImage({

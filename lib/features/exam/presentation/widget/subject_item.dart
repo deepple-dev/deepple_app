@@ -11,12 +11,12 @@ class SubjectItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: 8),
+      margin: const EdgeInsets.only(bottom: 8),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(name, style: Fonts.body03Regular(Palette.colorBlack)),
-          SizedBox(width: 8),
+          const SizedBox(width: 8),
           Expanded(
             child: Container(
               alignment: Alignment.center,
@@ -28,7 +28,7 @@ class SubjectItem extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(width: 8),
+          const SizedBox(width: 8),
           Text(count, style: Fonts.body03Regular(Palette.colorBlack)),
         ],
       ),

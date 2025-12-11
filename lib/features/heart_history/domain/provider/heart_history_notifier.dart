@@ -1,7 +1,7 @@
 import 'package:deepple_app/core/util/log.dart';
 import 'package:deepple_app/features/heart_history/data/repository/heart_history_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'heart_history_state.dart';
+import 'package:deepple_app/features/heart_history/domain/provider/heart_history_state.dart';
 
 part 'heart_history_notifier.g.dart';
 

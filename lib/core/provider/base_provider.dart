@@ -31,12 +31,12 @@ abstract class BaseNotifier<T> extends AsyncNotifier<T> {
       // 에러 알람 toast로 띄우기
       if (showToastOnError) {
         Fluttertoast.showToast(
-          msg: "Error: $e",
+          msg: 'Error: $e',
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
         );
       }
-      debugPrint("Error: $e\nStackTrace: $stackTrace");
+      debugPrint('Error: $e\nStackTrace: $stackTrace');
     } finally {
       if (onComplete != null) await onComplete();
     }
