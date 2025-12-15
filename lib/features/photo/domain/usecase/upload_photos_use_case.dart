@@ -59,8 +59,6 @@ class UploadPhotosUseCase {
         if (results.contains(false)) return false;
       }
 
-      Log.d('최종 서버로 보낼 URL 목록: $finalUrls');
-
       /// 서버에 업로드 요청
       await repo.uploadProfilePhotos(objectUrls: finalUrls);
 

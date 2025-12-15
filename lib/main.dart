@@ -20,8 +20,6 @@ import 'package:deepple_app/app/app.dart';
 
 void main() {
   runZonedGuarded(() async {
-    /// Splash 화면
-
     App.preserveSplash(
       widgetsBinding: WidgetsFlutterBinding.ensureInitialized(),
     );

@@ -1,3 +1,4 @@
+import 'package:deepple_app/core/util/log.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart'; // .env 파일 로딩
 
@@ -38,12 +39,15 @@ abstract class Config {
   static bool get enableNotificationLog => _enableNotificationLog ?? kDebugMode;
   static String get kakaoContactUrl => _kakaoContactUrl ?? '';
 
-  /// `.env` 로드하는 초기화 메서드
   static Future<void> initialize() async {
     try {
-      await dotenv.load(fileName: 'dev.env');
+      const envFile = String.fromEnvironment(
+        'ENV_FILE',
+        defaultValue: '.env',
+      );
+      await dotenv.load(fileName: 'assets/$envFile');
     } catch (e) {
-      print('⚠️ 환경 변수 파일(.env) 로딩 실패: $e');
+      Log.e('environment file load failed');
     }
 
     _enableGeneralLog =

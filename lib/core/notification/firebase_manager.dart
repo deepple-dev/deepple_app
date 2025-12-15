@@ -90,7 +90,7 @@ class FirebaseManager {
     );
     FirebaseMessaging.instance.onTokenRefresh.listen((newToken) async {
       // TODO: 서버에 토큰 저장 로직 추가
-      debugPrint('FCM Token refreshed: $newToken');
+      Log.d('FCM Token refreshed: $newToken');
     });
   }
 
