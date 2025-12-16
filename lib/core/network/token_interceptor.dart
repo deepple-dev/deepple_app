@@ -51,12 +51,17 @@ class TokenInterceptor extends Interceptor with LogMixin {
     Log.d(headers);
 
     // 응답 헤더에서 새 토큰 추출 및 저장
-    await _extractAndSaveTokens(headers);
+    final newAccessToken = await _extractAndSaveTokens(headers);
+
+    if (newAccessToken == null) return;
 
     // 토큰만 내려온 경우 재요청 처리
     final shouldRetry = _shouldRetryRequest(response);
     if (shouldRetry) {
-      final retryResponse = await _retryRequestWithNewToken(response);
+      final retryResponse = await _retryRequestWithNewToken(
+        response,
+        newAccessToken,
+      );
       if (retryResponse != null) {
         return handler.resolve(retryResponse);
       }
@@ -95,17 +100,21 @@ class TokenInterceptor extends Interceptor with LogMixin {
   }
 
   /// 응답 헤더에서 새 토큰들을 추출하고 저장
-  Future<void> _extractAndSaveTokens(Map<String, List<String>> headers) async {
+  Future<String?> _extractAndSaveTokens(
+    Map<String, List<String>> headers,
+  ) async {
     final newAccessToken = _extractAccessToken(headers);
     final newRefreshToken = await _extractAndSaveRefreshToken(headers);
 
     if (newAccessToken != null) {
       _saveAccessToken(newAccessToken);
+      return newAccessToken;
     }
 
     if (newRefreshToken != null) {
       Log.d('새 리프레시 토큰 저장완료!!');
     }
+    return null;
   }
 
   /// Access Token 추출
@@ -166,7 +175,12 @@ class TokenInterceptor extends Interceptor with LogMixin {
 
   /// Access Token 저장
   void _saveAccessToken(String token) {
-    _ref.read(authUsecaseProvider).setAccessToken(token);
+    _ref
+        .read(localStorageProvider)
+        .saveEncrypted(
+          SecureStorageItem.accessToken,
+          token,
+        );
     Log.d('새 엑세스 토큰 저장완료!!');
   }
 
@@ -192,16 +206,16 @@ class TokenInterceptor extends Interceptor with LogMixin {
   }
 
   /// 새 토큰으로 요청 재시도
-  Future<Response?> _retryRequestWithNewToken(Response originalResponse) async {
+  Future<Response?> _retryRequestWithNewToken(
+    Response originalResponse,
+    String accessToken,
+  ) async {
     try {
       final newOptions = _buildRetryRequestOptions(
         originalResponse.requestOptions,
       );
-      final latestToken = await _ref.read(authUsecaseProvider).getAccessToken();
 
-      if (latestToken != null) {
-        newOptions.headers[_authorizationHeader] = '$_bearerPrefix$latestToken';
-      }
+      newOptions.headers[_authorizationHeader] = '$_bearerPrefix$accessToken';
 
       Log.d('토큰 갱신 후 재요청 시도');
       return await _dio.fetch(newOptions);
