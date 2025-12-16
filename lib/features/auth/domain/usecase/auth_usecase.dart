@@ -4,7 +4,9 @@ import 'package:deepple_app/features/auth/data/dto/user_sign_in_request.dart';
 
 abstract class AuthUseCase {
   Future<UserData> signIn(UserSignInRequest user);
-  Future<bool> signOut();
+  Future<bool> signOut({
+    bool isTokenExpiredSignOut = false,
+  });
   Future<String?> getAccessToken();
   void setAccessToken(String accessToken);
   Future<String?> getRefreshToken();

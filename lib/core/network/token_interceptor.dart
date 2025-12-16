@@ -1,5 +1,4 @@
 import 'package:cookie_jar/cookie_jar.dart';
-import 'package:deepple_app/app/provider/global_notifier.dart';
 import 'package:deepple_app/app/router/router.dart';
 import 'package:deepple_app/core/config/config.dart';
 import 'package:deepple_app/core/mixin/log_mixin.dart';
@@ -11,8 +10,17 @@ import 'package:deepple_app/app/router/routing.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Add token in header call API
+/// HTTP 요청에 인증 토큰을 자동으로 추가하고
+/// 응답에서 토큰 갱신을 처리하는 Interceptor
 class TokenInterceptor extends Interceptor with LogMixin {
+  // Constants
+  static const String _requiresAccessTokenKey = 'requiresAccessToken';
+  static const String _authorizationHeader = 'authorization';
+  static const String _bearerPrefix = 'Bearer ';
+  static const String _setCookieHeader = 'set-cookie';
+  static const String _retryExtraKey = 'retry';
+  static const int _unauthorizedStatusCode = 401;
+
   final Ref _ref;
   final Dio _dio;
   final PersistCookieJar _cookieJar;
@@ -23,110 +31,38 @@ class TokenInterceptor extends Interceptor with LogMixin {
     required PersistCookieJar cookieJar,
   }) : _ref = ref,
        _dio = dio,
-       _cookieJar = cookieJar,
-       super();
+       _cookieJar = cookieJar;
 
   @override
   Future<void> onRequest(
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
-    if (options.headers.containsKey('requiresAccessToken')) {
-      if (options.headers['requiresAccessToken'] == true) {
-        final token = await _ref.read(authUsecaseProvider).getAccessToken();
-        options.headers.addAll(<String, Object?>{
-          'Authorization': 'Bearer $token',
-        });
-      }
-
-      options.headers.remove('requiresAccessToken');
-    }
-    return handler.next(options);
+    await _attachAccessTokenIfRequired(options);
+    super.onRequest(options, handler);
   }
 
-  /// 응답에서 AccessToken + RefreshToken 동시 갱신
   @override
   Future<void> onResponse(
     Response response,
     ResponseInterceptorHandler handler,
   ) async {
     final headers = response.headers.map;
-    final requestOptions = response.requestOptions;
+    Log.d(headers);
 
-    /// 새 AccessToken 추출
-    final newAccessToken =
-        headers['authorization']?.first ?? headers['Authorization']?.first;
+    // 응답 헤더에서 새 토큰 추출 및 저장
+    await _extractAndSaveTokens(headers);
 
-    String? newRefreshToken;
-
-    /// 새 RefreshToken 추출
-    final setCookieList = headers['set-cookie'];
-
-    if (newAccessToken != null && newAccessToken.startsWith('Bearer ')) {
-      final pureToken = newAccessToken.replaceFirst('Bearer ', '');
-      _ref.read(authUsecaseProvider).setAccessToken(pureToken);
-      Log.i('새 엑세스 토큰 저장완료!!');
-    }
-
-    if (setCookieList != null && setCookieList.isNotEmpty) {
-      final uri = Uri.parse(Config.baseUrl);
-      await _cookieJar.saveFromResponse(
-        uri,
-        setCookieList.map((e) => Cookie.fromSetCookieValue(e)).toList(),
-      );
-      newRefreshToken = _extractRefreshToken(setCookieList);
-
-      if (newRefreshToken != null && newRefreshToken.isNotEmpty) {
-        await _ref
-            .read(localStorageProvider)
-            .saveEncrypted(SecureStorageItem.refreshToken, newRefreshToken);
-        Log.i('새 리프레시 토큰 저장완료!!');
-      }
-    }
-
-    /// 응답 데이터가 비었는지 확인
-    final hasEmptyBody =
-        response.data == null ||
-        (response.data is Map && (response.data as Map).isEmpty);
-
-    /// "토큰만 내려온 200 응답"이면 재요청
-    final isTokenOnlyResponse =
-        newAccessToken != null && newRefreshToken != null && hasEmptyBody;
-
-    final alreadyRetried = requestOptions.extra['retry'] == true;
-
-    if (isTokenOnlyResponse && !alreadyRetried) {
-      final newOptions = requestOptions.copyWith(
-        headers: Map.of(requestOptions.headers),
-        extra: {
-          ...requestOptions.extra,
-          'retry': true,
-        },
-      );
-
-      final latestToken = await _ref.read(authUsecaseProvider).getAccessToken();
-
-      if (latestToken != null) {
-        newOptions.headers['Authorization'] = 'Bearer $latestToken';
-      }
-
-      try {
-        final retryResponse = await _dio.fetch(newOptions);
+    // 토큰만 내려온 경우 재요청 처리
+    final shouldRetry = _shouldRetryRequest(response);
+    if (shouldRetry) {
+      final retryResponse = await _retryRequestWithNewToken(response);
+      if (retryResponse != null) {
         return handler.resolve(retryResponse);
-      } catch (e) {
-        Log.e('Retry request failed: $e');
-        return handler.next(response);
-      } // 원래 API 응답으로 덮어쓰기
+      }
     }
 
-    return handler.next(response);
-  }
-
-  String? _extractRefreshToken(List<String> cookies) {
-    return cookies
-        .map((cookie) => RegExp(r'refresh_token=([^;]+)').firstMatch(cookie))
-        .firstWhere((match) => match != null, orElse: () => null)
-        ?.group(1);
+    super.onResponse(response, handler);
   }
 
   @override
@@ -134,19 +70,183 @@ class TokenInterceptor extends Interceptor with LogMixin {
     DioException err,
     ErrorInterceptorHandler handler,
   ) async {
-    final router = _ref.read(routerProvider);
+    _logError(err);
 
-    Log.e(
-      '[${err.requestOptions.method} ${err.requestOptions.path}] Api error: ${err.response}',
-    );
-
-    /// 진짜 만료(서버 거부)일 때만 로그아웃
-    if (err.response?.statusCode == 401) {
-      Log.d('401에러 발생함');
-      await _ref.read(globalProvider.notifier).clearLocalData();
-      router.goNamed(AppRoute.onboard.name);
+    if (_isUnauthorizedError(err)) {
+      await _handleUnauthorizedError();
     }
 
-    return handler.next(err);
+    super.onError(err, handler);
+  }
+
+  /// 요청에 Access Token 첨부 (필요한 경우에만)
+  Future<void> _attachAccessTokenIfRequired(RequestOptions options) async {
+    final requiresToken = options.headers[_requiresAccessTokenKey];
+
+    if (requiresToken == true) {
+      final token = await _ref.read(authUsecaseProvider).getAccessToken();
+      if (token != null) {
+        options.headers[_authorizationHeader] = '$_bearerPrefix$token';
+      }
+    }
+
+    // 커스텀 헤더 제거
+    options.headers.remove(_requiresAccessTokenKey);
+  }
+
+  /// 응답 헤더에서 새 토큰들을 추출하고 저장
+  Future<void> _extractAndSaveTokens(Map<String, List<String>> headers) async {
+    final newAccessToken = _extractAccessToken(headers);
+    final newRefreshToken = await _extractAndSaveRefreshToken(headers);
+
+    if (newAccessToken != null) {
+      _saveAccessToken(newAccessToken);
+    }
+
+    if (newRefreshToken != null) {
+      Log.d('새 리프레시 토큰 저장완료!!');
+    }
+  }
+
+  /// Access Token 추출
+  String? _extractAccessToken(Map<String, List<String>> headers) {
+    final authHeader = headers[_authorizationHeader]?.first;
+
+    if (authHeader != null && authHeader.startsWith(_bearerPrefix)) {
+      return authHeader.replaceFirst(_bearerPrefix, '');
+    }
+
+    return null;
+  }
+
+  /// Refresh Token 추출 및 저장
+  Future<String?> _extractAndSaveRefreshToken(
+    Map<String, List<String>> headers,
+  ) async {
+    final setCookieList = headers[_setCookieHeader];
+
+    if (setCookieList == null || setCookieList.isEmpty) {
+      return null;
+    }
+
+    // CookieJar에 쿠키 저장
+    final uri = Uri.parse(Config.baseUrl);
+    final cookies = setCookieList
+        .map((cookie) => Cookie.fromSetCookieValue(cookie))
+        .toList();
+
+    await _cookieJar.saveFromResponse(uri, cookies);
+
+    // Refresh Token 추출 및 안전한 저장소에 저장
+    final refreshToken = _extractRefreshTokenFromCookies(setCookieList);
+
+    if (refreshToken != null && refreshToken.isNotEmpty) {
+      await _ref
+          .read(localStorageProvider)
+          .saveEncrypted(SecureStorageItem.refreshToken, refreshToken);
+      return refreshToken;
+    }
+
+    return null;
+  }
+
+  /// 쿠키 리스트에서 Refresh Token 추출
+  String? _extractRefreshTokenFromCookies(List<String> cookies) {
+    final refreshTokenPattern = RegExp(r'refresh_token=([^;]+)');
+
+    for (final cookie in cookies) {
+      final match = refreshTokenPattern.firstMatch(cookie);
+      if (match != null) {
+        return match.group(1);
+      }
+    }
+
+    return null;
+  }
+
+  /// Access Token 저장
+  void _saveAccessToken(String token) {
+    _ref.read(authUsecaseProvider).setAccessToken(token);
+    Log.d('새 엑세스 토큰 저장완료!!');
+  }
+
+  /// 재요청이 필요한지 판단
+  bool _shouldRetryRequest(Response response) {
+    final headers = response.headers.map;
+    final hasNewAccessToken = _extractAccessToken(headers) != null;
+    final hasNewRefreshToken = headers[_setCookieHeader]?.isNotEmpty ?? false;
+    final hasEmptyBody = _hasEmptyResponseBody(response);
+    final alreadyRetried =
+        response.requestOptions.extra[_retryExtraKey] == true;
+
+    return hasNewAccessToken &&
+        hasNewRefreshToken &&
+        hasEmptyBody &&
+        !alreadyRetried;
+  }
+
+  /// 응답 바디가 비어있는지 확인
+  bool _hasEmptyResponseBody(Response response) {
+    return response.data == null ||
+        (response.data is Map && (response.data as Map).isEmpty);
+  }
+
+  /// 새 토큰으로 요청 재시도
+  Future<Response?> _retryRequestWithNewToken(Response originalResponse) async {
+    try {
+      final newOptions = _buildRetryRequestOptions(
+        originalResponse.requestOptions,
+      );
+      final latestToken = await _ref.read(authUsecaseProvider).getAccessToken();
+
+      if (latestToken != null) {
+        newOptions.headers[_authorizationHeader] = '$_bearerPrefix$latestToken';
+      }
+
+      Log.d('토큰 갱신 후 재요청 시도');
+      return await _dio.fetch(newOptions);
+    } catch (e) {
+      Log.e('재요청 실패: $e');
+      return null;
+    }
+  }
+
+  /// 재요청용 RequestOptions 생성
+  RequestOptions _buildRetryRequestOptions(RequestOptions original) {
+    return original.copyWith(
+      headers: Map<String, dynamic>.of(original.headers),
+      extra: {
+        ...original.extra,
+        _retryExtraKey: true,
+      },
+    );
+  }
+
+  /// 401 Unauthorized 에러인지 확인
+  bool _isUnauthorizedError(DioException err) {
+    return err.response?.statusCode == _unauthorizedStatusCode;
+  }
+
+  /// 401 에러 처리 (로그아웃)
+  Future<void> _handleUnauthorizedError() async {
+    Log.d('401 Unauthorized: 로컬 데이터 초기화 및 로그아웃');
+
+    await _ref
+        .read(authUsecaseProvider)
+        .signOut(
+          isTokenExpiredSignOut: true,
+        );
+
+    final router = _ref.read(routerProvider);
+    router.goNamed(AppRoute.onboard.name);
+  }
+
+  /// API 에러 로깅
+  void _logError(DioException err) {
+    final method = err.requestOptions.method;
+    final path = err.requestOptions.path;
+    final response = err.response;
+
+    Log.e('[$method $path] API 에러: $response');
   }
 }
