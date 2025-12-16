@@ -53,11 +53,9 @@ class TokenInterceptor extends Interceptor with LogMixin {
     // 응답 헤더에서 새 토큰 추출 및 저장
     final newAccessToken = await _extractAndSaveTokens(headers);
 
-    if (newAccessToken == null) return;
-
     // 토큰만 내려온 경우 재요청 처리
     final shouldRetry = _shouldRetryRequest(response);
-    if (shouldRetry) {
+    if (newAccessToken != null && shouldRetry) {
       final retryResponse = await _retryRequestWithNewToken(
         response,
         newAccessToken,
@@ -177,10 +175,7 @@ class TokenInterceptor extends Interceptor with LogMixin {
   void _saveAccessToken(String token) {
     _ref
         .read(localStorageProvider)
-        .saveEncrypted(
-          SecureStorageItem.accessToken,
-          token,
-        );
+        .saveEncrypted(SecureStorageItem.accessToken, token);
     Log.d('새 엑세스 토큰 저장완료!!');
   }
 
@@ -229,10 +224,7 @@ class TokenInterceptor extends Interceptor with LogMixin {
   RequestOptions _buildRetryRequestOptions(RequestOptions original) {
     return original.copyWith(
       headers: Map<String, dynamic>.of(original.headers),
-      extra: {
-        ...original.extra,
-        _retryExtraKey: true,
-      },
+      extra: {...original.extra, _retryExtraKey: true},
     );
   }
 
@@ -245,11 +237,7 @@ class TokenInterceptor extends Interceptor with LogMixin {
   Future<void> _handleUnauthorizedError() async {
     Log.d('401 Unauthorized: 로컬 데이터 초기화 및 로그아웃');
 
-    await _ref
-        .read(authUsecaseProvider)
-        .signOut(
-          isTokenExpiredSignOut: true,
-        );
+    await _ref.read(authUsecaseProvider).signOut(isTokenExpiredSignOut: true);
 
     final router = _ref.read(routerProvider);
     router.goNamed(AppRoute.onboard.name);
