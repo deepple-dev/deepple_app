@@ -1,5 +1,4 @@
 import 'package:deepple_app/app/widget/view/default_app_bar.dart';
-import 'package:deepple_app/app/widget/view/default_bottom_navigation_bar.dart';
 import 'package:deepple_app/app/widget/view/default_progress_indicator.dart';
 import 'package:deepple_app/core/extension/extended_context.dart';
 import 'package:deepple_app/core/mixin/theme_mixin.dart';

@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'api_service.dart';
+import 'package:deepple_app/core/network/api_service.dart';
 import 'package:dio/dio.dart';
 
-import '../util/log.dart';
+import 'package:deepple_app/core/util/log.dart';
 
 class LoggingInterceptor extends Interceptor {
   @override

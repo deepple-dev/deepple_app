@@ -37,7 +37,7 @@ class FetchIntroduceListUseCase {
           )
           .toList();
     } catch (e) {
-      Log.e("셀프 소개 리스트 호출 실패 : $e");
+      Log.e('셀프 소개 리스트 호출 실패 : $e');
       return [];
     }
   }

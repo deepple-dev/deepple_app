@@ -50,7 +50,7 @@ class IntroduceEditNotifier extends _$IntroduceEditNotifier {
       ).call(id: id, title: title.trim(), content: content.trim());
     } catch (e) {
       // TODO: 에러 발생 처리 어떻게???
-      Log.e("Failed to edit introduce to server: $e");
+      Log.e('Failed to edit introduce to server: $e');
       rethrow;
     }
   }

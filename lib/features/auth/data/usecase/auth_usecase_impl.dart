@@ -71,7 +71,6 @@ class AuthUseCaseImpl with LogMixin implements AuthUseCase {
           Log.e("서버 로그아웃 실패");
           return false; // 실패 시 로그아웃 불가
         }
-      }
 
       try {
         // 로컬 데이터는 성공/삭제 여부 상관없이 로그아웃 처리
@@ -84,7 +83,7 @@ class AuthUseCaseImpl with LogMixin implements AuthUseCase {
 
       return true;
     } catch (e) {
-      Log.e("로그아웃 중 예기치 못한 에러 발생: $e");
+      Log.e('로그아웃 중 예기치 못한 에러 발생: $e');
       return false;
     }
   }
@@ -146,9 +145,9 @@ class AuthUseCaseImpl with LogMixin implements AuthUseCase {
   Future<void> uploadProfile(ProfileUploadRequest profileData) async {
     try {
       await _userRepository.updateProfile(profileData);
-      Log.d("✅ 프로필 업로드 성공");
+      Log.d('✅ 프로필 업로드 성공');
     } catch (e) {
-      Log.e("❌ 프로필 업로드 실패: $e");
+      Log.e('❌ 프로필 업로드 실패: $e');
       rethrow;
     }
   }

@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'formatter.dart';
+import 'package:deepple_app/core/util/formatter.dart';
 
 /// "yyyy-MM-dd'T'HH:mm:ss.SSS" 형식의 문자열을 [DateTime]으로 변환
 class ConvertStringToDateTime implements JsonConverter<DateTime, String> {

@@ -34,7 +34,7 @@ extension ProfileUpdateRequestDtoMapper on MyProfile {
       gender: gender.name.toUpperCase(),
       yearOfBirth: DateTime.now().year - age + 1,
       height: height,
-      district: addressData.getDistrictValue(region) ?? "",
+      district: addressData.getDistrictValue(region) ?? '',
       highestEducation: education.toJson(),
       mbti: mbti,
       smokingStatus: smokingStatus.name.toUpperCase(),

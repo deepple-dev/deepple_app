@@ -106,7 +106,7 @@ ThemeData createThemeData(ColorScheme colorScheme) {
       );
 
   return ThemeData(
-    appBarTheme: AppBarTheme(
+    appBarTheme: const AppBarTheme(
       // backgroundColor: colorScheme.surface,
       // elevation: 0,
       scrolledUnderElevation: 0,

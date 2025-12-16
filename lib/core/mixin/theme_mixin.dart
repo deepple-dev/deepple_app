@@ -1,4 +1,3 @@
-import 'package:deepple_app/app/constants/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:deepple_app/core/extension/extended_context.dart';

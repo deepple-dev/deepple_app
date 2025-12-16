@@ -12,12 +12,12 @@ class MyBlockFriendPage extends StatelessWidget {
     return Scaffold(
       appBar: DefaultAppBar(
         isDivider: true,
-        title: "지인 차단",
+        title: '지인 차단',
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 16),
             child: Text(
-              "전체 선택",
+              '전체 선택',
               style: Fonts.body01Medium().copyWith(
                 fontWeight: FontWeight.w400,
                 color: Palette.colorBlack,
@@ -40,7 +40,7 @@ class MyBlockFriendPage extends StatelessWidget {
               child: Row(
                 children: [
                   Text(
-                    "차단된 연락처",
+                    '차단된 연락처',
                     style: Fonts.body02Medium().copyWith(
                       fontWeight: FontWeight.w400,
                       color: Colors.black,
@@ -57,7 +57,7 @@ class MyBlockFriendPage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(15),
                     ),
                     child: Text(
-                      "0",
+                      '0',
                       style: Fonts.body02Medium().copyWith(
                         fontWeight: FontWeight.w500,
                         color: const Color(0xff222529),
@@ -90,7 +90,7 @@ class MyBlockFriendPage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "김민지",
+                              '김민지',
                               style: Fonts.body02Medium().copyWith(
                                 fontWeight: FontWeight.w400,
                                 color: Palette.colorBlack,
@@ -98,7 +98,7 @@ class MyBlockFriendPage extends StatelessWidget {
                             ),
                             const Gap(4),
                             Text(
-                              "010-0000-0000",
+                              '010-0000-0000',
                               style: Fonts.body02Medium().copyWith(
                                 fontWeight: FontWeight.w400,
                                 color: const Color(0xff9F9F9F),

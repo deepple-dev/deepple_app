@@ -4,7 +4,7 @@ import 'package:deepple_app/features/profile/data/dto/profile_detail_response.da
 import 'package:equatable/equatable.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'enum.dart';
+import 'package:deepple_app/features/profile/domain/common/enum.dart';
 
 part 'model.freezed.dart';
 

@@ -29,13 +29,13 @@ class DefaultHeartCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          DefaultIcon(IconPath.storeHeart, size: 16),
-          Gap(1),
+          const DefaultIcon(IconPath.storeHeart, size: 16),
+          const Gap(1),
           Text(heart, style: Fonts.numeric01Bold()),
-          Gap(2),
+          const Gap(2),
           Text('₩${price.formatThousands}', style: Fonts.numeric01Medium()),
-          Gap(2),
-          Gap(24),
+          const Gap(2),
+          const Gap(24),
           DefaultElevatedButton(
             onPressed: () => onCreate(code),
             height: 34.0,

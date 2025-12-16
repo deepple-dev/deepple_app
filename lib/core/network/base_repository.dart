@@ -1,7 +1,7 @@
 import 'package:deepple_app/core/util/log.dart';
 
-import 'api_service.dart';
-import 'api_service_impl.dart';
+import 'package:deepple_app/core/network/api_service.dart';
+import 'package:deepple_app/core/network/api_service_impl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 abstract class BaseRepository {

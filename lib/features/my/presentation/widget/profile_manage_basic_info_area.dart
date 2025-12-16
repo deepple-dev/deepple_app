@@ -1,5 +1,4 @@
 import 'package:deepple_app/app/constants/constants.dart';
-import 'package:deepple_app/app/constants/enum.dart';
 import 'package:deepple_app/app/router/route_arguments.dart';
 import 'package:deepple_app/app/router/router.dart';
 import 'package:deepple_app/app/widget/widget.dart';
@@ -30,7 +29,7 @@ class ProfileManageBasicInfoArea extends StatelessWidget {
         spacing: 16.0,
         children: [
           Text(
-            "기본 정보",
+            '기본 정보',
             style: Fonts.header03().copyWith(fontWeight: FontWeight.w600),
           ),
           Column(
@@ -38,7 +37,7 @@ class ProfileManageBasicInfoArea extends StatelessWidget {
               final String value = switch (label) {
                 '닉네임' => profile.nickname,
                 '나이' => profile.age.toString(),
-                '키' => "${profile.height}cm",
+                '키' => '${profile.height}cm',
                 '성별' => profile.gender.label,
                 '연락처' => profile.phoneNum,
                 _ => '',

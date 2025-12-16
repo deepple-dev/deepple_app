@@ -33,20 +33,20 @@ class PermissionHandler with WidgetsBindingObserver {
       final status = await permission.status;
 
       if (status.isGranted) {
-        Log.d("권한 허용됨");
+        Log.d('권한 허용됨');
         return true;
       } else if (status.isDenied) {
-        Log.d("권한 거부됨. 요청 시도 중...");
+        Log.d('권한 거부됨. 요청 시도 중...');
         final newStatus = await permission.request();
         return newStatus.isGranted;
       } else if (status.isPermanentlyDenied) {
-        Log.d("권한 영구 거부됨. 설정 앱으로 이동.");
+        Log.d('권한 영구 거부됨. 설정 앱으로 이동.');
         openAppSettings();
         return false;
       }
       return false;
     } catch (e) {
-      Log.e("권한 상태 확인 중 오류 발생: $e");
+      Log.e('권한 상태 확인 중 오류 발생: $e');
       return false;
     }
   }

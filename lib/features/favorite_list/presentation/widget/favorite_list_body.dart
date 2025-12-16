@@ -5,8 +5,8 @@ import 'package:deepple_app/features/favorite_list/presentation/page/favorite_li
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'empty_favorite.dart';
-import 'favorite_grid_item.dart';
+import 'package:deepple_app/features/favorite_list/presentation/widget/empty_favorite.dart';
+import 'package:deepple_app/features/favorite_list/presentation/widget/favorite_grid_item.dart';
 
 class FavoriteListBody extends ConsumerStatefulWidget {
   const FavoriteListBody({super.key});

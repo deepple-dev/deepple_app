@@ -1,7 +1,5 @@
-import 'package:deepple_app/core/extension/extension.dart';
 import 'package:flutter/material.dart';
 import 'package:deepple_app/app/constants/constants.dart';
-import 'package:deepple_app/app/widget/button/button.dart';
 import 'package:deepple_app/app/widget/icon/default_icon.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
@@ -15,11 +13,11 @@ class EventHeartCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Container(
+      child: SizedBox(
         height: 170.h,
         child: Stack(
           children: [
-            Positioned(
+            const Positioned(
               top: 0, // 아이콘을 상단 20픽셀 위치
               right: 0, // 아이콘을 오른쪽 20픽셀 위치
               child: DefaultIcon(IconPath.celebrate, size: 124),
@@ -33,7 +31,7 @@ class EventHeartCard extends StatelessWidget {
                   color: Palette.colorPrimary50,
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
-                    BoxShadow(
+                    const BoxShadow(
                       color: Palette.colorPrimary100,
                       offset: Offset(4, 4),
                       blurRadius: 13.1,
@@ -49,8 +47,8 @@ class EventHeartCard extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          DefaultIcon(IconPath.storeHeart),
-                          Gap(2),
+                          const DefaultIcon(IconPath.storeHeart),
+                          const Gap(2),
                           Text(
                             '90',
                             style: Fonts.header01().copyWith(
@@ -68,7 +66,7 @@ class EventHeartCard extends StatelessWidget {
                               fontWeight: FontWeight.w700,
                             ),
                           ),
-                          Gap(6),
+                          const Gap(6),
                           Text(
                             'W18,000',
                             style: Fonts.body03Regular().copyWith(

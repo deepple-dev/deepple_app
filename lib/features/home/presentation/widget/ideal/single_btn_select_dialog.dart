@@ -124,7 +124,7 @@ class _SingleBtnSelectDialogState extends ConsumerState<SingleBtnSelectDialg> {
                   },
                   onPrimary: context.palette.onPrimary,
                   primary: context.palette.primary,
-                  child: const Text("확인"),
+                  child: const Text('확인'),
                 ),
               ],
             ),

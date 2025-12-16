@@ -1,6 +1,6 @@
 import 'package:deepple_app/app/constants/constants.dart';
 import 'package:flutter/material.dart';
-import '../widget/customer_center.dart';
+import 'package:deepple_app/features/my/presentation/widget/customer_center.dart';
 
 class Message {
   final String sender;
@@ -34,7 +34,7 @@ class _CustomerCenterPageState extends State<CustomerCenterPage> {
   void initState() {
     super.initState();
     const String userName = '고객';
-    final greeting = '$userName님, 안녕하세요 딥플입니다.\n궁금한 사항을 선택해 주세요';
+    const greeting = '$userName님, 안녕하세요 딥플입니다.\n궁금한 사항을 선택해 주세요';
     _messages.add(
       Message(
         sender: 'bot',

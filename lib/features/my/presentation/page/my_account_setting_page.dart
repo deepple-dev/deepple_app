@@ -24,26 +24,26 @@ class _MyAccountSettingPageState extends ConsumerState<MyAccountSettingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const DefaultAppBar(title: "계정 설정"),
+      appBar: const DefaultAppBar(title: '계정 설정'),
       body: Column(
         children: [
           _AccountSettingItem(
             children: [
               Text(
-                "닉네임",
+                '닉네임',
                 style: Fonts.body02Medium().copyWith(
                   fontWeight: FontWeight.w500,
                   color: Palette.colorBlack,
                 ),
               ),
               const Spacer(),
-              const Text("마카롱조아"),
+              const Text('마카롱조아'),
             ],
           ),
           _AccountSettingItem(
             children: [
               Text(
-                "휴면 회원 전환",
+                '휴면 회원 전환',
                 style: Fonts.body02Medium().copyWith(
                   fontWeight: FontWeight.w500,
                   color: Palette.colorBlack,
@@ -72,7 +72,7 @@ class _MyAccountSettingPageState extends ConsumerState<MyAccountSettingPage> {
                   );
                 },
                 child: Text(
-                  "로그아웃",
+                  '로그아웃',
                   style: Fonts.body02Medium().copyWith(
                     fontWeight: FontWeight.w500,
                     color: Palette.colorBlack,
@@ -86,7 +86,7 @@ class _MyAccountSettingPageState extends ConsumerState<MyAccountSettingPage> {
               GestureDetector(
                 onTap: () => navigate(context, route: AppRoute.serviceWithdraw),
                 child: Text(
-                  "서비스 탈퇴",
+                  '서비스 탈퇴',
                   style: Fonts.body02Medium().copyWith(
                     fontWeight: FontWeight.w500,
                     color: const Color(0xffbdbdbd),

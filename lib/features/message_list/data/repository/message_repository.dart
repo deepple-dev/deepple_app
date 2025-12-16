@@ -1,5 +1,4 @@
 import 'package:deepple_app/core/network/base_repository.dart';
-import 'package:deepple_app/core/util/log.dart';
 import 'package:deepple_app/features/message_list/data/dto/message_list_response.dart';
 import 'package:deepple_app/features/message_list/domain/domain.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

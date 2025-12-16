@@ -1,6 +1,4 @@
 import 'package:deepple_app/app/constants/constants.dart';
-import 'package:deepple_app/app/constants/fonts.dart';
-import 'package:deepple_app/app/constants/palette.dart';
 import 'package:deepple_app/features/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -50,13 +48,13 @@ class IdealAgeSlider extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "나이",
+                '나이',
                 style: Fonts.body02Regular().copyWith(
                   fontWeight: FontWeight.w500,
                 ),
               ),
               Text(
-                "$minAge세~$maxAge세",
+                '$minAge세~$maxAge세',
                 style: Fonts.body02Regular().copyWith(
                   fontWeight: FontWeight.w500,
                   color: const Color(0xff3B3B3B),

@@ -38,7 +38,7 @@ class IntroduceAddNotifier extends _$IntroduceAddNotifier {
         ref,
       ).call(title: title.trim(), content: content.trim());
     } catch (e) {
-      Log.e("Failed to add introduce to server: $e");
+      Log.e('Failed to add introduce to server: $e');
       rethrow;
     }
   }

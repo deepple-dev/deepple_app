@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-import '../util/string_util.dart';
+import 'package:deepple_app/core/util/string_util.dart';
 
 /// TextStyle에 대한 확장 메서드
 extension ExtendedTextStyle on TextStyle {

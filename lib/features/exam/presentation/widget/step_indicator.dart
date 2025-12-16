@@ -23,17 +23,17 @@ class StepIndicator extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '${currentStep}',
+              '$currentStep',
               style: Fonts.body03Regular(Palette.colorPrimary500),
             ),
             Text(' / ', style: Fonts.body03Regular(Palette.colorGrey400)),
             Text(
-              '${totalStep}',
+              '$totalStep',
               style: Fonts.body03Regular(Palette.colorGrey400),
             ),
           ],
         ),
-        Gap(8),
+        const Gap(8),
         PreferredSize(
           preferredSize: Size.fromHeight(4.h), // Progress bar의 높이를 지정
           child: TweenAnimationBuilder<double>(

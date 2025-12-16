@@ -43,7 +43,7 @@ abstract class Config {
     try {
       await dotenv.load(fileName: 'dev.env');
     } catch (e) {
-      print("⚠️ 환경 변수 파일(.env) 로딩 실패: $e");
+      print('⚠️ 환경 변수 파일(.env) 로딩 실패: $e');
     }
 
     _enableGeneralLog =

@@ -18,8 +18,8 @@ class NotificationEmptyViewWidget extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          DefaultIcon(IconPath.frowningFace, size: 48),
-          Gap(16),
+          const DefaultIcon(IconPath.frowningFace, size: 48),
+          const Gap(16),
           Text(
             '아직 받은 알람이 없어요\n새로운 알람을 받을 수 있도록 설정하시겠어요?',
             textAlign: TextAlign.center,

@@ -122,7 +122,7 @@ class _MultiBtnSelectDialogState extends State<MultiBtnSelectDialog> {
                   onPressed: () => widget.onSubmit(_selectedItems),
                   onPrimary: context.palette.onPrimary,
                   primary: context.palette.primary,
-                  child: const Text("확인"),
+                  child: const Text('확인'),
                 ),
               ],
             ),

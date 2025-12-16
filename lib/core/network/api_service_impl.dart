@@ -13,10 +13,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 
-import 'api_service.dart';
-import 'dio_service.dart';
-import 'network_exception.dart';
-import 'token_interceptor.dart';
+import 'package:deepple_app/core/network/api_service.dart';
+import 'package:deepple_app/core/network/dio_service.dart';
+import 'package:deepple_app/core/network/network_exception.dart';
+import 'package:deepple_app/core/network/token_interceptor.dart';
 
 const _refreshTokenKey = 'refresh_token';
 
@@ -105,7 +105,7 @@ class ApiServiceImpl implements ApiService {
     bool requiresAccessToken = true,
   }) async {
     await _initCompleter.future;
-    final finalHeaders = <String, dynamic>{"Accept": "*/*", ...?headers};
+    final finalHeaders = <String, dynamic>{'Accept': '*/*', ...?headers};
 
     if (requiresAccessToken) {
       final accessToken = await ref.read(authUsecaseProvider).getAccessToken();
@@ -114,7 +114,7 @@ class ApiServiceImpl implements ApiService {
           .getEncrypted(SecureStorageItem.refreshToken);
 
       if (accessToken != null) {
-        finalHeaders['Authorization'] = "Bearer $accessToken";
+        finalHeaders['Authorization'] = 'Bearer $accessToken';
       }
       if (refreshToken != null) {
         finalHeaders['x-refresh-token'] = refreshToken;
@@ -184,7 +184,7 @@ class ApiServiceImpl implements ApiService {
         cancelToken: cancelToken,
       );
 
-      if (path.contains("/login")) {
+      if (path.contains('/login')) {
         await _handleLoginResponse(response);
       }
 
