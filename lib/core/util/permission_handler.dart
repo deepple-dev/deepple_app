@@ -52,7 +52,7 @@ class PermissionHandler with WidgetsBindingObserver {
         }(),
       };
     } catch (e) {
-      Log.e('request photo permsssion failed: $e');
+      Log.e('request photo permission failed: $e');
       return false;
     }
   }

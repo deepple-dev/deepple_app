@@ -47,7 +47,7 @@ abstract class Config {
       );
       await dotenv.load(fileName: 'assets/$envFile');
     } catch (e) {
-      Log.e('environment file load failed');
+      Log.e('environment file load failed: $e');
     }
 
     _enableGeneralLog =
