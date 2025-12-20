@@ -31,8 +31,6 @@ class ProfileImageUpdateNotifier extends _$ProfileImageUpdateNotifier {
     required int index,
     required XFile image,
   }) async {
-    Log.d('여기 진입함');
-
     try {
       // 현재 state 복사
       final updatedImages = [...state.profileImages];
@@ -74,8 +72,6 @@ class ProfileImageUpdateNotifier extends _$ProfileImageUpdateNotifier {
     copiedImages.removeAt(index);
 
     state = state.copyWith(profileImages: copiedImages, hasDeletion: true);
-
-    Log.d('삭제 후 state: $state');
   }
 
   /// 서버 업로드 + Hive에 저장된 데이터 삭제

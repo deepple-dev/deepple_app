@@ -38,10 +38,6 @@ class TokenInterceptor extends Interceptor with LogMixin {
     final authService = ref.read(authUsecaseProvider);
     final router = ref.read(routerProvider);
 
-    Log.e(
-      '[${err.requestOptions.method} ${err.requestOptions.path}] Api request failure: ${err.response}',
-    );
-
     if (err.response?.statusCode == 401) {
       final authService = ref.read(authUsecaseProvider);
       // TODO(helljh): token 갱신 시나리오
