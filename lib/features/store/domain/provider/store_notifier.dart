@@ -95,7 +95,7 @@ class StoreNotifier extends _$StoreNotifier {
           await inAppPurchase.completePurchase(purchase);
         }
       } else if (purchase.status == PurchaseStatus.error) {
-        debugPrint('❌ 구매 실패: ${purchase.error}');
+        Log.e('❌ 구매 실패: ${purchase.error}');
       }
     }
 
