@@ -40,9 +40,8 @@ class Photo extends _$Photo with ChangeNotifier, WidgetsBindingObserver {
       _isReturningFromSettings = false;
       // 설정에서 돌아온 후 권한 상태 확인
       _permissionHandler.checkPhotoPermissionStatus().then((isGranted) {
-        if (!isGranted) {
-          Log.i('설정에서 돌아온 후에도 권한이 허용되지 않았습니다.');
-        }
+        if (isGranted) return;
+        Log.i('request photos permission is failed');
       });
     } else if (state == AppLifecycleState.inactive) {
       // 앱이 비활성 상태로 전환되었 때 (예를 들어 설정 같은 다른 앱에 갔을 때)
@@ -68,12 +67,12 @@ class Photo extends _$Photo with ChangeNotifier, WidgetsBindingObserver {
       final permissionStatus = await _permissionHandler
           .checkPhotoPermissionStatus();
       if (!permissionStatus) {
-        Log.i('권한이 허용되지 않았습니다.');
+        Log.i('photo permission is not allowed');
         return null;
       }
       return await _imagePicker.pickImage(source: source);
     } catch (e) {
-      Log.e('사진 선택 중 오류 발생: $e');
+      Log.e('pick photo failed: $e');
       return null;
     }
   }
