@@ -242,8 +242,8 @@ class TokenInterceptor extends Interceptor with LogMixin {
   void _logError(DioException err) {
     final method = err.requestOptions.method;
     final path = err.requestOptions.path;
-    final response = err.response;
+    final message = err.response?.statusMessage;
 
-    Log.e('[$method $path] API 에러: $response');
+    Log.e('[$method $path] API 에러: $message');
   }
 }
