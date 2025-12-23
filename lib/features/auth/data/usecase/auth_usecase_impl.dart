@@ -56,9 +56,7 @@ class AuthUseCaseImpl with LogMixin implements AuthUseCase {
   }
 
   @override
-  Future<bool> signOut({
-    bool isTokenExpiredSignOut = false,
-  }) async {
+  Future<bool> signOut({bool isTokenExpiredSignOut = false}) async {
     try {
       final uri = Uri.parse(Config.baseUrl);
       final cookieJar = _apiService.cookieJar;
@@ -68,9 +66,10 @@ class AuthUseCaseImpl with LogMixin implements AuthUseCase {
           // 서버 로그아웃 먼저 처리
           await _userRepository.signOut();
         } catch (e) {
-          Log.e("서버 로그아웃 실패");
+          Log.e('서버 로그아웃 실패');
           return false; // 실패 시 로그아웃 불가
         }
+      }
 
       try {
         // 로컬 데이터는 성공/삭제 여부 상관없이 로그아웃 처리

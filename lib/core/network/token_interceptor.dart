@@ -5,6 +5,7 @@ import 'package:deepple_app/core/mixin/log_mixin.dart';
 import 'package:deepple_app/core/storage/local_storage.dart';
 import 'package:deepple_app/core/storage/local_storage_item.dart';
 import 'package:deepple_app/core/util/log.dart';
+import 'package:deepple_app/core/util/toast.dart';
 import 'package:deepple_app/features/auth/data/usecase/auth_usecase_impl.dart';
 import 'package:deepple_app/app/router/routing.dart';
 import 'package:dio/dio.dart';
@@ -102,16 +103,13 @@ class TokenInterceptor extends Interceptor with LogMixin {
     Map<String, List<String>> headers,
   ) async {
     final newAccessToken = _extractAccessToken(headers);
-    final newRefreshToken = await _extractAndSaveRefreshToken(headers);
+    await _extractAndSaveRefreshToken(headers);
 
     if (newAccessToken != null) {
       _saveAccessToken(newAccessToken);
       return newAccessToken;
     }
 
-    if (newRefreshToken != null) {
-      Log.d('새 리프레시 토큰 저장완료!!');
-    }
     return null;
   }
 
@@ -127,13 +125,13 @@ class TokenInterceptor extends Interceptor with LogMixin {
   }
 
   /// Refresh Token 추출 및 저장
-  Future<String?> _extractAndSaveRefreshToken(
+  Future<void> _extractAndSaveRefreshToken(
     Map<String, List<String>> headers,
   ) async {
     final setCookieList = headers[_setCookieHeader];
 
     if (setCookieList == null || setCookieList.isEmpty) {
-      return null;
+      return;
     }
 
     // CookieJar에 쿠키 저장
@@ -151,10 +149,10 @@ class TokenInterceptor extends Interceptor with LogMixin {
       await _ref
           .read(localStorageProvider)
           .saveEncrypted(SecureStorageItem.refreshToken, refreshToken);
-      return refreshToken;
+      return;
     }
 
-    return null;
+    return;
   }
 
   /// 쿠키 리스트에서 Refresh Token 추출
@@ -176,7 +174,6 @@ class TokenInterceptor extends Interceptor with LogMixin {
     _ref
         .read(localStorageProvider)
         .saveEncrypted(SecureStorageItem.accessToken, token);
-    Log.d('새 엑세스 토큰 저장완료!!');
   }
 
   /// 재요청이 필요한지 판단
@@ -212,7 +209,6 @@ class TokenInterceptor extends Interceptor with LogMixin {
 
       newOptions.headers[_authorizationHeader] = '$_bearerPrefix$accessToken';
 
-      Log.d('토큰 갱신 후 재요청 시도');
       return await _dio.fetch(newOptions);
     } catch (e) {
       Log.e('재요청 실패: $e');
@@ -235,12 +231,11 @@ class TokenInterceptor extends Interceptor with LogMixin {
 
   /// 401 에러 처리 (로그아웃)
   Future<void> _handleUnauthorizedError() async {
-    Log.d('401 Unauthorized: 로컬 데이터 초기화 및 로그아웃');
-
     await _ref.read(authUsecaseProvider).signOut(isTokenExpiredSignOut: true);
 
     final router = _ref.read(routerProvider);
     router.goNamed(AppRoute.onboard.name);
+    showToastMessage('장시간 미접속으로 인해 로그아웃 되었습니다.');
   }
 
   /// API 에러 로깅
