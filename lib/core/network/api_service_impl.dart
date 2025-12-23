@@ -70,12 +70,23 @@ class ApiServiceImpl implements ApiService {
           connectTimeout: timeout,
           receiveTimeout: timeout,
         ),
-        [
-          if (enableAuth) TokenInterceptor(ref),
-          LoggingInterceptor(),
-          CookieManager(_cookieJar),
-        ],
       );
+
+      if (enableAuth) {
+        _dioService.interceptors.add(
+          TokenInterceptor(
+            ref: ref,
+            dio: _dioService,
+            cookieJar: cookieJar,
+          ),
+        );
+      }
+
+      if (!kReleaseMode) {
+        _dioService.interceptors.add(LoggingInterceptor());
+      }
+
+      _dioService.interceptors.add(CookieManager(_cookieJar));
     } catch (e, st) {
       Log.e('초기화 실패: $e', stackTrace: st);
       if (!_initCompleter.isCompleted) {

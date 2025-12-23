@@ -40,15 +40,11 @@ class _OnboardingCertificationPageState
   void initState() {
     super.initState();
     _notifier = ref.read(onboardingProvider.notifier);
-    Future.microtask(() async {
-      _notifier = ref.read(onboardingProvider.notifier);
-      final isCodeSended = await _notifier.sendVerificationCode(
-        widget.phoneNumber,
-      );
 
-      if (!isCodeSended) return;
-    });
+    // 인증 코드 전송
+    _notifier.sendVerificationCode(widget.phoneNumber);
 
+    // 입력값 검증 리스너
     _codeController.addListener(() {
       _notifier.validateInput(_codeController.text);
     });

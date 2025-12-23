@@ -56,17 +56,19 @@ class AuthUseCaseImpl with LogMixin implements AuthUseCase {
   }
 
   @override
-  Future<bool> signOut() async {
+  Future<bool> signOut({bool isTokenExpiredSignOut = false}) async {
     try {
       final uri = Uri.parse(Config.baseUrl);
       final cookieJar = _apiService.cookieJar;
 
-      try {
-        // 서버 로그아웃 먼저 처리
-        await _userRepository.signOut();
-      } catch (e) {
-        Log.e('서버 로그아웃 실패');
-        return false; // 실패 시 로그아웃 불가
+      if (!isTokenExpiredSignOut) {
+        try {
+          // 서버 로그아웃 먼저 처리
+          await _userRepository.signOut();
+        } catch (e) {
+          Log.e('서버 로그아웃 실패');
+          return false; // 실패 시 로그아웃 불가
+        }
       }
 
       try {
