@@ -420,7 +420,6 @@ class _MessageSendConfirm extends StatelessWidget {
             const Gap(17.0),
             CommonButtonGroup.custom(
               onCancel: context.pop,
-              enabledSubmit: _isEnoughPoint,
               onSubmit: () async {
                 context.pop();
                 onMessageSend();
@@ -452,7 +451,6 @@ class _MessageSendConfirm extends StatelessWidget {
             const Gap(24.0),
             CommonButtonGroup.custom(
               onCancel: context.pop,
-              enabledSubmit: _isEnoughPoint,
               onSubmit: () async {
                 context.pop();
                 navigate(context, route: AppRoute.store);
