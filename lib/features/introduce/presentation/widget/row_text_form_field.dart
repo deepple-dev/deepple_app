@@ -51,38 +51,38 @@ class _RowTextFormFieldState extends State<RowTextFormField> {
       textStyle: widget.textStyle,
       context: context,
       label: widget.label,
-      child: _buildSelectionField(),
-    );
-  }
-
-  Widget _buildSelectionField() {
-    return GestureDetector(
-      onTap: () => showDialog(
-        context: context,
-        builder: (context) => MultiBtnSelectDialog(
-          btnNames: addressData.cities.map((e) => e.label).toList(),
-          maxSelectableCount: 2,
-          title: '선호 지역',
-          selectedValues: selectedValues,
-          onSubmit: (selectedItems) {
-            widget.onSubmit(selectedItems);
-            if (context.mounted) {
-              context.pop();
-            }
-          },
+      child: GestureDetector(
+        onTap: () => showDialog(
+          context: context,
+          builder: (context) => MultiBtnSelectDialog(
+            btnNames: addressData.cities.map((e) => e.label).toList(),
+            maxSelectableCount: 2,
+            title: '선호 지역',
+            selectedValues: selectedValues,
+            onSubmit: (selectedItems) {
+              widget.onSubmit(selectedItems);
+              if (context.mounted) {
+                context.pop();
+              }
+            },
+          ),
         ),
-      ),
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Palette.colorGrey100,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Text(
-          selectedValues.isEmpty ? widget.hintText : selectedValues.join(", "),
-          style: Fonts.body02Regular(
-            selectedValues.isEmpty ? Palette.colorGrey500 : Palette.colorBlack,
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: Palette.colorGrey100,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Text(
+            selectedValues.isEmpty
+                ? widget.hintText
+                : selectedValues.join(", "),
+            style: Fonts.body02Regular(
+              selectedValues.isEmpty
+                  ? Palette.colorGrey500
+                  : Palette.colorBlack,
+            ),
           ),
         ),
       ),

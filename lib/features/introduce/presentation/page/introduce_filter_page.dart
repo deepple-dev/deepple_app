@@ -40,11 +40,9 @@ class IntroduceFilterPageState extends ConsumerState<IntroduceFilterPage> {
       appBar: DefaultAppBar(
         title: '필터 설정',
         leadingAction: (context) {
-          // 초기화
           filterNotifer.initChangedState();
-          if (context.mounted) {
-            context.pop();
-          }
+          if (!context.mounted) return;
+          context.pop();
         },
       ),
       body: Column(
