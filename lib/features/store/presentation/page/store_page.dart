@@ -46,7 +46,7 @@ class StorePageState extends AppBaseConsumerStatefulPageState<StorePage> {
     return Stack(
       children: [
         Scaffold(
-          appBar: const DefaultAppBar(title: "스토어"),
+          appBar: const DefaultAppBar(title: '스토어'),
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

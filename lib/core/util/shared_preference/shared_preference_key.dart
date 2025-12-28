@@ -22,18 +22,18 @@ class SharedPreferenceKeys {
 
   /// 셀프소개 필터 - 나이
   static const preferredAgeStart = SharedPreferencePrimitiveKey<int>(
-    "preferredAgeStart",
+    'preferredAgeStart',
     defaultValue: 27,
   );
 
   static const preferredAgeEnd = SharedPreferencePrimitiveKey<int>(
-    "preferredAgeEnd",
+    'preferredAgeEnd',
     defaultValue: 32,
   );
 
   /// 셀프소개 필터 - 선호 지역(한글)
   static const preferredCities = SharedPreferencePrimitiveKey<List<String>>(
-    "preferredCities",
+    'preferredCities',
     defaultValue: [],
   );
 
@@ -51,7 +51,7 @@ class SharedPreferenceKeys {
   ///
   /// 2 - female
   static const showAllGender = SharedPreferencePrimitiveKey<int>(
-    "showAllGender",
+    'showAllGender',
     defaultValue: 0,
   );
 }

@@ -1,34 +1,30 @@
 import 'dart:convert';
 
-import 'api_service.dart';
+import 'package:deepple_app/core/util/log.dart';
 import 'package:dio/dio.dart';
-
-import '../util/log.dart';
+import 'package:flutter/foundation.dart';
 
 class LoggingInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    final String httpMethod = options.method;
+    final buffer = StringBuffer();
+    buffer.writeln('[REQ] ${options.method} ${options.path}');
 
-    _printHeader(title: httpMethod, text: options.uri.toString());
-
-    if (options.headers.isNotEmpty) {
-      _printBody(
-        'Headers:\n${options.headers.entries.map((e) => '\t${e.key}: ${e.value}').join('\n')}',
-      );
+    if (!kReleaseMode) {
+      if (options.headers.isNotEmpty) {
+        buffer.writeln('- headers: ${_prettyJson(options.headers)}');
+      }
+      if (options.queryParameters.isNotEmpty) {
+        buffer.writeln(
+          '- queryParams: ${_prettyJson(options.queryParameters)}',
+        );
+      }
+      if (options.data != null) {
+        buffer.writeln('- body: ${_prettyJson(options.data)}');
+      }
     }
 
-    if (options.queryParameters.isNotEmpty) {
-      _printBody(
-        'QueryParameters:\n${options.queryParameters.entries.map((e) => '\t${e.key}: ${e.value}').join('\n')}',
-      );
-    }
-
-    if (options.data is Json) {
-      _printBody('Body:\n\t${_getBody(options.data)}');
-    }
-
-    _printFooter(title: httpMethod);
+    Log.i(buffer.toString().trim());
     super.onRequest(options, handler);
   }
 
@@ -37,124 +33,49 @@ class LoggingInterceptor extends Interceptor {
     Response<dynamic> response,
     ResponseInterceptorHandler handler,
   ) {
-    final RequestOptions options = response.requestOptions;
-    final String httpMethod = options.method;
-
-    _printHeader(
-      title: '$httpMethod ❱➤ ${response.statusCode} ${response.statusMessage}',
-      text: options.uri.toString(),
-      type: 1,
+    final buffer = StringBuffer();
+    buffer.writeln(
+      '[RES] ${response.requestOptions.method} ${response.requestOptions.path}',
     );
+    buffer.writeln('- statusCode: ${response.statusCode}');
 
-    if (response.data is Json || response.data is Iterable) {
-      _printBody('Response:', type: 1);
-      _printBody('\t${_getBody(response.data)}', type: 1);
+    if (!kReleaseMode) {
+      if (response.data != null) {
+        buffer.writeln('- body: ${_prettyJson(response.data)}');
+      }
     }
-    _printFooter(title: httpMethod, type: 1);
-
+    Log.i(buffer.toString().trim());
     return super.onResponse(response, handler);
   }
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
-    final RequestOptions options = err.requestOptions;
-    final String httpMethod = options.method;
-
-    _printHeader(
-      title:
-          '$httpMethod ❱➤ ${err.response?.statusCode} ${err.response?.statusMessage}',
-      text: options.uri.toString(),
-      type: 2,
+    final buffer = StringBuffer();
+    buffer.writeln(
+      '[ERR] ${err.requestOptions.method} ${err.requestOptions.path}',
     );
+    if (err.response != null) {
+      buffer.writeln('- statusCode: ${err.response?.statusCode}');
+    }
+    buffer.writeln('- error: ${err.error}');
 
-    if (err.response?.data is Json || err.response?.data is Iterable) {
-      _printBody('Response:', type: 2);
-      _logPrint(Log.prettyJson(err.response?.data), type: 2);
+    if (!kReleaseMode) {
+      if (err.response?.data != null) {
+        buffer.writeln('- body: ${_prettyJson(err.response!.data)}');
+      }
     }
 
-    _printFooter(title: httpMethod, type: 2);
-
-    try {
-      _logPrint(cURLRepresentation(err.requestOptions), type: 3);
-    } catch (error) {
-      _logPrint('Unable to create a cURL representation: $error', type: 3);
-    }
-
+    Log.e(buffer.toString().trim());
     return super.onError(err, handler);
   }
 
-  void _logPrint(String message, {int type = 0}) {
-    final String color;
-    switch (type) {
-      case 0:
-        color = '\x1B[33m';
-        break; // Yellow
-      case 1:
-        color = '\x1B[32m';
-        break; // Green
-      case 2:
-        color = '\x1B[31m';
-        break; // Red
-      default:
-        color = '';
-        break; // Default
+  String _prettyJson(dynamic data) {
+    try {
+      final jsonString = jsonEncode(data);
+      const encoder = JsonEncoder.withIndent('  ');
+      return encoder.convert(jsonDecode(jsonString));
+    } catch (e) {
+      return data.toString();
     }
-    const resetColor = '\x1B[0m';
-    Log.log('$color$message$resetColor', name: 'Dio');
-  }
-
-  void _printHeader({String? title, String? text, int type = 0}) {
-    _logPrint('╔╣ $title', type: type);
-    _logPrint('║ $text', type: type);
-  }
-
-  void _printBody(String? content, {int type = 0}) {
-    _logPrint('║ $content', type: type);
-  }
-
-  void _printFooter({String? title, int type = 0}) {
-    _logPrint('╚═ END $title', type: type);
-  }
-
-  String _getBody(dynamic data, {int maxLength = 200}) {
-    final body = jsonEncode(data);
-    return body.length > maxLength
-        ? '${body.substring(0, maxLength)}... (truncated)'
-        : body;
-  }
-
-  String cURLRepresentation(RequestOptions request) {
-    final List<String> components = [
-      "curl --request ${request.method.toUpperCase()} '${request.uri}'",
-      ...request.headers.entries
-          .where((e) => !e.key.contains('content-length'))
-          .map((e) => "--header '${e.key}: ${e.value}'"),
-    ];
-
-    if (request.contentType?.contains(Headers.formUrlEncodedContentType) ??
-        false) {
-      components.addAll(
-        (request.data as Json).entries.map(
-          (e) => "--data-urlencode '${e.key}=${e.value}'",
-        ),
-      );
-    } else if (request.contentType?.contains(
-          Headers.multipartFormDataContentType,
-        ) ??
-        false) {
-      final FormData formData = request.data as FormData;
-      components.addAll(
-        formData.fields.map((e) => "--form '${e.key}=\"${e.value}\"'"),
-      );
-      components.addAll(
-        formData.files.map(
-          (e) => "--form '${e.key}=\"@mock-path/${e.value.filename}\"'",
-        ),
-      );
-    } else if (request.data != null) {
-      components.add("--data '${_getBody(request.data)}'");
-    }
-
-    return components.join(' \\\n');
   }
 }

@@ -43,7 +43,7 @@ class GlobalNotifier extends _$GlobalNotifier {
       final profile = await fetchProfileToHiveFromServer();
       state = state.copyWith(profile: profile);
     } catch (e) {
-      Log.e('Failed to initialize profile: $e');
+      Log.e('initialize profile request failed: $e');
     }
   }
 
@@ -58,11 +58,11 @@ class GlobalNotifier extends _$GlobalNotifier {
           .read(fetchUserHeartBalanceUseCaseProvider)
           .execute();
 
-      Log.d('가져온 하트 수: $heartBalance');
+      Log.d('fetched heart point: $heartBalance');
 
       state = state.copyWith(heartBalance: heartBalance);
     } catch (e) {
-      Log.d('보유 하트 수 가져오기 실패: $e');
+      Log.e('fetch heart point failed: $e');
     }
   }
 
@@ -81,7 +81,7 @@ class GlobalNotifier extends _$GlobalNotifier {
   }
 
   Future<void> clearLocalData() async {
-    Log.d('clearLocalData 진입함');
+    Log.d('start clearLocalData');
     // CachedUserProfile 박스 열기 또는 참조
     final profileBox = await Hive.openBox<CachedUserProfile>(
       CachedUserProfile.boxName,
@@ -105,21 +105,22 @@ class GlobalNotifier extends _$GlobalNotifier {
       await myProfileImagesBox.clear();
       await myProfileImagesBox.close();
     } catch (e) {
-      Log.d('Hive 데이터 삭제 시 오류 발생: $e');
+      Log.d('clear Hive data failed: $e');
     }
 
     try {
       // FlutterSecureStorage에 저장된 데이터 모두 삭제
       await ref.read(localStorageProvider).clearEncrypted();
     } catch (e) {
-      Log.d('FlutterSecureStorage 데이터 삭제 중 오류 발생: $e');
+      Log.d('clear FlutterSecureStorage data failed: $e');
     }
 
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.clear(); // 앱 내 모든 SharedPreference 데이터 삭제
     } catch (e) {
-      Log.d('SharedPreference 데이터 삭제 중 오류 발생: $e');
+      Log.d('clear SharedPreference data failed: $e');
     }
+    Log.d('end clearLocalData');
   }
 }

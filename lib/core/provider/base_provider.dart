@@ -1,7 +1,8 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+
+import 'package:deepple_app/core/util/log.dart';
 
 /*
 비동기 작업을 실행하기 전에 onStart, 성공 시 onSuccess, 실패 시 onError,
@@ -31,12 +32,12 @@ abstract class BaseNotifier<T> extends AsyncNotifier<T> {
       // 에러 알람 toast로 띄우기
       if (showToastOnError) {
         Fluttertoast.showToast(
-          msg: "Error: $e",
+          msg: 'Error: $e',
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
         );
       }
-      debugPrint("Error: $e\nStackTrace: $stackTrace");
+      Log.e('Error in BaseNotifier: ${e.runtimeType}');
     } finally {
       if (onComplete != null) await onComplete();
     }
@@ -65,7 +66,7 @@ class ExampleNotifier extends BaseNotifier<String> {
       },
       onSuccess: () async {
         // 성공 시 로그
-        debugPrint("Data loaded successfully.");
+        Log.d("Data loaded successfully.");
       },
       onError: (error) async {
         // 에러 발생 시 상태 설정

@@ -8,7 +8,7 @@ import 'package:deepple_app/features/interview/domain/usecase/interview_update_u
 import 'package:deepple_app/features/interview/domain/usecase/save_interview_to_hive_usecase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import 'interview_state.dart';
+import 'package:deepple_app/features/interview/domain/provider/interview_state.dart';
 
 part 'interview_notifier.g.dart';
 
@@ -64,7 +64,7 @@ class InterviewNotifier extends _$InterviewNotifier {
         ref,
       ).call(questionId: questionId, answerContent: answerContent);
 
-      final isSuccess = response.code == "200";
+      final isSuccess = response.code == '200';
       if (isSuccess) {
         await _saveInterviewToHive(questionId, question, answerContent);
       }

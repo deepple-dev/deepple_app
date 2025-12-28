@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
-import 'widget.dart';
+import 'package:deepple_app/features/profile/presentation/widget/widget.dart';
 
 class SkeletonProfile extends StatelessWidget {
   const SkeletonProfile({super.key});

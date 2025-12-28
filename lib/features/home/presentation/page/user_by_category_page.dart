@@ -94,7 +94,7 @@ class _UserByCategoryPageState extends ConsumerState<UserByCategoryPage> {
       final pressed = await showDialog<bool>(
         context: context,
         builder: (context) => UnlockWithHeartDialog(
-          description: "소개 받으시겠습니까?",
+          description: '소개 받으시겠습니까?',
           heartBalance: heartBalance,
           isMale: isMale,
         ),

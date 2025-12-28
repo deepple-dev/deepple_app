@@ -12,7 +12,7 @@ class InterviewAnswerTagWidget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
       decoration: BoxDecoration(
         color: isAnswered ? context.palette.primary : Palette.colorGrey100,
-        borderRadius: BorderRadius.all(Radius.circular(5)),
+        borderRadius: const BorderRadius.all(Radius.circular(5)),
       ),
       child: Text(
         isAnswered ? '답변 완료 🎉' : '미답변',

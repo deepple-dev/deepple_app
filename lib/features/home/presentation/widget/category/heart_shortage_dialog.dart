@@ -28,12 +28,12 @@ class HeartShortageDialog extends StatelessWidget {
           child: Column(
             children: [
               Text(
-                "하트가 부족해요!",
+                '하트가 부족해요!',
                 style: Fonts.header02().copyWith(fontWeight: FontWeight.w700),
               ),
               const Gap(12),
               Text(
-                "보유한 하트 : $heartBalance",
+                '보유한 하트 : $heartBalance',
                 style: Fonts.body02Medium().copyWith(
                   fontWeight: FontWeight.w400,
                 ),
@@ -50,7 +50,7 @@ class HeartShortageDialog extends StatelessWidget {
                         primary: Colors.white,
                         border: const BorderSide(color: Color(0xffE1E1E1)),
                         child: Text(
-                          "취소",
+                          '취소',
                           style: Fonts.body02Medium().copyWith(
                             fontWeight: FontWeight.w400,
                             color: Palette.colorBlack,
@@ -68,7 +68,7 @@ class HeartShortageDialog extends StatelessWidget {
                         },
                         primary: Palette.colorPrimary500,
                         child: Text(
-                          "하트 충전하러 가기",
+                          '하트 충전하러 가기',
                           style: Fonts.body02Medium().copyWith(
                             fontWeight: FontWeight.w600,
                             color: Colors.white,

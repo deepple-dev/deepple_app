@@ -5,8 +5,8 @@ import 'package:deepple_app/features/message_list/presentation/page/message_list
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'empty_message.dart';
-import 'message_list_item.dart';
+import 'package:deepple_app/features/message_list/presentation/widget/empty_message.dart';
+import 'package:deepple_app/features/message_list/presentation/widget/message_list_item.dart';
 
 class MessageListBody extends ConsumerStatefulWidget {
   const MessageListBody({super.key});

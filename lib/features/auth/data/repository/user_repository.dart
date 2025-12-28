@@ -20,8 +20,8 @@ class UserRepository extends BaseRepository {
     final Map<String, dynamic> json = await apiService.postJson(
       '$path/login',
       data: {
-        "phoneNumber": data.phoneNumber.removePhoneFormat,
-        "code": data.code,
+        'phoneNumber': data.phoneNumber.removePhoneFormat,
+        'code': data.code,
       },
       requiresAccessToken: false,
     );
@@ -44,9 +44,9 @@ class UserRepository extends BaseRepository {
     try {
       await apiService.putJson('$path/profile', data: requestData.toJson());
 
-      Log.d("프로필 업데이트 성공");
+      Log.d('프로필 업데이트 성공');
     } catch (e, st) {
-      Log.e("프로필 업데이트 실패", errorObject: e, stackTrace: st);
+      Log.e('프로필 업데이트 실패', errorObject: e, stackTrace: st);
       rethrow;
     }
   }
@@ -60,9 +60,10 @@ class UserRepository extends BaseRepository {
 
   // 인증코드 발송
   Future<void> sendVerificationCode({required String phoneNumber}) async {
-    await apiService.getJson(
-      '$path/code?phoneNumber=${phoneNumber.removePhoneFormat}',
+    await apiService.postJson(
+      '$path/code',
       requiresAccessToken: false,
+      data: {'phoneNumber': phoneNumber.removePhoneFormat},
     );
   }
 

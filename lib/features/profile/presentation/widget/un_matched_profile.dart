@@ -5,7 +5,7 @@ import 'package:deepple_app/features/profile/domain/provider/profile_notifier.da
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'widget.dart';
+import 'package:deepple_app/features/profile/presentation/widget/widget.dart';
 
 class UnMatchedProfile extends StatelessWidget {
   const UnMatchedProfile({

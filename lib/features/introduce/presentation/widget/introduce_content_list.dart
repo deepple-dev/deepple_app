@@ -58,7 +58,7 @@ class _IntroduceContentListState extends ConsumerState<IntroduceContentList> {
         _isLoadingMore = false;
       });
     } catch (e) {
-      Log.e("셀프소개 추가 조회 시 오류 발생 : $e");
+      Log.e('셀프소개 추가 조회 시 오류 발생 : $e');
     } finally {
       _isLoadingMore = false;
     }

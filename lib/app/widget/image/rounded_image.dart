@@ -2,10 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../constants/constants.dart';
-import '../../../core/util/string_util.dart';
-import '../view/default_progress_indicator.dart';
-import 'error_image.dart';
+import 'package:deepple_app/app/constants/constants.dart';
+import 'package:deepple_app/core/util/string_util.dart';
+import 'package:deepple_app/app/widget/view/default_progress_indicator.dart';
+import 'package:deepple_app/app/widget/image/error_image.dart';
 
 class RoundedImage extends ConsumerWidget {
   const RoundedImage({

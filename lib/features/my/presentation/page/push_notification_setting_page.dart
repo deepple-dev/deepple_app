@@ -4,7 +4,7 @@ import 'package:deepple_app/features/my/presentation/provider/my_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../provider/my_setting_notifier.dart';
+import 'package:deepple_app/features/my/presentation/provider/my_setting_notifier.dart';
 
 class PushNotificationSettingPage extends ConsumerWidget {
   const PushNotificationSettingPage({super.key});
@@ -14,12 +14,12 @@ class PushNotificationSettingPage extends ConsumerWidget {
     final provider = ref.watch(mySettingProvider);
     return provider.when(
       data: (settings) => Scaffold(
-        appBar: const DefaultAppBar(title: "푸쉬알림 설정"),
+        appBar: const DefaultAppBar(title: '푸쉬알림 설정'),
         body: SafeArea(
           child: Column(
             children: [
               _LabelSwitchRow(
-                label: "앱푸시 알림을 설정하시면\n새로운 메시지, 관심을 받는 즉시 알려드려요",
+                label: '앱푸시 알림을 설정하시면\n새로운 메시지, 관심을 받는 즉시 알려드려요',
                 value: settings.notificationEnabled,
                 onChanged: (_) => ref
                     .read(mySettingProvider.notifier)
@@ -88,7 +88,7 @@ class _LabelSwitchRow extends StatelessWidget {
             child: Switch(
               inactiveTrackColor: const Color(0xffDEDEDE),
               inactiveThumbImage: const AssetImage(
-                "assets/icons/inactive_thumb_image.svg",
+                'assets/icons/inactive_thumb_image.svg',
               ),
               value: value,
               onChanged: onChanged,

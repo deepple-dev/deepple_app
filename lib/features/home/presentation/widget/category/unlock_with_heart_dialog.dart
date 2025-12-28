@@ -45,7 +45,7 @@ class UnlockWithHeartDialog extends ConsumerWidget {
               ),
               const Gap(12),
               Text(
-                "보유한 하트: $heartBalance", // TODO: 하트 개수 가져오기
+                '보유한 하트: $heartBalance', // TODO: 하트 개수 가져오기
                 style: Fonts.body02Medium().copyWith(
                   fontWeight: FontWeight.w400,
                   color: const Color(0xff7E7E7E),
@@ -61,7 +61,7 @@ class UnlockWithHeartDialog extends ConsumerWidget {
                       primary: Colors.white,
                       border: const BorderSide(color: Color(0xffE1E1E1)),
                       child: Text(
-                        "취소",
+                        '취소',
                         style: Fonts.body02Medium().copyWith(
                           fontWeight: FontWeight.w400,
                           color: Palette.colorBlack,
@@ -83,8 +83,8 @@ class UnlockWithHeartDialog extends ConsumerWidget {
                           const Gap(4),
                           Text(
                             userProfile.isMale
-                                ? "${Dimens.maleIntroducedProfileOpenHeartCount}"
-                                : "${Dimens.femaleIntroducedProfileOpenHeartCount}",
+                                ? '${Dimens.maleIntroducedProfileOpenHeartCount}'
+                                : '${Dimens.femaleIntroducedProfileOpenHeartCount}',
                             style: Fonts.body02Medium().copyWith(
                               fontWeight: FontWeight.w600,
                               color: Colors.white,

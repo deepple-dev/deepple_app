@@ -1,4 +1,4 @@
-import '../util/log.dart';
+import 'package:deepple_app/core/util/log.dart';
 
 /// Common using log data, log error in class
 // mixin: 여러 클래스에 공통 기능을 추가할 수 있는 Dart의 기능

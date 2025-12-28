@@ -1,63 +1,40 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer' as dev;
+import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
 import 'package:deepple_app/core/config/config.dart';
 
 class Log {
+  // TODO(Han): Release 에서 Debug용 logger 하나 더 생성하기
   static final Logger _logger = Logger(
+    filter: _LogFilter(),
     printer: PrettyPrinter(
-      methodCount: 2, // 호출 스택 깊이
-      errorMethodCount: 8, // 에러 발생 시 출력할 스택 깊이
-      lineLength: 100, // 한 줄 길이 제한
-      colors: true, // 색상 적용 여부
-      printEmojis: true, // 이모지 사용 여부
+      methodCount: kReleaseMode ? 0 : 2,
+      errorMethodCount: 8,
+      lineLength: 100,
+      dateTimeFormat: DateTimeFormat.dateAndTime,
+      colors: false,
+      printEmojis: false,
     ),
+    level: kReleaseMode ? Level.info : Level.debug,
   );
 
-  // Config.enableGeneralLog 값이 true일 때만 로그 출력
-  static bool get _enableLog => Config.enableGeneralLog;
-
   /// 디버그 로그 출력 (Debug)
-  static void d(
-    Object? message, {
-    String? name,
-    DateTime? time,
-    int level = 0,
-  }) {
-    if (_enableLog) {
-      final logMessage = _formatMessage(message, name);
-      _logger.d(logMessage);
-      _logToDevConsole(logMessage, name, time, null, null, level);
-    }
+  static void d(Object? message, {String? name, DateTime? time}) {
+    final logMessage = _formatMessage(message, name);
+    _logger.d(logMessage);
   }
 
-  /// 정보 로그 출력 (Info)
-  static void i(
-    Object? message, {
-    String? name,
-    DateTime? time,
-    int level = 500,
-  }) {
-    if (_enableLog) {
-      final logMessage = _formatMessage(message, name);
-      _logger.i(logMessage);
-      _logToDevConsole(logMessage, name, time, null, null, level);
-    }
+  static void i(Object? message, {String? name, DateTime? time}) {
+    final logMessage = _formatMessage(message, name);
+    _logger.i(logMessage);
   }
 
   /// 경고 로그 출력 (Warning)
-  static void w(
-    Object? message, {
-    String? name,
-    DateTime? time,
-    int level = 800,
-  }) {
-    if (_enableLog) {
-      final logMessage = _formatMessage(message, name);
-      _logger.w(logMessage);
-      _logToDevConsole(logMessage, name, time, null, null, level);
-    }
+  static void w(Object? message, {String? name, DateTime? time}) {
+    final logMessage = _formatMessage(message, name);
+    _logger.w(logMessage);
   }
 
   /// 에러 로그 출력 (Error)
@@ -67,13 +44,9 @@ class Log {
     Object? errorObject,
     StackTrace? stackTrace,
     DateTime? time,
-    int level = 1000,
   }) {
-    if (_enableLog) {
-      final logMessage = _formatMessage(errorMessage, name);
-      _logger.e(logMessage, error: errorObject, stackTrace: stackTrace);
-      _logToDevConsole(logMessage, name, time, errorObject, stackTrace, level);
-    }
+    final logMessage = _formatMessage(errorMessage, name);
+    _logger.e(logMessage, error: errorObject, stackTrace: stackTrace);
   }
 
   /// JSON 포맷팅 메서드 (Pretty JSON)
@@ -82,7 +55,7 @@ class Log {
       return json.toString();
     }
     try {
-      final encoder = JsonEncoder.withIndent('\t');
+      const encoder = JsonEncoder.withIndent('\t');
       if (json is Map<String, dynamic> || json is List<dynamic>) {
         return encoder.convert(json);
       }
@@ -96,32 +69,23 @@ class Log {
   static void log(
     String message, {
     String? name,
-    int level = 0,
     Object? error,
     StackTrace? stackTrace,
     DateTime? time,
     int? sequenceNumber,
     Zone? zone,
   }) {
-    if (_enableLog) {
-      final logMessage = _formatMessage(message, name);
-      _logger.log(
-        Level.debug,
-        logMessage,
-        error: error,
-        stackTrace: stackTrace,
-      );
-      _logToDevConsole(
-        logMessage,
-        name,
-        time,
-        error,
-        stackTrace,
-        level,
-        sequenceNumber,
-        zone,
-      );
-    }
+    final logMessage = _formatMessage(message, name);
+    _logger.log(Level.debug, logMessage, error: error, stackTrace: stackTrace);
+    _logToDevConsole(
+      logMessage,
+      name,
+      time,
+      error,
+      stackTrace,
+      sequenceNumber,
+      zone,
+    );
   }
 
   /// `dev.log()`를 활용하여 기존 기능을 유지하는 보조 함수
@@ -131,7 +95,6 @@ class Log {
     DateTime? time,
     Object? error,
     StackTrace? stackTrace,
-    int level = 0,
     int? sequenceNumber,
     Zone? zone,
   ]) {
@@ -140,7 +103,7 @@ class Log {
       message,
       name: name ?? '',
       time: logTime,
-      level: level,
+      level: Level.debug.value,
       error: error,
       stackTrace: stackTrace,
       sequenceNumber: sequenceNumber,
@@ -148,8 +111,16 @@ class Log {
     );
   }
 
-  /// 로그 메시지를 일관되게 포맷하는 보조 함수
   static String _formatMessage(Object? message, String? name) {
     return name != null ? '[$name] $message' : '$message';
+  }
+}
+
+class _LogFilter extends LogFilter {
+  @override
+  bool shouldLog(LogEvent event) {
+    if (level == null) return false;
+
+    return event.level >= level!;
   }
 }

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:deepple_app/app/router/route_arguments.dart';
 import 'package:deepple_app/app/widget/dialogue/confirm_dialogue.dart';
 import 'package:deepple_app/core/util/toast.dart';
-import 'package:deepple_app/core/util/util.dart';
 import 'package:deepple_app/features/auth/data/data.dart';
 import 'package:deepple_app/features/contact_setting/domain/provider/contact_setting_notifier.dart';
 import 'package:deepple_app/features/onboarding/domain/enum/auth_status.dart';
@@ -41,15 +40,11 @@ class _OnboardingCertificationPageState
   void initState() {
     super.initState();
     _notifier = ref.read(onboardingProvider.notifier);
-    Future.microtask(() async {
-      _notifier = ref.read(onboardingProvider.notifier);
-      final isCodeSended = await _notifier.sendVerificationCode(
-        widget.phoneNumber,
-      );
 
-      if (!isCodeSended) return;
-    });
+    // 인증 코드 전송
+    _notifier.sendVerificationCode(widget.phoneNumber);
 
+    // 입력값 검증 리스너
     _codeController.addListener(() {
       _notifier.validateInput(_codeController.text);
     });

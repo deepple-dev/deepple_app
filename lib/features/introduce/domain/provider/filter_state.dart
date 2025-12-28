@@ -10,8 +10,8 @@ abstract class FilterState with _$FilterState {
   const FilterState._();
 
   String? get getGender => switch (selectedGender) {
-    Gender.male => "MALE",
-    Gender.female => "FEMALE",
+    Gender.male => 'MALE',
+    Gender.female => 'FEMALE',
     _ => null,
   };
 

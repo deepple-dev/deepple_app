@@ -18,17 +18,17 @@ class ServiceWithdrawPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: const DefaultAppBar(title: "서비스 탈퇴"),
+      appBar: const DefaultAppBar(title: '서비스 탈퇴'),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("서비스를 탈퇴 하시겠습니까?", style: Fonts.body01Medium()),
+              Text('서비스를 탈퇴 하시겠습니까?', style: Fonts.body01Medium()),
               const Gap(16),
               Text(
-                "서비스를 탈퇴할 경우 계정의 모든 정보와 구매/획득한 하트가 모두 삭제되며 복구할 수 없습니다.\n\n계정을 휴면전환 하시면 프로필이 상대방에게 노출되지 않으며 언제든지 해제할 수 있고 구매/획득한 하트는 1년동안 유지됩니다.",
+                '서비스를 탈퇴할 경우 계정의 모든 정보와 구매/획득한 하트가 모두 삭제되며 복구할 수 없습니다.\n\n계정을 휴면전환 하시면 프로필이 상대방에게 노출되지 않으며 언제든지 해제할 수 있고 구매/획득한 하트는 1년동안 유지됩니다.',
                 style: Fonts.body02Medium().copyWith(
                   color: const Color(0xff7E7E7E),
                   height: 1.5,
@@ -37,7 +37,7 @@ class ServiceWithdrawPage extends ConsumerWidget {
               const Spacer(),
               DefaultElevatedButton(
                 child: Text(
-                  "휴면 전환하기",
+                  '휴면 전환하기',
                   style: Fonts.body02Medium().copyWith(color: Colors.white),
                 ),
                 onPressed: () {
@@ -51,7 +51,7 @@ class ServiceWithdrawPage extends ConsumerWidget {
                 onPressed: () =>
                     navigate(context, route: AppRoute.withdrawReason),
                 child: Text(
-                  "서비스 탈퇴하기",
+                  '서비스 탈퇴하기',
                   style: Fonts.body02Medium().copyWith(
                     color: Palette.colorPrimary500,
                   ),

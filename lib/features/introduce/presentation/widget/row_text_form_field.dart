@@ -78,7 +78,7 @@ class _RowTextFormFieldState extends State<RowTextFormField> {
           child: Text(
             selectedValues.isEmpty
                 ? widget.hintText
-                : selectedValues.join(", "),
+                : selectedValues.join(', '),
             style: Fonts.body02Regular(
               selectedValues.isEmpty
                   ? Palette.colorGrey500

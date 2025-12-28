@@ -26,7 +26,7 @@ class _ServiceWithdrawReasonPageState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const DefaultAppBar(title: "서비스 탈퇴"),
+      appBar: const DefaultAppBar(title: '서비스 탈퇴'),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.only(
@@ -38,10 +38,10 @@ class _ServiceWithdrawReasonPageState
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("서비스를 탈퇴 하시는 이유를 알려주세요.", style: Fonts.body01Medium()),
+              Text('서비스를 탈퇴 하시는 이유를 알려주세요.', style: Fonts.body01Medium()),
               const Gap(16),
               Text(
-                "서비스 개선에 많은 도움이 됩니다",
+                '서비스 개선에 많은 도움이 됩니다',
                 style: Fonts.body02Medium().copyWith(
                   color: const Color(0xff7E7E7E),
                 ),
@@ -97,7 +97,7 @@ class _ServiceWithdrawReasonPageState
                     ? Palette.colorPrimary500
                     : const Color(0xffE9EBEC), //배경색
                 child: Text(
-                  "탈퇴하기",
+                  '탈퇴하기',
                   style: Fonts.body01Medium().copyWith(
                     fontWeight: FontWeight.w600,
                     color: _selectedReason != null
@@ -165,12 +165,12 @@ class _WithdrawConfirmDialogContent extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            "서비스 탈퇴",
+            '서비스 탈퇴',
             style: Fonts.header02().copyWith(fontWeight: FontWeight.w700),
           ),
           const Gap(16),
           Text(
-            "탈퇴 후 3개월간 재가입이 불가능합니다.\n정말로 서비스를 탈퇴하시겠습니까?",
+            '탈퇴 후 3개월간 재가입이 불가능합니다.\n정말로 서비스를 탈퇴하시겠습니까?',
             style: Fonts.body02Medium().copyWith(
               fontWeight: FontWeight.w400,
               color: const Color(0xff515151),

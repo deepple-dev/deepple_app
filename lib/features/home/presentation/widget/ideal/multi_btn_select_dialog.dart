@@ -90,9 +90,7 @@ class _MultiBtnSelectDialogState extends State<MultiBtnSelectDialog> {
                               spacing: 8.0, // 가로 간격
                               runSpacing: 8.0, // 세로 간격
                               children: widget.btnNames.map((tag) {
-                                bool isSelected = _selectedItems.contains(
-                                  tag,
-                                );
+                                bool isSelected = _selectedItems.contains(tag);
                                 return GestureDetector(
                                   behavior: HitTestBehavior.opaque,
                                   onTap: () => _toggleItem(tag),
@@ -110,9 +108,7 @@ class _MultiBtnSelectDialogState extends State<MultiBtnSelectDialog> {
                                             ? Palette.colorPrimary100
                                             : Palette.colorGrey200,
                                       ),
-                                      borderRadius: BorderRadius.circular(
-                                        12,
-                                      ),
+                                      borderRadius: BorderRadius.circular(12),
                                     ),
                                     child: Text(
                                       tag,
@@ -130,12 +126,13 @@ class _MultiBtnSelectDialogState extends State<MultiBtnSelectDialog> {
                         ),
                       ],
                     ),
+
                     DefaultElevatedButton(
                       padding: const EdgeInsets.symmetric(vertical: 8),
                       onPressed: () => widget.onSubmit(_selectedItems),
                       onPrimary: context.palette.onPrimary,
                       primary: context.palette.primary,
-                      child: const Text("확인"),
+                      child: const Text('확인'),
                     ),
                   ],
                 ),

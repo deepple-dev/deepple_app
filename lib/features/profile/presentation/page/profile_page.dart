@@ -9,8 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../domain/common/model.dart';
-import '../widget/widget.dart';
+import 'package:deepple_app/features/profile/domain/common/model.dart';
+import 'package:deepple_app/features/profile/presentation/widget/widget.dart';
 
 class ProfilePage extends ConsumerStatefulWidget {
   const ProfilePage({

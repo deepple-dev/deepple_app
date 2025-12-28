@@ -62,7 +62,7 @@ class IntroduceNotifier extends _$IntroduceNotifier {
       );
     } catch (e, s) {
       // TODO: 에러 처리
-      Log.e("셀프 소개 목록 조회 중 오류 발생 : $e");
+      Log.e('셀프 소개 목록 조회 중 오류 발생 : $e');
       state = AsyncError(e, s);
     }
   }
@@ -99,7 +99,7 @@ class IntroduceNotifier extends _$IntroduceNotifier {
       }
     } catch (e, s) {
       // TODO: 에러 처리
-      Log.e("셀프 소개 목록 조회 중 오류 발생 : $e");
+      Log.e('셀프 소개 목록 조회 중 오류 발생 : $e');
       state = AsyncError(e, s);
     }
   }
@@ -123,7 +123,7 @@ class IntroduceNotifier extends _$IntroduceNotifier {
       );
     } catch (e, s) {
       // TODO: 에러 처리
-      Log.e("내 셀프 소개 목록 조회 중 오류 발생 : $e");
+      Log.e('내 셀프 소개 목록 조회 중 오류 발생 : $e');
       state = AsyncError(e, s);
     }
   }
@@ -153,7 +153,7 @@ class IntroduceNotifier extends _$IntroduceNotifier {
       }
     } catch (e, s) {
       // TODO: 에러 처리
-      Log.e("내 셀프 소개 목록 조회 중 오류 발생 : $e");
+      Log.e('내 셀프 소개 목록 조회 중 오류 발생 : $e');
       state = AsyncError(e, s);
     }
   }
@@ -177,8 +177,8 @@ class IntroduceNotifier extends _$IntroduceNotifier {
   Future<void> deleteIntroduce(int id) async {
     try {
       await ref.read(deleteIntroduceUseCaseProvider).execute(id: id);
-    } catch (e, s) {
-      Log.e("Failed to delete introduce from server: $e");
+    } catch (e) {
+      Log.e('Failed to delete introduce from server: $e');
       rethrow;
     }
   }
