@@ -32,6 +32,7 @@ class _RowTextFormFieldState extends State<RowTextFormField> {
   @override
   void initState() {
     super.initState();
+    selectedValues = widget.initialValues;
   }
 
   @override
