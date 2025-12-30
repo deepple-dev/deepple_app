@@ -115,12 +115,12 @@ class _MessageSendBottomSheetState
                         .read(contactSettingProvider.notifier)
                         .registerContactSetting(method: method),
                   ),
-                  const Gap(32.0),
+                  const Gap(24.0),
                   _MessageSendForm(
                     expectedResultAfterSend: expectedResultAfterSend,
                     controller: _controller,
                   ),
-                  const Gap(32.0),
+                  const Gap(24.0),
                   _MessageButtonGroup(
                     onMessageSend: () =>
                         _onSubmit(messageReceived: messageReceived),
@@ -152,7 +152,7 @@ class _MessageSendBottomSheetState
           : '상대방도 관심을 표현했어요! 매칭 확률이 매우 높습니다.',
       expectedResultAfterSend: messageReceived
           ? '빠른 응답은 상대에게 좋은 이미지를 줄 수 있어요!'
-          : '상대방이 수락하면 서로의 연락처가 공개됩니다.',
+          : '진심이 담긴 메시지로 좋은 인상을 줄 수 있어요',
     );
   }
 
@@ -262,15 +262,12 @@ class _ContactSelectOption extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      spacing: 8.0,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Text('연락처 선택', style: Fonts.header03()),
-        const Gap(8.0),
-        Text(
-          '상대방이 데이트 신청을 수락하면 선택한 연락처만 보여줘요 ',
-          style: Fonts.body02Regular(context.colorScheme.secondary),
-        ),
-        const Gap(23.0),
+        const Gap(4.0),
+        Text('상대방이 데이트 신청을 수락하면 선택한 연락처만 보여줘요'),
+        const Gap(12.0),
         RadioGroup<ContactMethod>(
           groupValue: selected,
           onChanged: (value) {
@@ -339,9 +336,9 @@ class _MessageSendForm extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text('메시지 입력하기', style: Fonts.header03()),
-        const Gap(8.0),
+        const Gap(4.0),
         Text(expectedResultAfterSend),
-        const Gap(24.0),
+        const Gap(16.0),
         DefaultTextFormField(
           controller: controller,
           border: OutlineInputBorder(
@@ -404,62 +401,91 @@ class _MessageSendConfirm extends StatelessWidget {
         ),
         constraints: BoxConstraints(maxWidth: context.screenWidth * .8),
         padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 13.0),
-        child: _isEnoughPoint ? Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Gap(8.0),
-            Text('메시지 보내기', style: Fonts.header02()),
-            const Gap(12.0),
-            Text('보유한 하트: $hasPoint'),
-            const Gap(8.0),
-            const Text(
-              '3일 동안 상대방으로부터 응답이 없으면\n사용하신 하트를 100% 돌려드려요',
-              textAlign: TextAlign.center,
-            ),
-            const Gap(17.0),
-            CommonButtonGroup.custom(
-              onCancel: context.pop,
-              onSubmit: () async {
-                context.pop();
-                onMessageSend();
-              },
-              cancel: const Text('취소'),
-              submit: Text.rich(
-                TextSpan(
-                  children: [
-                    const WidgetSpan(
-                      child: Padding(
-                        padding: EdgeInsets.only(right: 4.0),
-                        child: DefaultIcon(IconPath.heartLine, size: 16.0),
+        child: _isEnoughPoint
+            ? Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Gap(8.0),
+                  Text('메시지 보내기', style: Fonts.header02()),
+                  const Gap(12.0),
+                  Text('보유한 하트: $hasPoint'),
+                  const Gap(8.0),
+                  const Text(
+                    '3일 동안 상대방으로부터 응답이 없으면\n사용하신 하트를 100% 돌려드려요',
+                    textAlign: TextAlign.center,
+                  ),
+                  const Gap(17.0),
+                  CommonButtonGroup.custom(
+                    onCancel: context.pop,
+                    onSubmit: () async {
+                      context.pop();
+                      onMessageSend();
+                    },
+                    cancel: Text(
+                      '취소',
+                      style: Fonts.body02Medium().copyWith(
+                        fontWeight: FontWeight.w400,
+                        color: Palette.colorBlack,
                       ),
                     ),
-                    TextSpan(text: needPoint.toString()),
-                  ],
-                ),
+                    submit: Text.rich(
+                      TextSpan(
+                        children: [
+                          const WidgetSpan(
+                            child: Padding(
+                              padding: EdgeInsets.only(right: 4.0),
+                              child: const DefaultIcon(
+                                IconPath.heart,
+                                size: 20,
+                              ),
+                            ),
+                          ),
+                          TextSpan(
+                            text: needPoint.toString(),
+                            style: Fonts.body02Medium().copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            : Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Gap(8.0),
+                  Text('하트가 부족해요!', style: Fonts.header02()),
+                  const Gap(12.0),
+                  Text('보유한 하트: $hasPoint'),
+                  const Gap(24.0),
+                  CommonButtonGroup.custom(
+                    onCancel: context.pop,
+                    onSubmit: () async {
+                      context.pop();
+                      navigate(context, route: AppRoute.store);
+                    },
+                    cancel: Text(
+                      '취소',
+                      style: Fonts.body02Medium().copyWith(
+                        fontWeight: FontWeight.w400,
+                        color: Palette.colorBlack,
+                      ),
+                    ),
+                    submit: Text(
+                      '하트 충전하기',
+                      style: Fonts.body02Medium().copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ) : Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Gap(8.0),
-            Text('하트가 부족해요!', style: Fonts.header02()),
-            const Gap(12.0),
-            Text('보유한 하트: $hasPoint'),
-            const Gap(24.0),
-            CommonButtonGroup.custom(
-              onCancel: context.pop,
-              onSubmit: () async {
-                context.pop();
-                navigate(context, route: AppRoute.store);
-              },
-              cancel: const Text('취소'),
-              submit: const Text('하트 충전하러 가기'),
-            ),
-          ],
-        ),
       ),
     );
   }
