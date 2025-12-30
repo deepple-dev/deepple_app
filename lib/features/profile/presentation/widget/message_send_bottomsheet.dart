@@ -262,7 +262,6 @@ class _ContactSelectOption extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Text('연락처 선택', style: Fonts.header03()),
         const Gap(4.0),
@@ -435,10 +434,7 @@ class _MessageSendConfirm extends StatelessWidget {
                           const WidgetSpan(
                             child: Padding(
                               padding: EdgeInsets.only(right: 4.0),
-                              child: const DefaultIcon(
-                                IconPath.heart,
-                                size: 20,
-                              ),
+                              child: DefaultIcon(IconPath.heart, size: 20),
                             ),
                           ),
                           TextSpan(
