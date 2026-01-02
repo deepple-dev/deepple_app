@@ -13,40 +13,35 @@ class MessageListPage extends StatelessWidget {
     return DefaultTabController(
       length: MessageTabType.values.length,
       child: Scaffold(
-        body: NestedScrollView(
-          headerSliverBuilder: (context, innerBoxIsScrolled) => [
-            SliverAppBar(
-              centerTitle: false,
-              title: Text(
-                '메시지',
-                style: Fonts.header03().copyWith(
-                  fontWeight: FontWeight.w700,
-                  height: 1.2,
-                ),
-              ),
-              actions: [const DefaultAppBarActionGroup()],
-              automaticallyImplyLeading: false,
-              pinned: false,
-              bottom: TabBar(
-                indicatorColor: Colors.black,
-                dividerColor: context.colorScheme.outline,
-                labelStyle: Fonts.body02Regular(
-                  Palette.colorGrey400,
-                ).copyWith(fontWeight: FontWeight.w600),
-                unselectedLabelStyle: Fonts.body02Regular(
-                  Palette.colorGrey400,
-                ).copyWith(fontWeight: FontWeight.w400),
-                unselectedLabelColor: context.colorScheme.secondary,
-                indicatorSize: TabBarIndicatorSize.tab,
-                labelColor: context.colorScheme.onSurface,
-                tabs: MessageTabType.values
-                    .map((value) => Tab(child: Text(value.label)))
-                    .toList(),
-              ),
+        appBar: AppBar(
+          centerTitle: false,
+          title: Text(
+            '메시지',
+            style: Fonts.header03().copyWith(
+              fontWeight: FontWeight.w700,
+              height: 1.2,
             ),
-          ],
-          body: const MessageListBody(),
+          ),
+          actions: [const DefaultAppBarActionGroup()],
+          automaticallyImplyLeading: false,
+          bottom: TabBar(
+            indicatorColor: Colors.black,
+            dividerColor: context.colorScheme.outline,
+            labelStyle: Fonts.body02Regular(
+              Palette.colorGrey400,
+            ).copyWith(fontWeight: FontWeight.w600),
+            unselectedLabelStyle: Fonts.body02Regular(
+              Palette.colorGrey400,
+            ).copyWith(fontWeight: FontWeight.w400),
+            unselectedLabelColor: context.colorScheme.secondary,
+            indicatorSize: TabBarIndicatorSize.tab,
+            labelColor: context.colorScheme.onSurface,
+            tabs: MessageTabType.values
+                .map((value) => Tab(child: Text(value.label)))
+                .toList(),
+          ),
         ),
+        body: const MessageListBody(),
       ),
     );
   }

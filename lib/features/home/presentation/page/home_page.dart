@@ -18,12 +18,10 @@ class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
 
   @override
-  HomePageState createState() => HomePageState();
+  ConsumerState<HomePage> createState() => _HomePageState();
 }
 
-class HomePageState extends BaseConsumerStatefulPageState<HomePage> {
-  HomePageState() : super(isAppBar: false, isHorizontalMargin: false);
-
+class _HomePageState extends ConsumerState<HomePage> {
   @override
   void initState() {
     super.initState();
@@ -32,7 +30,7 @@ class HomePageState extends BaseConsumerStatefulPageState<HomePage> {
   }
 
   @override
-  Widget buildPage(BuildContext context) {
+  Widget build(BuildContext context) {
     final homeStateAsync = ref.watch(homeProvider);
     final homeNotifier = ref.read(homeProvider.notifier);
 

@@ -8,8 +8,11 @@ import 'package:deepple_app/app/router/router.dart';
 import 'package:deepple_app/app/router/routing.dart';
 import 'package:deepple_app/core/notification/firebase_manager.dart';
 import 'package:deepple_app/core/notification/notification_model.dart';
+import 'package:deepple_app/core/provider/auth_expired_provider.dart';
 import 'package:deepple_app/core/storage/local_storage.dart';
 import 'package:deepple_app/core/util/log.dart';
+import 'package:deepple_app/core/util/toast.dart';
+import 'package:deepple_app/features/auth/data/usecase/auth_usecase_impl.dart';
 import 'package:deepple_app/features/contact_setting/domain/provider/contact_setting_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -37,6 +40,19 @@ class _AppState extends ConsumerState<App> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen<bool>(authExpiredProvider, (prev, next) async {
+      if (!next) return;
+
+      await ref.read(authUsecaseProvider).signOut(isTokenExpiredSignOut: true);
+
+      final router = ref.read(routerProvider);
+      router.goNamed(AppRoute.onboard.name);
+
+      showToastMessage('장시간 미접속으로 인해 로그아웃 되었습니다.');
+
+      ref.read(authExpiredProvider.notifier).reset();
+    });
+
     return ScreenUtilInit(
       designSize: const Size(360, 800),
       minTextAdapt: true,
