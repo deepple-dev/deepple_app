@@ -70,30 +70,14 @@ class _ProfileImageContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        SizedBox.square(
-          dimension: _profileImageSize,
-          child: DefaultImage(
-            imageURL: profile.profileUrl,
-            width: _profileImageSize,
-            borderRadius: _imageRadius,
-            fit: BoxFit.cover,
-          ),
-        ),
-        if (profile.isRecent)
-          const Positioned(
-            right: 8.0,
-            top: 8.0,
-            child: Badge(backgroundColor: Color(0xFF6CD4FF), smallSize: 8.0),
-          ),
-        if (profile.isMutual)
-          const Positioned(
-            right: 5.0,
-            bottom: 5.0,
-            child: DefaultIcon(IconPath.heart, size: 20.0),
-          ),
-      ],
+    return SizedBox.square(
+      dimension: _profileImageSize,
+      child: DefaultImage(
+        imageURL: profile.profileUrl,
+        width: _profileImageSize,
+        borderRadius: _imageRadius,
+        fit: BoxFit.cover,
+      ),
     );
   }
 

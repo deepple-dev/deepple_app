@@ -210,10 +210,10 @@ class DistrictMapper {
   };
 
   static const Map<String, Range> _ulsanCodeRanges = {
-    '중구': Range(44000, 44099),
-    '남구': Range(44600, 44799),
-    '동구': Range(44200, 44299),
-    '북구': Range(44000, 44099),
+    '동구': Range(44000, 44099),
+    '중구': Range(44500, 44599),
+    '남구': Range(44700, 44799),
+    '북구': Range(44200, 44299),
     '울주군': Range(44900, 45099),
   };
 

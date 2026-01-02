@@ -75,7 +75,7 @@ class SignUpPageState extends BaseConsumerStatefulPageState<SignUpPage> {
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque, // 빈 공간에서도 이벤트를 감지
-      onTap: FocusScope.of(context).unfocus, // 외부를 클릭했을 때 focus 해제
+      onTap: () => FocusScope.of(context).unfocus(), // 외부를 클릭했을 때 focus 해제
       child: Column(
         children: [
           Expanded(
