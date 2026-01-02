@@ -202,15 +202,15 @@ class DistrictMapper {
   };
 
   static const Map<String, Range> _gwangJuCodeRanges = {
-    '동구': Range(61400, 61499),
-    '서구': Range(61900, 61999),
-    '남구': Range(61600, 61729),
+    '동구': Range(61400, 61599),
+    '서구': Range(61900, 62199),
+    '남구': Range(61600, 61899),
     '북구': Range(61000, 61299),
     '광산구': Range(62200, 62449),
   };
 
   static const Map<String, Range> _ulsanCodeRanges = {
-    '동구': Range(44000, 44099),
+    '동구': Range(44000, 44199),
     '중구': Range(44500, 44599),
     '남구': Range(44700, 44799),
     '북구': Range(44200, 44299),
