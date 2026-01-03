@@ -42,20 +42,6 @@ class IntroduceDetailNotifier extends _$IntroduceDetailNotifier {
     return true;
   }
 
-  Future<void> setFavoriteType({
-    required int memberId,
-    required FavoriteType type,
-  }) async {
-    try {
-      await ref
-          .read(favoriteRepositoryProvider)
-          .requestFavorite(memberId, type: type);
-    } catch (e) {
-      Log.e('좋아요 설정 실패: $e');
-      rethrow;
-    }
-  }
-
   Future<bool> requestProfileExchange(int responderId) async {
     final repository = ref.read(profileRepositoryProvider);
 
