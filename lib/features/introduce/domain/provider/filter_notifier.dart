@@ -40,6 +40,7 @@ class FilterNotifier extends _$FilterNotifier {
         [];
 
     // TODO: 서버로부터 받은 선호나이를 반영해야함
+
     return FilterState(
       rangeValues: RangeValues(
         preferredAgeStart.toDouble(),
@@ -47,20 +48,26 @@ class FilterNotifier extends _$FilterNotifier {
       ),
       selectedCitys: preferredCities,
       selectedGender: selectedGender,
+      newRangeValues: RangeValues(
+        preferredAgeStart.toDouble(),
+        preferredAgeEnd.toDouble(),
+      ),
+      newSelectedCitys: preferredCities,
+      newSelectedGender: selectedGender,
       hasChanged: false,
     );
   }
 
   void updateRange(RangeValues values) {
-    state = state.copyWith(rangeValues: values, hasChanged: true);
+    state = state.copyWith(newRangeValues: values, hasChanged: true);
   }
 
   void updateCitys(List<String> citys) {
-    state = state.copyWith(selectedCitys: citys, hasChanged: true);
+    state = state.copyWith(newSelectedCitys: citys, hasChanged: true);
   }
 
   void updateGender(Gender? gender) {
-    state = state.copyWith(selectedGender: gender, hasChanged: true);
+    state = state.copyWith(newSelectedGender: gender, hasChanged: true);
   }
 
   void updateChanged(bool hasChanged) {
@@ -68,6 +75,11 @@ class FilterNotifier extends _$FilterNotifier {
   }
 
   void saveFilter() {
+    state = state.copyWith(
+      rangeValues: state.newRangeValues,
+      selectedCitys: state.newSelectedCitys,
+      selectedGender: state.newSelectedGender,
+    );
     SharedPreferenceManager.setValue(
       SharedPreferenceKeys.preferredAgeStart,
       state.rangeValues.start.toInt(),
@@ -89,6 +101,15 @@ class FilterNotifier extends _$FilterNotifier {
           : 0,
     );
 
-    state = state.copyWith(hasChanged: false);
+    initChangedState();
+  }
+
+  void initChangedState() {
+    state = state.copyWith(
+      newRangeValues: state.rangeValues,
+      newSelectedCitys: state.selectedCitys,
+      newSelectedGender: state.selectedGender,
+      hasChanged: false,
+    );
   }
 }

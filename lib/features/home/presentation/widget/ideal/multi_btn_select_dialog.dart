@@ -36,99 +36,58 @@ class _MultiBtnSelectDialogState extends State<MultiBtnSelectDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          margin: const EdgeInsets.symmetric(horizontal: 25),
-          padding: const EdgeInsets.only(top: 16, bottom: 24),
-          width: context.screenWidth,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    GestureDetector(
-                      onTap: context.pop,
-                      child: const DefaultIcon(IconPath.close),
-                    ),
-                  ],
-                ),
-                Text(
-                  widget.title,
-                  style: Fonts.header03().copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: Palette.colorBlack,
-                  ),
-                ),
-                const Gap(6),
-                Text(
-                  '${widget.maxSelectableCount}개까지 중복 선택이 가능해요',
-                  style: Fonts.body02Medium().copyWith(
-                    fontWeight: FontWeight.w400,
-                    color: const Color(0xff8D92A0),
-                  ),
-                ),
-                Container(
-                  height: context.screenHeight * 0.26,
-                  padding: const EdgeInsets.symmetric(vertical: 20),
-                  child: SingleChildScrollView(
-                    child: Wrap(
-                      alignment: WrapAlignment.center,
-                      spacing: 8.0, // 가로 간격
-                      runSpacing: 8.0, // 세로 간격
-                      children: widget.btnNames.map((tag) {
-                        bool isSelected = _selectedItems.contains(tag);
-                        return GestureDetector(
-                          behavior: HitTestBehavior.opaque,
-                          onTap: () => _toggleItem(tag),
-                          child: Container(
-                            margin: const EdgeInsets.all(4),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 9,
-                            ),
-                            decoration: BoxDecoration(
-                              color: isSelected
-                                  ? Palette.colorPrimary100
-                                  : Colors.white,
-                              border: Border.all(
-                                color: const Color(0xffEDEEF0),
-                              ),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Text(
-                              tag,
-                              style: TextStyle(
-                                color: isSelected
-                                    ? Palette.colorPrimary600
-                                    : Palette.colorGrey800,
-                              ),
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ),
-                DefaultElevatedButton(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  onPressed: () => widget.onSubmit(_selectedItems),
-                  onPrimary: context.palette.onPrimary,
-                  primary: context.palette.primary,
-                  child: const Text('확인'),
-                ),
-              ],
-            ),
-          ),
+    return Center(
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.only(
+          top: 16,
+          bottom: 24,
+          left: 20,
+          right: 20,
         ),
-      ],
+        width: context.screenWidth,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _CloseButton(onTap: context.pop),
+            _TitleColumn(
+              title: widget.title,
+              maxCount: widget.maxSelectableCount,
+            ),
+            const Gap(14),
+            SizedBox(
+              height: context.screenHeight * 0.26,
+              child: SingleChildScrollView(
+                child: Wrap(
+                  alignment: WrapAlignment.center,
+                  spacing: 8.0, // 가로 간격
+                  runSpacing: 8.0, // 세로 간격
+                  children: widget.btnNames.map((tag) {
+                    bool isSelected = _selectedItems.contains(tag);
+                    return _SelectableCapsule(
+                      tag: tag,
+                      onTap: () => _toggleItem(tag),
+                      isSelected: isSelected,
+                    );
+                  }).toList(),
+                ),
+              ),
+            ),
+            const Gap(20),
+            DefaultElevatedButton(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              onPressed: () => widget.onSubmit(_selectedItems),
+              onPrimary: context.palette.onPrimary,
+              primary: context.palette.primary,
+              child: const Text('확인'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -144,5 +103,81 @@ class _MultiBtnSelectDialogState extends State<MultiBtnSelectDialog> {
         }
       }
     });
+  }
+}
+
+class _CloseButton extends StatelessWidget {
+  final void Function() onTap;
+  const _CloseButton({required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        GestureDetector(onTap: onTap, child: const DefaultIcon(IconPath.close)),
+      ],
+    );
+  }
+}
+
+class _TitleColumn extends StatelessWidget {
+  final String title;
+  final int maxCount;
+
+  const _TitleColumn({required this.title, required this.maxCount});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          title,
+          style: Fonts.semibold(fontSize: 18, color: Palette.colorBlack),
+        ),
+        const Gap(14),
+        Text(
+          '최대 $maxCount개까지 선택이 가능해요',
+          style: Fonts.body02Regular().copyWith(color: Palette.colorGrey500),
+        ),
+      ],
+    );
+  }
+}
+
+class _SelectableCapsule extends StatelessWidget {
+  final String tag;
+  final void Function() onTap;
+  final bool isSelected;
+
+  const _SelectableCapsule({
+    required this.tag,
+    required this.onTap,
+    required this.isSelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      // onTap: () => _toggleItem(tag),
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected ? Palette.colorPrimary100 : Colors.white,
+          border: Border.all(
+            color: isSelected ? Palette.colorPrimary100 : Palette.colorGrey200,
+          ),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Text(
+          tag,
+          style: Fonts.body02Regular(
+            isSelected ? Palette.colorPrimary600 : Palette.colorGrey800,
+          ),
+        ),
+      ),
+    );
   }
 }
