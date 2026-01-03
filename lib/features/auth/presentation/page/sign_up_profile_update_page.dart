@@ -22,8 +22,12 @@ class SignUpProfileUpdatePageState
   SignUpProfileUpdatePageState()
     : super(
         defaultAppBarTitle: '프로필 정보',
-        defaultAppBarLeadingAction: (context) =>
-            navigate(context, route: AppRoute.signUp),
+        defaultAppBarLeadingAction: (context) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (!context.mounted) return;
+            navigate(context, route: AppRoute.signUp);
+          });
+        },
       );
 
   Widget buildDefaultTextFormFieldRow({
@@ -44,7 +48,7 @@ class SignUpProfileUpdatePageState
             initialValue: initialValue,
             onTap: () {
               signUpProcess.updateCurrentStep(step);
-              navigate(context, route: route);
+              navigate(context, route: route, method: NavigationMethod.go);
             },
             enabled: true,
             readOnly: true,

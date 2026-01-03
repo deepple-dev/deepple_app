@@ -43,7 +43,7 @@ abstract class Config {
     try {
       const envFile = String.fromEnvironment(
         'ENV_FILE',
-        defaultValue: '.env',
+        defaultValue: '.env.dev',
       );
       await dotenv.load(fileName: 'assets/$envFile');
     } catch (e) {

@@ -1,13 +1,11 @@
 import 'package:cookie_jar/cookie_jar.dart';
-import 'package:deepple_app/app/router/router.dart';
 import 'package:deepple_app/core/config/config.dart';
 import 'package:deepple_app/core/mixin/log_mixin.dart';
+import 'package:deepple_app/core/provider/auth_expired_provider.dart';
 import 'package:deepple_app/core/storage/local_storage.dart';
 import 'package:deepple_app/core/storage/local_storage_item.dart';
 import 'package:deepple_app/core/util/log.dart';
-import 'package:deepple_app/core/util/toast.dart';
 import 'package:deepple_app/features/auth/data/usecase/auth_usecase_impl.dart';
-import 'package:deepple_app/app/router/routing.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -77,7 +75,7 @@ class TokenInterceptor extends Interceptor with LogMixin {
     _logError(err);
 
     if (_isUnauthorizedError(err)) {
-      await _handleUnauthorizedError();
+      _ref.read(authExpiredProvider.notifier).execute();
     }
 
     super.onError(err, handler);
@@ -227,15 +225,6 @@ class TokenInterceptor extends Interceptor with LogMixin {
   /// 401 Unauthorized 에러인지 확인
   bool _isUnauthorizedError(DioException err) {
     return err.response?.statusCode == _unauthorizedStatusCode;
-  }
-
-  /// 401 에러 처리 (로그아웃)
-  Future<void> _handleUnauthorizedError() async {
-    await _ref.read(authUsecaseProvider).signOut(isTokenExpiredSignOut: true);
-
-    final router = _ref.read(routerProvider);
-    router.goNamed(AppRoute.onboard.name);
-    showToastMessage('장시간 미접속으로 인해 로그아웃 되었습니다.');
   }
 
   /// API 에러 로깅

@@ -4,6 +4,7 @@ import 'package:deepple_app/app/constants/enum.dart';
 import 'package:deepple_app/core/config/config.dart';
 import 'package:deepple_app/core/notification/firebase_manager.dart';
 import 'package:deepple_app/core/provider/default_provider_observer.dart';
+import 'package:deepple_app/core/storage/local_storage_item.dart';
 import 'package:deepple_app/core/util/log.dart';
 import 'package:deepple_app/core/util/shared_preference/shared_preference.dart';
 import 'package:deepple_app/features/auth/data/dto/user_response.dart';
@@ -14,6 +15,7 @@ import 'package:deepple_app/features/profile/domain/common/enum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 
 import 'package:deepple_app/app/app.dart';

@@ -2,7 +2,6 @@ import 'package:deepple_app/app/constants/constants.dart';
 import 'package:deepple_app/app/provider/global_notifier.dart';
 import 'package:deepple_app/app/router/route_arguments.dart';
 import 'package:deepple_app/app/router/router.dart';
-import 'package:deepple_app/core/state/base_page_state.dart';
 import 'package:deepple_app/core/util/toast.dart';
 import 'package:deepple_app/features/home/presentation/provider/provider.dart';
 import 'package:deepple_app/features/home/presentation/widget/home/home_banner_area.dart';
@@ -18,12 +17,10 @@ class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
 
   @override
-  HomePageState createState() => HomePageState();
+  ConsumerState<HomePage> createState() => _HomePageState();
 }
 
-class HomePageState extends BaseConsumerStatefulPageState<HomePage> {
-  HomePageState() : super(isAppBar: false, isHorizontalMargin: false);
-
+class _HomePageState extends ConsumerState<HomePage> {
   @override
   void initState() {
     super.initState();
@@ -32,7 +29,7 @@ class HomePageState extends BaseConsumerStatefulPageState<HomePage> {
   }
 
   @override
-  Widget buildPage(BuildContext context) {
+  Widget build(BuildContext context) {
     final homeStateAsync = ref.watch(homeProvider);
     final homeNotifier = ref.read(homeProvider.notifier);
 

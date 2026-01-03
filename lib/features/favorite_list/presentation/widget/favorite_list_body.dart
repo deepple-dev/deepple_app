@@ -36,52 +36,45 @@ class _FavoriteListBodyState extends ConsumerState<FavoriteListBody> {
   Widget build(BuildContext context) {
     final notifier = ref.watch(favoriteListProvider);
 
-    return SafeArea(
-      child: TabBarView(
-        children: FavoriteTabType.values.map((type) {
-          final data = switch (type) {
-            FavoriteTabType.received => notifier.favoriteMeUsers,
-            FavoriteTabType.sent => notifier.myFavoriteUsers,
-          };
+    return TabBarView(
+      children: FavoriteTabType.values.map((type) {
+        final data = switch (type) {
+          FavoriteTabType.received => notifier.favoriteMeUsers,
+          FavoriteTabType.sent => notifier.myFavoriteUsers,
+        };
 
-          if (data.users.isEmpty) {
-            return EmptyFavorite(type: type);
-          }
+        if (data.users.isEmpty) {
+          return EmptyFavorite(type: type);
+        }
 
-          return CustomScrollView(
-            controller: _controller,
-            slivers: [
-              SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                sliver: SliverGrid(
-                  delegate: SliverChildBuilderDelegate((context, index) {
-                    final profile = data.users[index];
-                    return FavoriteGridItem(
-                      profile: profile,
-                      isBlurred:
-                          !(index < _previewProfileCount &&
-                              _unBlurIdList.contains(profile.userId)),
-                      onProfileTab: () => navigate(
-                        context,
-                        route: AppRoute.profile,
-                        extra: ProfileDetailArguments(userId: profile.userId),
-                      ),
-                      onBlurTap: () =>
-                          setState(() => _unBlurIdList.add(profile.userId)),
-                    );
-                  }, childCount: data.users.length),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: _gridColumnCount,
-                    mainAxisSpacing: 8.0,
-                    crossAxisSpacing: 16.0,
-                    childAspectRatio: _gridItemSize.aspectRatio,
-                  ),
-                ),
+        return GridView.builder(
+          controller: _controller,
+          padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: _gridColumnCount,
+            mainAxisSpacing: 8.0,
+            crossAxisSpacing: 16.0,
+            childAspectRatio: _gridItemSize.aspectRatio,
+          ),
+          itemCount: data.users.length,
+          itemBuilder: (context, index) {
+            final profile = data.users[index];
+            return FavoriteGridItem(
+              profile: profile,
+              isBlurred:
+                  !(index < _previewProfileCount &&
+                      _unBlurIdList.contains(profile.userId)),
+              onProfileTab: () => navigate(
+                context,
+                route: AppRoute.profile,
+                extra: ProfileDetailArguments(userId: profile.userId),
               ),
-            ],
-          );
-        }).toList(),
-      ),
+              onBlurTap: () =>
+                  setState(() => _unBlurIdList.add(profile.userId)),
+            );
+          },
+        );
+      }).toList(),
     );
   }
 

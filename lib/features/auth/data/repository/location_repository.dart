@@ -78,7 +78,10 @@ class LocationRepository {
 
   String _formatAddress(Placemark placemark) {
     final administrativeArea = placemark.administrativeArea;
+
     final subAdministrativeArea = placemark.subAdministrativeArea;
+
+    final locality = placemark.locality;
 
     if (administrativeArea == null) {
       Log.w('administrativeArea가 없습니다.');
@@ -94,7 +97,9 @@ class LocationRepository {
 
     // 서울, 부산은 우편번호로 구 정보 찾기
     if (administrativeArea.contains('서울') ||
-        administrativeArea.contains('부산')) {
+        administrativeArea.contains('부산') ||
+        administrativeArea.contains('광주광역시') ||
+        administrativeArea.contains('울산광역시')) {
       final district = DistrictMapper.getDistrictByPostalCode(
         administrativeArea,
         placemark.postalCode,
@@ -102,10 +107,18 @@ class LocationRepository {
       return district.isNotEmpty ? '$convertedCity $district' : convertedCity;
     }
 
-    // 그 외 지역은 administrativeArea + subAdministrativeArea (시/군/구)
-    return subAdministrativeArea != null && subAdministrativeArea.isNotEmpty
-        ? '$convertedCity $subAdministrativeArea'
-        : convertedCity;
+    // subAdministrativeArea가 있으면 사용
+    if (subAdministrativeArea != null && subAdministrativeArea.isNotEmpty) {
+      return '$convertedCity $subAdministrativeArea';
+    }
+
+    // subAdministrativeArea가 없으면 locality 사용
+    if (locality != null && locality.isNotEmpty) {
+      return '$convertedCity $locality';
+    }
+
+    // 그 외는 시만
+    return convertedCity;
   }
 }
 
@@ -124,7 +137,7 @@ class CityConverter {
     '강원특별자치도': '강원도',
     '충청북도': '충청북도',
     '충청남도': '충청남도',
-    '전라북도': '전라북도',
+    '전북특별자치도': '전라북도',
     '전라남도': '전라남도',
     '경상북도': '경상북도',
     '경상남도': '경상남도',
@@ -188,6 +201,22 @@ class DistrictMapper {
     '기장군': Range(46000, 46199),
   };
 
+  static const Map<String, Range> _gwangJuCodeRanges = {
+    '동구': Range(61400, 61599),
+    '서구': Range(61900, 62199),
+    '남구': Range(61600, 61899),
+    '북구': Range(61000, 61299),
+    '광산구': Range(62200, 62449),
+  };
+
+  static const Map<String, Range> _ulsanCodeRanges = {
+    '동구': Range(44000, 44199),
+    '중구': Range(44500, 44599),
+    '남구': Range(44700, 44799),
+    '북구': Range(44200, 44299),
+    '울주군': Range(44900, 45099),
+  };
+
   static String getDistrictByPostalCode(String city, String? postalCode) {
     if (postalCode == null || postalCode.isEmpty) return '';
 
@@ -199,6 +228,10 @@ class DistrictMapper {
       return _findDistrict(code, _seoulDistrictRanges);
     } else if (city.contains('부산')) {
       return _findDistrict(code, _busanDistrictRanges);
+    } else if (city.contains('광주광역시')) {
+      return _findDistrict(code, _gwangJuCodeRanges);
+    } else if (city.contains('울산광역시')) {
+      return _findDistrict(code, _ulsanCodeRanges);
     }
 
     return '';

@@ -50,7 +50,7 @@ class _MessageListBodyState extends ConsumerState<MessageListBody> {
           return CustomScrollView(
             controller: _controller,
             slivers: [
-              SliverList.builder(
+              ListView.builder(
                 itemBuilder: (context, index) {
                   final message = data.messages[index];
                   return MessageListItem(
