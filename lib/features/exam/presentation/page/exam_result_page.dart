@@ -138,12 +138,12 @@ class _ResultHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final title = isSubjectOptional
-        ? (hasSoulmate ? "나의 소울메이트를 찾았어요" : "아쉽게도 소울메이트를 찾지 못했어요")
-        : "현재 $soulmateCount명이 동일한 답을 선택했어요";
+        ? (hasSoulmate ? '나의 소울메이트를 찾았어요' : '아쉽게도 소울메이트를 찾지 못했어요')
+        : '현재 $soulmateCount명이 동일한 답을 선택했어요';
 
     final subtitle = isSubjectOptional
-        ? (hasSoulmate ? "상대방과 모두 같은 답을 선택하셨어요!" : "참여완료에 대한 하트를 지급해드렸어요")
-        : "필수과목 30문제를 풀고 모두 동일한 답을 선택해야 해요";
+        ? (hasSoulmate ? '상대방과 모두 같은 답을 선택하셨어요!' : '참여완료에 대한 하트를 지급해드렸어요')
+        : '필수과목 30문제를 풀고 모두 동일한 답을 선택해야 해요';
 
     return Align(
       alignment: Alignment.centerLeft,
@@ -224,7 +224,7 @@ class _ResultList extends StatelessWidget {
               final pressed = await showDialog<bool>(
                 context: context,
                 builder: (_) => UnlockWithHeartDialog(
-                  description: "프로필을 미리보기 하시겠습니까?",
+                  description: '프로필을 미리보기 하시겠습니까?',
                   heartBalance: heartBalance,
                   isMale: userProfile.isMale,
                 ),

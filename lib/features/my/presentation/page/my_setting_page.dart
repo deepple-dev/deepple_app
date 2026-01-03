@@ -14,7 +14,7 @@ class MySettingPage extends ConsumerWidget {
     final mySettingAsync = ref.watch(mySettingProvider);
 
     return Scaffold(
-      appBar: const DefaultAppBar(title: "설정"),
+      appBar: const DefaultAppBar(title: '설정'),
       body: Column(
         children: [
           _MySettingListItem(
@@ -85,7 +85,7 @@ class _MySettingListItem extends StatelessWidget {
                     SizedBox(
                       height: 24,
                       child: Text(
-                        "V$version",
+                        'V$version',
                         style: Fonts.body02Medium(const Color(0xff9E9E9E)),
                       ),
                     )

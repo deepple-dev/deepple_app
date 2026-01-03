@@ -11,7 +11,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-import '../../config/firebase_options.dart';
+import 'package:deepple_app/config/firebase_options.dart';
 
 class FirebaseManager {
   static final FirebaseManager _instance = FirebaseManager._internal();
@@ -90,7 +90,7 @@ class FirebaseManager {
     );
     FirebaseMessaging.instance.onTokenRefresh.listen((newToken) async {
       // TODO: 서버에 토큰 저장 로직 추가
-      debugPrint('FCM Token refreshed: $newToken');
+      Log.d('FCM Token refreshed: $newToken');
     });
   }
 

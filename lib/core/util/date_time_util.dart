@@ -1,5 +1,5 @@
-import 'formatter.dart';
-import 'validation.dart';
+import 'package:deepple_app/core/util/formatter.dart';
+import 'package:deepple_app/core/util/validation.dart';
 
 /// Common using [DateTime]
 class DateTimeUtil {
@@ -42,17 +42,17 @@ class DateTimeUtil {
     }
     // Less timeShowNow
     if (timeShowNow != null && difference < timeShowNow) {
-      return "지금";
+      return '지금';
     }
     // Default
     if (difference < const Duration(minutes: 1)) {
-      return "방금";
+      return '방금';
     } else if (difference < const Duration(hours: 1)) {
-      return "${difference.inMinutes}분 전";
+      return '${difference.inMinutes}분 전';
     } else if (difference < const Duration(days: 1)) {
-      return "${difference.inHours}시간 전";
+      return '${difference.inHours}시간 전';
     } else if (difference < const Duration(days: 30)) {
-      return "${difference.inDays}일 전";
+      return '${difference.inDays}일 전';
     } else if (difference < const Duration(days: 90)) {
       return convertToDate(dateTime);
     } else {

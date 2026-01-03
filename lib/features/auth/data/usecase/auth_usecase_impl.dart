@@ -56,17 +56,19 @@ class AuthUseCaseImpl with LogMixin implements AuthUseCase {
   }
 
   @override
-  Future<bool> signOut() async {
+  Future<bool> signOut({bool isTokenExpiredSignOut = false}) async {
     try {
       final uri = Uri.parse(Config.baseUrl);
       final cookieJar = _apiService.cookieJar;
 
-      try {
-        // 서버 로그아웃 먼저 처리
-        await _userRepository.signOut();
-      } catch (e) {
-        Log.e("서버 로그아웃 실패");
-        return false; // 실패 시 로그아웃 불가
+      if (!isTokenExpiredSignOut) {
+        try {
+          // 서버 로그아웃 먼저 처리
+          await _userRepository.signOut();
+        } catch (e) {
+          Log.e('서버 로그아웃 실패');
+          return false; // 실패 시 로그아웃 불가
+        }
       }
 
       try {
@@ -80,7 +82,7 @@ class AuthUseCaseImpl with LogMixin implements AuthUseCase {
 
       return true;
     } catch (e) {
-      Log.e("로그아웃 중 예기치 못한 에러 발생: $e");
+      Log.e('로그아웃 중 예기치 못한 에러 발생: $e');
       return false;
     }
   }
@@ -142,9 +144,9 @@ class AuthUseCaseImpl with LogMixin implements AuthUseCase {
   Future<void> uploadProfile(ProfileUploadRequest profileData) async {
     try {
       await _userRepository.updateProfile(profileData);
-      Log.d("✅ 프로필 업로드 성공");
+      Log.d('✅ 프로필 업로드 성공');
     } catch (e) {
-      Log.e("❌ 프로필 업로드 실패: $e");
+      Log.e('❌ 프로필 업로드 실패: $e');
       rethrow;
     }
   }

@@ -56,23 +56,23 @@ enum Gender {
 @HiveType(typeId: 8, adapterName: 'EducationAdapter')
 enum Education {
   @HiveField(0)
-  highSchool("고등학교 졸업"),
+  highSchool('고등학교 졸업'),
   @HiveField(1)
-  associate("전문대"),
+  associate('전문대'),
   @HiveField(2)
-  bachelorsLocal("지방 4년제 대학"),
+  bachelorsLocal('지방 4년제 대학'),
   @HiveField(3)
-  bachelorsSeoul("서울 4년제 대학"),
+  bachelorsSeoul('서울 4년제 대학'),
   @HiveField(4)
-  bachelorsOverseas("해외 4년제 대학"),
+  bachelorsOverseas('해외 4년제 대학'),
   @HiveField(5)
-  lawSchool("로스쿨"),
+  lawSchool('로스쿨'),
   @HiveField(6)
-  masters("석사"),
+  masters('석사'),
   @HiveField(7)
-  doctorate("박사"),
+  doctorate('박사'),
   @HiveField(8)
-  other("기타");
+  other('기타');
 
   final String label;
   const Education(this.label);
@@ -282,14 +282,14 @@ enum ProfileExchangeStatus {
 }
 
 enum ActivityStatus {
-  initial("INITIAL"),
-  active("ACTIVE"),
-  suspendedTemporarily("SUSPENDED_TEMPORARILY"),
-  suspendedPermanently("SUSPENDED_PERMANENTLY"),
-  waitingScreening("WAITING_SCREENING"),
-  rejectedScreening("REJECTED_SCREENING"),
-  dormant("DORMANT"),
-  deleted("DELETED");
+  initial('INITIAL'),
+  active('ACTIVE'),
+  suspendedTemporarily('SUSPENDED_TEMPORARILY'),
+  suspendedPermanently('SUSPENDED_PERMANENTLY'),
+  waitingScreening('WAITING_SCREENING'),
+  rejectedScreening('REJECTED_SCREENING'),
+  dormant('DORMANT'),
+  deleted('DELETED');
 
   final String label;
   const ActivityStatus(this.label);

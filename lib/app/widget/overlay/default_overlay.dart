@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../../../core/state/base_widget_state.dart';
-import '../../constants/params.dart';
+import 'package:deepple_app/core/state/base_widget_state.dart';
+import 'package:deepple_app/app/constants/params.dart';
 
 class DefaultOverlay extends StatefulWidget {
   const DefaultOverlay({

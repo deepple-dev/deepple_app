@@ -4,7 +4,7 @@ import 'package:deepple_app/core/config/config.dart';
 import 'package:dio/dio.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../util/log.dart';
+import 'package:deepple_app/core/util/log.dart';
 
 part 'network_exception.freezed.dart';
 
@@ -43,19 +43,6 @@ abstract class NetworkException with _$NetworkException implements Exception {
 
   // 다양한 예외 상황에 맞는 NetworkException 객체를 반환하는 메서드
   static NetworkException getException(Object error) {
-    if (Config.enableLogNetworkException) {
-      StackTrace? stackTrace;
-      if (error is Error) {
-        stackTrace = error.stackTrace;
-      }
-      Log.e(
-        'Error type: ${error.runtimeType}',
-        name: 'NetworkException',
-        errorObject: error,
-        stackTrace: stackTrace,
-      );
-    }
-
     /// 예외 타입에 따른 분기 처리
     /// 이미 NetworkException 타입이면 그대로 반환
     if (error is NetworkException) {

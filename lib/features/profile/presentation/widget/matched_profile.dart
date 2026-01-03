@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:deepple_app/app/enum/enum.dart';
 
-import 'widget.dart';
+import 'package:deepple_app/features/profile/presentation/widget/widget.dart';
 
 class MatchedProfile extends ConsumerWidget {
   const MatchedProfile(this.userId, {super.key});

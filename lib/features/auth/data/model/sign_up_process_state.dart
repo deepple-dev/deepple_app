@@ -114,17 +114,17 @@ abstract class SignUpProcessState with _$SignUpProcessState {
   // ProfileUploadRequest로 변환할 때 인덱스로 변환
   ProfileUploadRequest toProfileUploadRequest() {
     return ProfileUploadRequest(
-      nickname: nickname ?? "",
+      nickname: nickname ?? '',
       gender: selectedGender.toJson(), // Enum → 백엔드 변환
       yearOfBirth: selectedYear ?? 0,
       height: selectedHeight ?? 0,
-      job: selectedJob?.toJson() ?? "",
-      district: addressData.getDistrictValue(selectedLocation ?? '') ?? "", //
-      highestEducation: selectedEducation?.toJson() ?? "", // Enum → 백엔드 변환
-      mbti: mbti ?? "",
-      smokingStatus: selectedSmoking?.toJson() ?? "", // Enum → 백엔드 변환
-      drinkingStatus: selectedDrinking?.toJson() ?? "", // Enum → 백엔드 변환
-      religion: selectedReligion?.toJson() ?? "", // Enum → 백엔드 변환
+      job: selectedJob?.toJson() ?? '',
+      district: addressData.getDistrictValue(selectedLocation ?? '') ?? '', //
+      highestEducation: selectedEducation?.toJson() ?? '', // Enum → 백엔드 변환
+      mbti: mbti ?? '',
+      smokingStatus: selectedSmoking?.toJson() ?? '', // Enum → 백엔드 변환
+      drinkingStatus: selectedDrinking?.toJson() ?? '', // Enum → 백엔드 변환
+      religion: selectedReligion?.toJson() ?? '', // Enum → 백엔드 변환
       hobbies: selectedHobbies.map((e) => e.toJson()).toList(),
     );
   }

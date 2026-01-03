@@ -1,7 +1,7 @@
 import 'package:deepple_app/core/extension/extended_context.dart';
 import 'package:flutter/material.dart';
 
-import 'default_overlay.dart';
+import 'package:deepple_app/app/widget/overlay/default_overlay.dart';
 
 class MenuFloat extends DefaultOverlay {
   const MenuFloat({

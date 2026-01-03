@@ -56,13 +56,13 @@ class MyPageState extends BaseConsumerStatefulPageState<MyPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Padding(
-                padding: EdgeInsets.only(top: 4.0),
+                padding: const EdgeInsets.only(top: 4.0),
                 child: Text(
                   '마이페이지',
                   style: Fonts.header03().copyWith(fontWeight: FontWeight.w700),
                 ),
               ),
-              DefaultAppBarActionGroup(),
+              const DefaultAppBarActionGroup(),
             ],
           ),
           const Gap(16),

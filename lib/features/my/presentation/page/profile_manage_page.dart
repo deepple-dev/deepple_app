@@ -20,7 +20,7 @@ class ProfileManagePage extends ConsumerWidget {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         backgroundColor: Palette.colorGrey50,
-        appBar: const DefaultAppBar(title: "프로필 관리"),
+        appBar: const DefaultAppBar(title: '프로필 관리'),
         body: myProfileAsync.when(
           data: (data) => ListView.builder(
             itemCount: profileMangeAreaCount,

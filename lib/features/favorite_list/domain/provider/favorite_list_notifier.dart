@@ -2,7 +2,7 @@ import 'package:deepple_app/core/util/log.dart';
 import 'package:deepple_app/features/favorite_list/data/repository/favorite_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import 'favorite_list_state.dart';
+import 'package:deepple_app/features/favorite_list/domain/provider/favorite_list_state.dart';
 
 part 'favorite_list_notifier.g.dart';
 

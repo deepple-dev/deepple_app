@@ -9,7 +9,7 @@ class TermsOfUsePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const DefaultAppBar(title: "이용약관"),
+      appBar: const DefaultAppBar(title: '이용약관'),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
@@ -38,7 +38,7 @@ List<TextSpan> _parseTermsOfuse(String text) =>
             fontWeight: FontWeight.w600,
           ),
         );
-      } else if (lineContent.contains("*")) {
+      } else if (lineContent.contains('*')) {
         return TextSpan(
           text: '${lineContent.replaceAll("*", "")}\n',
           style: Fonts.body02Medium().copyWith(

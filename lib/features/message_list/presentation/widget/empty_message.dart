@@ -5,9 +5,9 @@ import 'package:deepple_app/features/home/presentation/page/main_tab_view.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
-import '../../../../app/constants/icon_path.dart';
-import '../../../../app/widget/icon/default_icon.dart';
-import '../page/message_list_page.dart';
+import 'package:deepple_app/app/constants/icon_path.dart';
+import 'package:deepple_app/app/widget/icon/default_icon.dart';
+import 'package:deepple_app/features/message_list/presentation/page/message_list_page.dart';
 
 class EmptyMessage extends StatelessWidget {
   const EmptyMessage({super.key, required this.type});

@@ -6,7 +6,6 @@ import 'package:deepple_app/app/widget/overlay/tool_tip.dart';
 import 'package:deepple_app/app/widget/text/bullet_text.dart';
 import 'package:deepple_app/core/extension/extended_context.dart';
 import 'package:deepple_app/core/state/base_page_state.dart';
-import 'package:deepple_app/features/auth/presentation/widget/auth_photo_guide_widget.dart';
 import 'package:deepple_app/features/auth/presentation/widget/auth_step_indicator_widget.dart';
 import 'package:deepple_app/features/auth/presentation/widget/photo_guide_bottomsheet.dart';
 import 'package:deepple_app/features/photo/domain/provider/photo_provider.dart';

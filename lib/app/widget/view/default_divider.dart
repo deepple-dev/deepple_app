@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/extension/extended_context.dart';
+import 'package:deepple_app/core/extension/extended_context.dart';
 
 class DefaultDivider extends ConsumerWidget {
   const DefaultDivider({super.key, this.color});

@@ -1,5 +1,6 @@
 import 'package:deepple_app/app/constants/constants.dart';
 import 'package:deepple_app/app/enum/contact_method.dart';
+import 'package:deepple_app/app/router/router.dart';
 import 'package:deepple_app/app/widget/icon/default_icon.dart';
 import 'package:deepple_app/app/widget/input/default_text_form_field.dart';
 import 'package:deepple_app/core/extension/extension.dart';
@@ -10,8 +11,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../domain/common/model.dart';
-import 'common_button_group.dart';
+import 'package:deepple_app/features/profile/domain/common/model.dart';
+import 'package:deepple_app/features/profile/presentation/widget/common_button_group.dart';
 
 class MessageSendBottomSheet extends ConsumerStatefulWidget {
   const MessageSendBottomSheet(
@@ -391,6 +392,8 @@ class _MessageSendConfirm extends StatelessWidget {
   final int needPoint;
   final VoidCallback onMessageSend;
 
+  bool get _isEnoughPoint => hasPoint >= needPoint;
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -401,7 +404,7 @@ class _MessageSendConfirm extends StatelessWidget {
         ),
         constraints: BoxConstraints(maxWidth: context.screenWidth * .8),
         padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 13.0),
-        child: Column(
+        child: _isEnoughPoint ? Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -417,7 +420,6 @@ class _MessageSendConfirm extends StatelessWidget {
             const Gap(17.0),
             CommonButtonGroup.custom(
               onCancel: context.pop,
-              enabledSubmit: hasPoint >= needPoint,
               onSubmit: () async {
                 context.pop();
                 onMessageSend();
@@ -436,6 +438,25 @@ class _MessageSendConfirm extends StatelessWidget {
                   ],
                 ),
               ),
+            ),
+          ],
+        ) : Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Gap(8.0),
+            Text('하트가 부족해요!', style: Fonts.header02()),
+            const Gap(12.0),
+            Text('보유한 하트: $hasPoint'),
+            const Gap(24.0),
+            CommonButtonGroup.custom(
+              onCancel: context.pop,
+              onSubmit: () async {
+                context.pop();
+                navigate(context, route: AppRoute.store);
+              },
+              cancel: const Text('취소'),
+              submit: const Text('하트 충전하러 가기'),
             ),
           ],
         ),

@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:deepple_app/core/util/util.dart';
 import 'package:deepple_app/features/auth/presentation/page/auth_navigation_page.dart';
 import 'package:deepple_app/features/auth/presentation/page/auth_sign_up_terms_page.dart';
 import 'package:deepple_app/features/auth/presentation/page/sign_up_page.dart';
@@ -41,8 +40,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:go_router/go_router.dart';
 
-import 'route_arguments.dart';
-import 'named_go_route.dart';
+import 'package:deepple_app/app/router/route_arguments.dart';
+import 'package:deepple_app/app/router/named_go_route.dart';
 
 // Global Navigator Keys
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();

@@ -57,7 +57,7 @@ class FilePickerState extends AppBaseWidgetState<CustomFilePicker> {
       children: [
         Row(
           children: [
-            Text("첨부파일", style: style),
+            Text('첨부파일', style: style),
             const Gap(20),
             Expanded(
               child: Container(

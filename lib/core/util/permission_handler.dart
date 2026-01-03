@@ -18,7 +18,7 @@ class PermissionHandler with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed && isReturningFromSettings) {
       isReturningFromSettings = false;
-      // 설정에서 돌아온 경우 권한 상태 재확인
+      // Re-check permission status when returning from settings
       checkPhotoPermissionStatus();
     } else if (state == AppLifecycleState.inactive) {
       isReturningFromSettings = true;
@@ -32,21 +32,27 @@ class PermissionHandler with WidgetsBindingObserver {
           : Permission.storage;
       final status = await permission.status;
 
-      if (status.isGranted) {
-        Log.d("권한 허용됨");
-        return true;
-      } else if (status.isDenied) {
-        Log.d("권한 거부됨. 요청 시도 중...");
-        final newStatus = await permission.request();
-        return newStatus.isGranted;
-      } else if (status.isPermanentlyDenied) {
-        Log.d("권한 영구 거부됨. 설정 앱으로 이동.");
-        openAppSettings();
-        return false;
-      }
-      return false;
+      return await switch (status) {
+        PermissionStatus.granted => () async {
+          Log.d('request photo permission granted');
+          return true;
+        }(),
+        PermissionStatus.denied => () async {
+          Log.d('request photo permission denied. Requesting permission...');
+          final newStatus = await permission.request();
+          return newStatus.isGranted;
+        }(),
+        PermissionStatus.permanentlyDenied => () async {
+          Log.d('request photo permission permanently denied. Opening app settings.');
+          openAppSettings();
+          return false;
+        }(),
+        _ => () async {
+          return false;
+        }(),
+      };
     } catch (e) {
-      Log.e("권한 상태 확인 중 오류 발생: $e");
+      Log.e('request photo permission failed: $e');
       return false;
     }
   }
