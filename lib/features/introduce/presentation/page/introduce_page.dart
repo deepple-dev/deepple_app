@@ -1,5 +1,5 @@
-import 'package:deepple_app/app/widget/icon/default_icon.dart';
-import 'package:deepple_app/core/state/base_page_state.dart';
+import 'package:deepple_app/app/widget/view/default_app_bar_action_group.dart';
+import 'package:deepple_app/core/extension/extended_context.dart';
 import 'package:deepple_app/features/introduce/introduce.dart';
 import 'package:deepple_app/features/introduce/presentation/widget/introduce_content_list.dart';
 import 'package:deepple_app/features/introduce/presentation/widget/introduce_my_list.dart';
@@ -7,8 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:deepple_app/app/router/router.dart';
 import 'package:deepple_app/app/constants/constants.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gap/gap.dart';
 
 enum IntroduceTabType {
   all('소개'),
@@ -23,107 +21,94 @@ class IntroducePage extends ConsumerStatefulWidget {
   const IntroducePage({super.key});
 
   @override
-  IntroducePageState createState() => IntroducePageState();
+  ConsumerState<IntroducePage> createState() => IntroducePageState();
 }
 
-class IntroducePageState extends BaseConsumerStatefulPageState<IntroducePage> {
-  IntroducePageState() : super(isAppBar: false, isHorizontalMargin: false);
+class IntroducePageState extends ConsumerState<IntroducePage>
+    with SingleTickerProviderStateMixin {
+  IntroducePageState();
 
-  int _currentTabIndex = 0;
+  late final TabController _tabController;
 
   @override
   void initState() {
     super.initState();
+
+    _tabController = TabController(
+      length: SelfIntroduceTabType.values.length,
+      vsync: this,
+    );
+
+    _tabController.addListener(() {
+      if (_tabController.indexIsChanging) return;
+
+      _refreshIntroduceList(_tabController.index);
+    });
+
+    // 최초 진입 시 첫 탭 데이터 로드
+    _refreshIntroduceList(0);
   }
 
   @override
-  Widget buildPage(BuildContext context) {
-    final double horizontalPadding = screenWidth * 0.05;
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final double horizontalPadding = context.screenWidth * 0.05;
     final EdgeInsets contentPadding = EdgeInsets.symmetric(
       horizontal: horizontalPadding,
     );
 
     return Scaffold(
+      appBar: AppBar(
+        centerTitle: false,
+        title: Text(
+          '셀프소개',
+          style: Fonts.header03().copyWith(
+            fontWeight: FontWeight.w700,
+            height: 1.2,
+          ),
+        ),
+        actions: [const DefaultAppBarActionGroup()],
+        actionsPadding: const EdgeInsets.symmetric(horizontal: 10),
+        automaticallyImplyLeading: false,
+        bottom: TabBar(
+          controller: _tabController,
+          indicatorColor: Colors.black,
+          dividerColor: context.colorScheme.outline,
+          labelStyle: Fonts.body02Regular(
+            Palette.colorGrey400,
+          ).copyWith(fontWeight: FontWeight.w600),
+          unselectedLabelStyle: Fonts.body02Regular(
+            Palette.colorGrey400,
+          ).copyWith(fontWeight: FontWeight.w400),
+          unselectedLabelColor: context.colorScheme.secondary,
+          indicatorSize: TabBarIndicatorSize.tab,
+          labelColor: context.colorScheme.onSurface,
+          tabs: SelfIntroduceTabType.values
+              .map((value) => Tab(child: Text(value.label)))
+              .toList(),
+        ),
+      ),
       body: Stack(
         children: [
           SafeArea(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: horizontalPadding,
-                    vertical: 16.0.w,
-                  ),
-                  child: Column(
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '셀프소개',
-                            style: Fonts.header03().copyWith(
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          const Spacer(),
-                          Row(
-                            children: [
-                              SizedBox(
-                                height: Dimens.iconSize,
-                                width: Dimens.iconSize,
-                                child: IconButton(
-                                  onPressed: () => navigate(
-                                    context,
-                                    route: AppRoute.notification,
-                                  ),
-                                  padding: EdgeInsets.zero,
-                                  icon: const DefaultIcon(
-                                    IconPath.notification,
-                                    size: Dimens.iconSize,
-                                  ),
-                                ),
-                              ),
-                              if (_currentTabIndex == 0)
-                                Row(
-                                  children: [
-                                    const Gap(8),
-                                    SizedBox(
-                                      height: Dimens.iconSize,
-                                      width: Dimens.iconSize,
-                                      child: IconButton(
-                                        onPressed: () => navigate(
-                                          context,
-                                          route: AppRoute.introduceFilter,
-                                        ),
-                                        padding: EdgeInsets.zero,
-                                        icon: const DefaultIcon(
-                                          IconPath.filter,
-                                          size: Dimens.iconSize,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                IntroduceTabBar(
-                  tabs: ['소개', '내가 쓴 글'],
-                  currentIndex: _currentTabIndex,
-                  horizontalPadding: horizontalPadding,
-                  onTap: _onTabTapped,
-                ),
                 Expanded(
                   child: Padding(
                     padding: contentPadding,
-                    child: _currentTabIndex == 0
-                        ? const IntroduceContentList()
-                        : const IntroduceMyList(),
+                    child: TabBarView(
+                      controller: _tabController,
+                      children: const [
+                        IntroduceContentList(),
+                        IntroduceMyList(),
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -135,7 +120,7 @@ class IntroducePageState extends BaseConsumerStatefulPageState<IntroducePage> {
 
               // 등록한 셀프소개가 적용되는 딜레이 필요
               // await Future.delayed(const Duration(milliseconds: 500));
-              _refreshIntroduceList();
+              _refreshIntroduceList(_tabController.index);
             },
           ),
         ],
@@ -143,18 +128,20 @@ class IntroducePageState extends BaseConsumerStatefulPageState<IntroducePage> {
     );
   }
 
-  void _onTabTapped(int index) => safeSetState(() {
-    _currentTabIndex = index;
-    _refreshIntroduceList();
-  });
-
-  Future<void> _refreshIntroduceList() async {
-    if (_currentTabIndex == 0) {
+  Future<void> _refreshIntroduceList(int currentTabIndex) async {
+    if (currentTabIndex == 0) {
       ref.read(introduceProvider.notifier).fetchIntroduceList();
-    } else if (_currentTabIndex == 1) {
+    } else if (currentTabIndex == 1) {
       ref.read(introduceProvider.notifier).fetchMyIntroduceList();
     }
   }
 }
 
-/// DefaultIcon(IconPath.frowningFace, size: 48),
+enum SelfIntroduceTabType {
+  introduced('소개'),
+  self('내가 쓴 글');
+
+  const SelfIntroduceTabType(this.label);
+
+  final String label;
+}

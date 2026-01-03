@@ -22,6 +22,8 @@ class FavoriteListPage extends StatelessWidget {
             ),
           ),
           actions: [const DefaultAppBarActionGroup()],
+          actionsPadding: const EdgeInsets.symmetric(horizontal: 10),
+
           automaticallyImplyLeading: false,
           bottom: TabBar(
             indicatorColor: Colors.black,

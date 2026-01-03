@@ -53,6 +53,7 @@ class MyPageState extends ConsumerState<MyPage> {
           style: Fonts.header03().copyWith(fontWeight: FontWeight.w700),
         ),
         actions: [const DefaultAppBarActionGroup()],
+        actionsPadding: const EdgeInsets.symmetric(horizontal: 10),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 24),
