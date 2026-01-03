@@ -24,7 +24,7 @@ class _MyAccountSettingPageState extends ConsumerState<MyAccountSettingPage> {
 
   @override
   Widget build(BuildContext context) {
-    final nickName = ref.read(globalProvider).profile.nickname;
+    final nickName = ref.watch(globalProvider).profile.nickname;
 
     return Scaffold(
       appBar: const DefaultAppBar(title: '계정 설정'),
