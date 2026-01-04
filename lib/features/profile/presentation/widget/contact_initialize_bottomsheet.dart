@@ -93,14 +93,11 @@ class _ContactSettingBodyState extends ConsumerState<_ContactSettingBody> {
               '메시지를 보내기 위해서는 최초 1회 등록이 필요해요',
               style: Fonts.body02Medium(context.colorScheme.primary),
             ),
-            const Gap(13.0),
+            const Gap(24.0),
             Text('연락처 선택', style: Fonts.header03()),
-            const Gap(8.0),
-            Text(
-              '상대방이 데이트 신청을 수락하면 선택한 연락처만 보여줘요 ',
-              style: Fonts.body02Medium(context.colorScheme.secondary),
-            ),
-            const Gap(13.0),
+            const Gap(4.0),
+            Text('상대방이 데이트 신청을 수락하면 선택한 연락처만 보여줘요'),
+            const Gap(12.0),
             ContactSelectForm(
               phoneNumber: state.phone,
               kakaoId: state.kakao,
@@ -108,7 +105,7 @@ class _ContactSettingBodyState extends ConsumerState<_ContactSettingBody> {
               onChanged: (selected) => setState(() => _selected = selected),
               onKakaoIdChanged: (kakaoId) => setState(() => _kakaoId = kakaoId),
             ),
-            const Gap(27.0),
+            const Gap(24.0),
             CommonButtonGroup(
               onCancel: context.pop,
               onSubmit: () async {
