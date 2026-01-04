@@ -33,7 +33,7 @@ class ProfileNotifier extends _$ProfileNotifier {
     try {
       final profile = await ProfileFetchUseCase(ref).call(userId);
       final heartPoint = ref
-          .watch(globalProvider)
+          .read(globalProvider)
           .heartBalance
           .totalHeartBalance;
 
