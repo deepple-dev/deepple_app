@@ -23,6 +23,8 @@ class Dimens {
     top: Radius.circular(10),
   );
 
+  static const double bottomPadding = 36.0;
+
   static const double dialogWidth = 300.0;
   static const double dialogGap = 24.0;
   static const EdgeInsets dialogPadding = EdgeInsets.symmetric(
