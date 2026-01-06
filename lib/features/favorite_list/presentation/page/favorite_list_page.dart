@@ -12,40 +12,37 @@ class FavoriteListPage extends StatelessWidget {
     return DefaultTabController(
       length: FavoriteTabType.values.length,
       child: Scaffold(
-        body: NestedScrollView(
-          headerSliverBuilder: (context, innerBoxIsScrolled) => [
-            SliverAppBar(
-              centerTitle: false,
-              title: Text(
-                '좋아요',
-                style: Fonts.header03().copyWith(
-                  fontWeight: FontWeight.w700,
-                  height: 1.2,
-                ),
-              ),
-              actions: [const DefaultAppBarActionGroup()],
-              automaticallyImplyLeading: false,
-              pinned: false,
-              bottom: TabBar(
-                indicatorColor: Colors.black,
-                dividerColor: context.colorScheme.outline,
-                labelStyle: Fonts.body02Regular(
-                  Palette.colorGrey400,
-                ).copyWith(fontWeight: FontWeight.w600),
-                unselectedLabelStyle: Fonts.body02Regular(
-                  Palette.colorGrey400,
-                ).copyWith(fontWeight: FontWeight.w400),
-                unselectedLabelColor: context.colorScheme.secondary,
-                indicatorSize: TabBarIndicatorSize.tab,
-                labelColor: context.colorScheme.onSurface,
-                tabs: FavoriteTabType.values
-                    .map((value) => Tab(child: Text(value.label)))
-                    .toList(),
-              ),
+        appBar: AppBar(
+          centerTitle: false,
+          title: Text(
+            '좋아요',
+            style: Fonts.header03().copyWith(
+              fontWeight: FontWeight.w700,
+              height: 1.2,
             ),
-          ],
-          body: const FavoriteListBody(),
+          ),
+          actions: [const DefaultAppBarActionGroup()],
+          actionsPadding: const EdgeInsets.symmetric(horizontal: 10),
+
+          automaticallyImplyLeading: false,
+          bottom: TabBar(
+            indicatorColor: Colors.black,
+            dividerColor: context.colorScheme.outline,
+            labelStyle: Fonts.body02Regular(
+              Palette.colorGrey400,
+            ).copyWith(fontWeight: FontWeight.w600),
+            unselectedLabelStyle: Fonts.body02Regular(
+              Palette.colorGrey400,
+            ).copyWith(fontWeight: FontWeight.w400),
+            unselectedLabelColor: context.colorScheme.secondary,
+            indicatorSize: TabBarIndicatorSize.tab,
+            labelColor: context.colorScheme.onSurface,
+            tabs: FavoriteTabType.values
+                .map((value) => Tab(child: Text(value.label)))
+                .toList(),
+          ),
         ),
+        body: const FavoriteListBody(),
       ),
     );
   }

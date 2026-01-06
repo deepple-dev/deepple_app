@@ -1,4 +1,5 @@
 import 'package:deepple_app/app/constants/constants.dart';
+import 'package:deepple_app/app/provider/provider.dart';
 import 'package:deepple_app/app/router/router.dart';
 import 'package:deepple_app/app/widget/dialogue/confirm_dialogue.dart';
 import 'package:deepple_app/app/widget/dialogue/error_dialog.dart';
@@ -23,6 +24,8 @@ class _MyAccountSettingPageState extends ConsumerState<MyAccountSettingPage> {
 
   @override
   Widget build(BuildContext context) {
+    final nickName = ref.watch(globalProvider).profile.nickname;
+
     return Scaffold(
       appBar: const DefaultAppBar(title: '계정 설정'),
       body: Column(
@@ -37,7 +40,13 @@ class _MyAccountSettingPageState extends ConsumerState<MyAccountSettingPage> {
                 ),
               ),
               const Spacer(),
-              const Text('마카롱조아'),
+              Text(
+                nickName,
+                style: Fonts.body02Medium().copyWith(
+                  fontWeight: FontWeight.w400,
+                  color: const Color(0xff9E9E9E),
+                ),
+              ),
             ],
           ),
           _AccountSettingItem(
