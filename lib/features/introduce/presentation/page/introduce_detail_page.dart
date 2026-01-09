@@ -5,13 +5,10 @@ import 'package:deepple_app/core/network/network_exception.dart';
 import 'package:deepple_app/core/state/base_page_state.dart';
 import 'package:deepple_app/app/widget/view/default_app_bar.dart';
 import 'package:deepple_app/app/widget/button/default_elevated_button.dart';
-import 'package:deepple_app/app/widget/icon/default_icon.dart';
 import 'package:deepple_app/core/util/toast.dart';
 import 'package:deepple_app/features/home/presentation/widget/category/heart_shortage_dialog.dart';
 import 'package:deepple_app/features/introduce/domain/provider/introduce_detail_notifier.dart';
 import 'package:deepple_app/features/introduce/presentation/widget/profile_exchange_dialog.dart';
-import 'package:deepple_app/features/profile/domain/common/enum.dart';
-import 'package:deepple_app/features/profile/presentation/widget/favorite_type_select_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:deepple_app/app/constants/constants.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -77,7 +74,6 @@ class IntroduceDetailPageState
           final content = introduceDetail.content;
           final imageUrl = introduceDetail.memberBasicInfo.profileImageUrl;
           final memberId = introduceDetail.memberBasicInfo.memberId;
-          final like = introduceDetail.like;
           final gender = introduceDetail.memberBasicInfo.gender;
 
           // 하트 갯수
@@ -155,47 +151,7 @@ class IntroduceDetailPageState
                                     },
                                   );
                                 })
-                              : _WaitingButton('상대방의 수락을 기다리고 있어요', () {}),
-                          const Gap(8.0),
-                          SizedBox(
-                            width: 44.0,
-                            child: DefaultElevatedButton(
-                              padding: const EdgeInsets.all(10.0),
-                              primary: Palette.colorGrey100,
-                              onPressed: () async {
-                                final favoriteType =
-                                    await FavoriteTypeSelectDialog.open(
-                                      context,
-                                      userId: memberId,
-                                      favoriteType: FavoriteType.interested,
-                                    );
-                                if (favoriteType == null) return;
-
-                                try {
-                                  await notifier.setFavoriteType(
-                                    memberId: memberId,
-                                    type: favoriteType,
-                                  );
-                                } on NetworkException catch (e) {
-                                  if (e.status == 400) {
-                                    // TODO: 에러 문구
-                                    showToastMessage('이미 좋아요가 존재합니다.');
-                                  }
-                                } catch (e) {
-                                  // TODO: 에러 문구
-                                  showToastMessage('에러 발생');
-                                }
-
-                                // memberinfo 업데이트 필요
-                                await notifier.getIntroduceDetail();
-                              },
-                              child: DefaultIcon(
-                                like == null
-                                    ? IconPath.heart
-                                    : IconPath.heartFill,
-                              ),
-                            ),
-                          ),
+                              : _WaitingButton("상대방의 수락을 기다리고 있어요", () {}),
                         ],
                       ),
                   ],
