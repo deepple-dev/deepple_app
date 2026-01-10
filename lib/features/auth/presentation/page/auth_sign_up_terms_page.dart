@@ -63,7 +63,7 @@ class AuthSignUpTermsPageState
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(bottom: screenHeight * 0.05),
+            padding: const EdgeInsets.only(bottom: Dimens.bottomPadding),
             child: DefaultElevatedButton(
               onPressed: isButtonEnabled
                   ? () async {

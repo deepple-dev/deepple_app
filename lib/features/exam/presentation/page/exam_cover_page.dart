@@ -112,7 +112,7 @@ class ExamCoverPageState extends BaseConsumerStatefulPageState<ExamCoverPage> {
           ),
         ),
         Padding(
-          padding: EdgeInsets.only(bottom: screenHeight * 0.05),
+          padding: const EdgeInsets.only(bottom: Dimens.bottomPadding),
           child: DefaultElevatedButton(
             onPressed: () async {
               await notifier.fetchRequiredQuestions();

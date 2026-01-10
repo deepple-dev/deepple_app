@@ -46,8 +46,13 @@ class _TemporalForbiddenPageState extends State<TemporalForbiddenPage> {
 
     return Scaffold(
       body: SafeArea(
+        bottom: false,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+          padding: const EdgeInsets.only(
+            left: 12.0,
+            right: 12.0,
+            bottom: Dimens.bottomPadding,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [

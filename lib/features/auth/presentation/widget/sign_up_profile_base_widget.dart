@@ -80,7 +80,7 @@ class _SignUpProfileBaseWidgetState
               Gap(16.h),
               Expanded(child: SingleChildScrollView(child: widget.body)),
               Padding(
-                padding: EdgeInsets.only(bottom: screenHeight * 0.05),
+                padding: const EdgeInsets.only(bottom: Dimens.bottomPadding),
                 child: DefaultElevatedButton(
                   onPressed:
                       signUpProcess.isButtonEnabled() && !signUpState.isLoading

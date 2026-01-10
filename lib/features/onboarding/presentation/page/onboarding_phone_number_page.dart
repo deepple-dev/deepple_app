@@ -1,4 +1,3 @@
-
 import 'package:deepple_app/app/router/route_arguments.dart';
 import 'package:deepple_app/core/state/base_page_state.dart';
 import 'package:deepple_app/app/constants/constants.dart';
@@ -135,7 +134,7 @@ class OnboardingPhoneInputPageState
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(bottom: screenHeight * 0.05),
+            padding: const EdgeInsets.only(bottom: Dimens.bottomPadding),
             child: Consumer(
               builder: (context, ref, child) {
                 return DefaultElevatedButton(

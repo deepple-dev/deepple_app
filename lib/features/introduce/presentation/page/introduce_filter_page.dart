@@ -34,10 +34,7 @@ class IntroduceFilterPage extends ConsumerWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  '나이',
-                  style: Fonts.body02Medium(),
-                ),
+                Text('나이', style: Fonts.body02Medium()),
                 Text(
                   '${ageRange.start.toInt()}세~${ageRange.end.toInt()}세',
                   style: Fonts.body02Regular(Palette.colorBlack),
@@ -85,7 +82,10 @@ class IntroduceFilterPage extends ConsumerWidget {
           ),
           const Spacer(),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24,
+              vertical: Dimens.bottomPadding,
+            ),
             child: DefaultElevatedButton(
               onPressed: hasChanged
                   ? () {

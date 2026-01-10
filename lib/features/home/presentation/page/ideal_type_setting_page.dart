@@ -36,7 +36,10 @@ class IdealTypeSettingPage extends ConsumerWidget {
           ),
         ),
         bottomNavigationBar: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: Dimens.bottomPadding,
+          ),
           child: DefaultElevatedButton(
             primary: data.isFilterPossible
                 ? Palette.colorPrimary500
