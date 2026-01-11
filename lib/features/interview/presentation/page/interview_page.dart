@@ -1,5 +1,6 @@
 import 'package:deepple_app/app/widget/view/default_app_bar_action_group.dart';
 import 'package:deepple_app/core/state/base_page_state.dart';
+import 'package:deepple_app/app/widget/widget.dart';
 import 'package:deepple_app/app/widget/view/default_tap_bar.dart';
 import 'package:deepple_app/features/interview/presentation/widget/question_card.dart';
 import 'package:deepple_app/features/interview/presentation/widget/interview_banner_widget.dart';
@@ -32,52 +33,34 @@ class InterviewPageState extends BaseConsumerStatefulPageState<InterviewPage> {
     );
     const double tagSpacing = 16;
 
-    return Padding(
-      padding: EdgeInsets.only(top: screenHeight * 0.1),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: contentPadding,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 4.0),
-                  child: Text(
-                    '나를 소개해볼까요?',
-                    style: Fonts.header03().copyWith(
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-                const DefaultAppBarActionGroup(),
-              ],
-            ),
-          ),
-          const Gap(16),
-          DefaultTabBar(
-            tabs: ['나', '관계', '연인'],
-            currentIndex: _currentTabIndex,
-            onTap: _onTabTapped,
-            horizontalPadding: horizontalPadding,
-          ),
-          if (_isBannerVisible)
-            Padding(
-              padding: contentPadding,
-              child: InterviewBannerWidget(onClose: _closeBanner),
-            ),
-          if (!_isBannerVisible) const Gap(12),
-          Expanded(
-            child: QuestionCard(
-              tagSpacing: tagSpacing,
-              contentPadding: contentPadding,
-              currentTabIndex: _currentTabIndex,
+    return Scaffold(
+      appBar: DefaultAppBar(
+        title: '인터뷰',
+      ),
+      body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            DefaultTabBar(
+              tabs: ['나', '관계', '연인'],
+              currentIndex: _currentTabIndex,
+              onTap: _onTabTapped,
               horizontalPadding: horizontalPadding,
             ),
-          ),
-        ],
+            if (_isBannerVisible)
+              Padding(
+                padding: contentPadding,
+                child: InterviewBannerWidget(onClose: _closeBanner),
+              ),
+            if (!_isBannerVisible) const Gap(12),
+            Expanded(
+              child: QuestionCard(
+                tagSpacing: tagSpacing,
+                contentPadding: contentPadding,
+                currentTabIndex: _currentTabIndex,
+                horizontalPadding: horizontalPadding,
+              ),
+            ),
+          ],
       ),
     );
   }

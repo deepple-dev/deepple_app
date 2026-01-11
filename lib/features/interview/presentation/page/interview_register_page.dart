@@ -111,11 +111,7 @@ class InterviewRegisterPageState extends ConsumerState<InterviewRegisterPage> {
             context: context,
             content: '이 페이지를 벗어나면\n작성된 내용은 저장되지 않습니다.',
             onElevatedButtonPressed: () {
-              navigate(
-                context,
-                route: AppRoute.mainTab,
-                method: NavigationMethod.go,
-              );
+              navigate(context, route: AppRoute.interview);
             },
           );
         },
