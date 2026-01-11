@@ -1,24 +1,24 @@
 import 'dart:async';
 
+import 'package:deepple_app/app/constants/constants.dart';
 import 'package:deepple_app/app/router/route_arguments.dart';
+import 'package:deepple_app/app/router/router.dart';
+import 'package:deepple_app/app/widget/button/default_elevated_button.dart';
+import 'package:deepple_app/app/widget/button/default_outlined_button.dart';
 import 'package:deepple_app/app/widget/dialogue/confirm_dialogue.dart';
+import 'package:deepple_app/app/widget/input/default_text_form_field.dart';
+import 'package:deepple_app/app/widget/text/title_text.dart';
+import 'package:deepple_app/core/state/base_page_state.dart';
 import 'package:deepple_app/core/util/toast.dart';
 import 'package:deepple_app/features/auth/data/data.dart';
+import 'package:deepple_app/features/auth/data/dto/user_response.dart';
 import 'package:deepple_app/features/contact_setting/domain/provider/contact_setting_notifier.dart';
 import 'package:deepple_app/features/onboarding/domain/enum/auth_status.dart';
 import 'package:deepple_app/features/onboarding/domain/provider/onboarding_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
-import 'package:deepple_app/app/widget/button/default_elevated_button.dart';
-import 'package:deepple_app/app/widget/button/default_outlined_button.dart';
-import 'package:deepple_app/app/widget/input/default_text_form_field.dart';
-import 'package:deepple_app/app/widget/text/title_text.dart';
-import 'package:deepple_app/app/constants/constants.dart';
-import 'package:deepple_app/app/router/router.dart';
-import 'package:deepple_app/core/state/base_page_state.dart';
 import 'package:go_router/go_router.dart';
-import 'package:deepple_app/features/auth/data/dto/user_response.dart';
 
 class OnboardingCertificationPage extends ConsumerStatefulWidget {
   const OnboardingCertificationPage({super.key, required this.phoneNumber});

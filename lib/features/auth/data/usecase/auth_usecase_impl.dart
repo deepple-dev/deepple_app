@@ -44,12 +44,12 @@ class AuthUseCaseImpl with LogMixin implements AuthUseCase {
       );
       final success = await _registerDeviceToServer();
       if (!success) {
-        await _localStorage.saveEncrypted(SecureStorageItem.accessToken, '');
         throw Exception('device registration failed: clear user token');
       }
       return userResponse;
     } catch (e) {
-      logD('유저 데이터 저장 실패: $e');
+      await _localStorage.saveEncrypted(SecureStorageItem.accessToken, '');
+      Log.e('user sign exception: $e');
       showToastMessage('로그인에 실패하였습니다');
       rethrow;
     }
