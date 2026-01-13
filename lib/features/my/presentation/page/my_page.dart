@@ -19,11 +19,6 @@ const List<MenuItem> _menuItems = [
     iconPath: IconPath.idealSetting,
     route: AppRoute.idealSetting,
   ),
-  (
-    title: '차단친구 관리',
-    iconPath: IconPath.blockFriend,
-    route: AppRoute.blockFriend,
-  ),
   (title: '스토어', iconPath: IconPath.store, route: AppRoute.store),
   (
     title: '고객센터',
