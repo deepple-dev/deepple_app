@@ -261,7 +261,7 @@ class _ResultBottomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: screenHeight * 0.05),
+      padding: const EdgeInsets.only(bottom: Dimens.bottomPadding),
       child: isSubjectOptional
           ? isDone
                 ? DefaultElevatedButton(
