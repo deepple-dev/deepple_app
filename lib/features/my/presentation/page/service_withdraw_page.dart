@@ -22,12 +22,9 @@ class ServiceWithdrawPage extends ConsumerWidget {
       body: SafeArea(
         bottom: false,
         child: Padding(
-          padding: const EdgeInsets.only(
-            left: 16,
-            top: 16,
-            right: 16,
-            bottom: Dimens.bottomPadding,
-          ),
+          padding: const EdgeInsets.all(
+            16.0,
+          ).copyWith(bottom: Dimens.bottomPadding),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

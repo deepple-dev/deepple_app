@@ -26,7 +26,13 @@ class IntroduceFilterPage extends ConsumerWidget {
     final hasChanged = ref.watch(filterProvider).hasChanged;
 
     return Scaffold(
-      appBar: const DefaultAppBar(title: '필터 설정'),
+      appBar: DefaultAppBar(
+        title: '필터 설정',
+        leadingAction: (context) {
+          // 필터 원상복귀
+          Navigator.of(context).pop();
+        },
+      ),
       body: Column(
         children: [
           Padding(
@@ -93,7 +99,13 @@ class IntroduceFilterPage extends ConsumerWidget {
                       Navigator.of(context).pop();
                     }
                   : null,
-              child: const Text('필터 적용하기'),
+              child: Text(
+                '필터 적용하기',
+                style: Fonts.bold(
+                  fontSize: 14,
+                  color: hasChanged ? Palette.colorWhite : Palette.colorGrey300,
+                ),
+              ),
             ),
           ),
         ],

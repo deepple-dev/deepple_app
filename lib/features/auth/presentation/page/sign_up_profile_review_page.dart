@@ -16,12 +16,9 @@ class SignUpProfileReviewPage extends ConsumerWidget {
       body: SafeArea(
         bottom: false,
         child: Padding(
-          padding: const EdgeInsets.only(
-            top: 24.0,
-            left: 20.0,
-            right: 20.0,
-            bottom: Dimens.bottomPadding,
-          ),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 20.0,
+          ).copyWith(top: 24.0, bottom: Dimens.bottomPadding),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [

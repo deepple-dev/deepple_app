@@ -17,12 +17,9 @@ class SignUpProfileRejectPage extends ConsumerWidget {
       body: SafeArea(
         bottom: false,
         child: Padding(
-          padding: const EdgeInsets.only(
-            left: 12,
-            right: 12,
-            top: 24,
-            bottom: Dimens.bottomPadding,
-          ),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 12.0,
+          ).copyWith(top: 24.0, bottom: Dimens.bottomPadding),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
