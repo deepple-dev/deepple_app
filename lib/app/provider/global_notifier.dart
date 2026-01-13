@@ -47,11 +47,11 @@ class GlobalNotifier extends _$GlobalNotifier {
     }
   }
 
-  Future<void> fetchHeartBalance() async {
+  Future<HeartBalance?> fetchHeartBalance() async {
     try {
       final accessToken = await ref.read(authUsecaseProvider).getAccessToken();
       if (accessToken?.isEmpty ?? true) {
-        return;
+        return null;
       }
 
       final heartBalance = await ref
@@ -61,8 +61,10 @@ class GlobalNotifier extends _$GlobalNotifier {
       Log.d('fetched heart point: $heartBalance');
 
       state = state.copyWith(heartBalance: heartBalance);
+      return heartBalance;
     } catch (e) {
       Log.e('fetch heart point failed: $e');
+      return null;
     }
   }
 
