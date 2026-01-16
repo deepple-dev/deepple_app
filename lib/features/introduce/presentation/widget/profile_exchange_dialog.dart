@@ -5,43 +5,29 @@ import 'package:deepple_app/app/constants/palette.dart';
 import 'package:deepple_app/app/widget/button/default_elevated_button.dart';
 import 'package:deepple_app/app/widget/button/default_outlined_button.dart';
 import 'package:deepple_app/app/widget/icon/default_icon.dart';
+import 'package:deepple_app/features/home/presentation/widget/category/heart_shortage_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class ProfileExchangeDialog extends ConsumerStatefulWidget {
-  final int heartBalance;
+class ProfileExchangeDialog extends ConsumerWidget {
+  final int myHeartPoint;
   final VoidCallback onSendExchange;
-  final VoidCallback onNotEnoughHeart;
+
   const ProfileExchangeDialog({
     super.key,
-    required this.heartBalance,
+    required this.myHeartPoint,
     required this.onSendExchange,
-    required this.onNotEnoughHeart,
   });
 
-  @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _ProfileExchangeDialogState();
+  bool get _notEnoughHeart => myHeartPoint < Dimens.profileExchangeHeartCount;
 
-  static Future<void> open(
-    BuildContext context, {
-    required int myHeart,
-    required VoidCallback onSendExchange,
-    required VoidCallback onNotEnoughHeart,
-  }) => showDialog(
-    context: context,
-    builder: (context) => ProfileExchangeDialog(
-      heartBalance: myHeart,
-      onSendExchange: onSendExchange,
-      onNotEnoughHeart: onNotEnoughHeart,
-    ),
-  );
-}
-
-class _ProfileExchangeDialogState extends ConsumerState<ProfileExchangeDialog> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    if (_notEnoughHeart) {
+      return HeartShortageDialog(heartBalance: myHeartPoint);
+    }
+
     return Dialog(
       insetPadding: const EdgeInsets.symmetric(horizontal: 16.0),
       shape: const RoundedRectangleBorder(borderRadius: Dimens.dialogRadius),
@@ -57,11 +43,10 @@ class _ProfileExchangeDialogState extends ConsumerState<ProfileExchangeDialog> {
               textAlign: TextAlign.center,
             ),
             Text(
-              '보유한 하트: ${widget.heartBalance}',
+              '보유한 하트: $myHeartPoint',
               style: Fonts.body01Regular(const Color(0xFF7E7E7E)),
               textAlign: TextAlign.center,
             ),
-
             Row(
               spacing: 8.0.w,
               children: [
@@ -81,6 +66,7 @@ class _ProfileExchangeDialogState extends ConsumerState<ProfileExchangeDialog> {
                 ),
                 Expanded(
                   child: DefaultElevatedButton(
+                    onPressed: onSendExchange,
                     child: Row(
                       spacing: 4.0.w,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -96,14 +82,6 @@ class _ProfileExchangeDialogState extends ConsumerState<ProfileExchangeDialog> {
                         ),
                       ],
                     ),
-                    onPressed: () {
-                      // if (widget.heartBalance <
-                      //     Dimens.profileExchangeHeartCount) {
-                      //   widget.onNotEnoughHeart();
-                      // } else {
-                      widget.onSendExchange();
-                      // }
-                    },
                   ),
                 ),
               ],
@@ -113,4 +91,16 @@ class _ProfileExchangeDialogState extends ConsumerState<ProfileExchangeDialog> {
       ),
     );
   }
+
+  static Future<void> open(
+    BuildContext context, {
+    required int myHeartPoint,
+    required VoidCallback onSendExchange,
+  }) => showDialog(
+    context: context,
+    builder: (context) => ProfileExchangeDialog(
+      myHeartPoint: myHeartPoint,
+      onSendExchange: onSendExchange,
+    ),
+  );
 }
