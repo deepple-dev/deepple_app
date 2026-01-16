@@ -72,7 +72,7 @@ class IntroducePageState extends ConsumerState<IntroducePage>
             height: 1.2,
           ),
         ),
-        actions: [const DefaultAppBarActionGroup()],
+        actions: [const DefaultAppBarActionGroup(showFilter: true)],
         actionsPadding: const EdgeInsets.symmetric(horizontal: 10),
         automaticallyImplyLeading: false,
         bottom: TabBar(
