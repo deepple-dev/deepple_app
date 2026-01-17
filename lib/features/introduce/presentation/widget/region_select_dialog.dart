@@ -1,4 +1,5 @@
 import 'package:deepple_app/app/widget/list/list_chip.dart';
+import 'package:deepple_app/features/introduce/domain/provider/filter_temp_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:deepple_app/app/constants/constants.dart';
@@ -35,7 +36,7 @@ class Regionselectdialog extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedCityList = ref.watch(filterProvider).selectedCitys;
+    final selectedCityList = ref.watch(filterTempProvider).selectedCitys;
 
     return Dialog(
       insetPadding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -68,7 +69,7 @@ class Regionselectdialog extends ConsumerWidget {
                   onSelectionChanged: (updatedSelections) {
                     if (updatedSelections.length > 2) return;
                     ref
-                        .read(filterProvider.notifier)
+                        .read(filterTempProvider.notifier)
                         .updateCitys(updatedSelections);
                   },
                 ),

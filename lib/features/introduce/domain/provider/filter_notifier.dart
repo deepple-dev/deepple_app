@@ -47,24 +47,32 @@ class FilterNotifier extends _$FilterNotifier {
       ),
       selectedCitys: preferredCities,
       selectedGender: selectedGender,
-      hasChanged: false,
     );
   }
 
   void updateRange(RangeValues values) {
-    state = state.copyWith(rangeValues: values, hasChanged: true);
+    state = state.copyWith(rangeValues: values);
   }
 
   void updateCitys(List<String> citys) {
-    state = state.copyWith(selectedCitys: citys, hasChanged: true);
+    state = state.copyWith(selectedCitys: citys);
   }
 
   void updateGender(Gender? gender) {
-    state = state.copyWith(selectedGender: gender, hasChanged: true);
+    state = state.copyWith(selectedGender: gender);
   }
 
-  void updateChanged(bool hasChanged) {
-    state = state.copyWith(hasChanged: hasChanged);
+  void updateFilter({
+    required Gender? newGender,
+    required List<String> newCities,
+    required RangeValues newRange,
+  }) {
+    state = state.copyWith(
+      selectedGender: newGender,
+      selectedCitys: newCities,
+      rangeValues: newRange,
+    );
+    saveFilter();
   }
 
   void saveFilter() {
@@ -88,7 +96,5 @@ class FilterNotifier extends _$FilterNotifier {
           ? 2
           : 0,
     );
-
-    state = state.copyWith(hasChanged: false);
   }
 }
