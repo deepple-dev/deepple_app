@@ -59,7 +59,7 @@ final class IntroduceEditNotifierProvider
 }
 
 String _$introduceEditNotifierHash() =>
-    r'0fc8ec50d7232b30f49e6c84427c3960c5a9d141';
+    r'1f3b4e8f0fcae971646a9e1b3a24e6073131efe7';
 
 final class IntroduceEditNotifierFamily extends $Family
     with

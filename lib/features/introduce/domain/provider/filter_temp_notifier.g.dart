@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'photo_provider.dart';
+part of 'filter_temp_notifier.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -9,51 +9,53 @@ part of 'photo_provider.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(Photo)
-const photoProvider = PhotoProvider._();
+@ProviderFor(FilterTempNotifier)
+const filterTempProvider = FilterTempNotifierProvider._();
 
-final class PhotoProvider extends $NotifierProvider<Photo, List<XFile?>> {
-  const PhotoProvider._()
+final class FilterTempNotifierProvider
+    extends $NotifierProvider<FilterTempNotifier, FilterTempState> {
+  const FilterTempNotifierProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'photoProvider',
+        name: r'filterTempProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$photoHash();
+  String debugGetCreateSourceHash() => _$filterTempNotifierHash();
 
   @$internal
   @override
-  Photo create() => Photo();
+  FilterTempNotifier create() => FilterTempNotifier();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(List<XFile?> value) {
+  Override overrideWithValue(FilterTempState value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<List<XFile?>>(value),
+      providerOverride: $SyncValueProvider<FilterTempState>(value),
     );
   }
 }
 
-String _$photoHash() => r'd0bdc39c2d03812597508b32a1230d9cec1f7f42';
+String _$filterTempNotifierHash() =>
+    r'adcf95d89483c6eb9cd0417e97bbfecd16faf175';
 
-abstract class _$Photo extends $Notifier<List<XFile?>> {
-  List<XFile?> build();
+abstract class _$FilterTempNotifier extends $Notifier<FilterTempState> {
+  FilterTempState build();
   @$mustCallSuper
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<List<XFile?>, List<XFile?>>;
+    final ref = this.ref as $Ref<FilterTempState, FilterTempState>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<List<XFile?>, List<XFile?>>,
-              List<XFile?>,
+              AnyNotifier<FilterTempState, FilterTempState>,
+              FilterTempState,
               Object?,
               Object?
             >;

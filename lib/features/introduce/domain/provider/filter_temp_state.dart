@@ -1,13 +1,13 @@
-import 'package:deepple_app/app/constants/constants.dart';
+import 'package:deepple_app/app/constants/enum.dart';
 import 'package:deepple_app/app/constants/region_data.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'filter_state.freezed.dart';
+part 'filter_temp_state.freezed.dart';
 
 @freezed
-abstract class FilterState with _$FilterState {
-  const FilterState._();
+abstract class FilterTempState with _$FilterTempState {
+  const FilterTempState._();
 
   String? get getGender => switch (selectedGender) {
     Gender.male => 'MALE',
@@ -19,16 +19,18 @@ abstract class FilterState with _$FilterState {
       .map((label) => addressData.getCityByLabel(label).value)
       .toList();
 
-  const factory FilterState({
+  const factory FilterTempState({
     required RangeValues rangeValues,
     required List<String> selectedCitys,
     required Gender? selectedGender,
+    required bool hasChanged,
   }) = _FilterState;
 
   // 초기 상태
-  factory FilterState.initial() => const FilterState(
+  factory FilterTempState.initial() => const FilterTempState(
     rangeValues: RangeValues(27, 32),
     selectedCitys: [],
     selectedGender: null,
+    hasChanged: false,
   );
 }

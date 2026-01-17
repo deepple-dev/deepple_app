@@ -1,7 +1,9 @@
 import 'package:deepple_app/app/provider/global_notifier.dart';
 import 'package:deepple_app/app/widget/input/selection.dart';
 import 'package:deepple_app/app/widget/widget.dart';
-import 'package:deepple_app/features/introduce/domain/provider/filter_notifier.dart';
+import 'package:deepple_app/features/introduce/domain/provider/filter_temp_notifier.dart';
+import 'package:deepple_app/features/introduce/domain/provider/filter_temp_state.dart';
+import 'package:deepple_app/features/introduce/introduce.dart';
 import 'package:deepple_app/features/introduce/presentation/widget/age_range_slider.dart';
 import 'package:deepple_app/features/introduce/presentation/widget/row_text_form_field.dart';
 import 'package:flutter/material.dart';
@@ -18,12 +20,18 @@ class IntroduceFilterPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    FilterNotifier filterNotifer = ref.read(filterProvider.notifier);
+    FilterTempNotifier filterTempNotifier = ref.read(
+      filterTempProvider.notifier,
+    );
+    FilterTempState filterTempState = ref.watch(filterTempProvider);
+
     final isMale = ref.read(globalProvider).profile.isMale;
-    final ageRange = ref.watch(filterProvider).rangeValues;
-    final selectedCityList = ref.watch(filterProvider).selectedCitys;
-    final selectedGender = ref.watch(filterProvider).selectedGender;
-    final hasChanged = ref.watch(filterProvider).hasChanged;
+    final ageRange = filterTempState.rangeValues;
+    final selectedCityList = filterTempState.selectedCitys;
+    final selectedGender = filterTempState.selectedGender;
+    final hasChanged = filterTempState.hasChanged;
+
+    IntroduceNotifier introduceNotifier = ref.read(introduceProvider.notifier);
 
     return Scaffold(
       appBar: DefaultAppBar(
@@ -74,9 +82,9 @@ class IntroduceFilterPage extends ConsumerWidget {
                     onChange: (str) {
                       // hive 저장?
                       if (str == ALL) {
-                        filterNotifer.updateGender(null);
+                        filterTempNotifier.updateGender(null);
                       } else {
-                        filterNotifer.updateGender(
+                        filterTempNotifier.updateGender(
                           isMale ? Gender.female : Gender.male,
                         );
                       }
@@ -95,7 +103,13 @@ class IntroduceFilterPage extends ConsumerWidget {
             child: DefaultElevatedButton(
               onPressed: hasChanged
                   ? () {
-                      filterNotifer.saveFilter();
+                      ref
+                          .read(filterProvider.notifier)
+                          .updateFilter(
+                            newGender: filterTempState.selectedGender,
+                            newCities: filterTempState.selectedCitys,
+                            newRange: filterTempState.rangeValues,
+                          );
                       Navigator.of(context).pop();
                     }
                   : null,
