@@ -25,13 +25,19 @@ class StoreNotifier extends _$StoreNotifier {
 
   @override
   StoreState build() {
-    _initialize();
+    Future.microtask(() => _initialize());
+
+    ref.onDispose(() {
+      _subscription?.cancel();
+    });
     return StoreState.initial();
   }
 
   Future<void> _initialize() async {
-    await _initializeAppPurchase();
-    await _initializeHeartBalanceItem();
+    await Future.wait([
+      _initializeAppPurchase(),
+      _initializeHeartBalanceItem(),
+    ]);
     _subscribeToPurchaseUpdates();
   }
 
@@ -73,33 +79,43 @@ class StoreNotifier extends _$StoreNotifier {
 
   // 앱 내 구매상태 변경 시 콜백
   void onPurchaseUpdated(List<PurchaseDetails> purchases) async {
-    final inAppPurchase = InAppPurchase.instance;
-
     state = state.copyWith(isPurchasePending: true);
 
-    for (final purchase in purchases) {
-      if (purchase.status == PurchaseStatus.purchased) {
-        try {
-          // 영수증 서버 검증
-          await ref
-              .read(storeProvider.notifier)
-              .verifyReceipt(purchase.verificationData.serverVerificationData);
+    try {
+      for (final purchase in purchases) {
+        if (purchase.status == PurchaseStatus.purchased || purchase.status == PurchaseStatus.restored) {
+          final String jwsToken = purchase.verificationData.serverVerificationData;
 
-          // 보유하트 재조회
-          await fetchHeartBalance();
-        } catch (e) {
-          Log.e('영수증 검증 또는 하트 조회 실패: $e');
+          if (purchase.status == PurchaseStatus.pending) continue;
+          
+          try {  
+            await verifyReceipt(jwsToken);
+            
+            if (purchase.pendingCompletePurchase) {
+              await InAppPurchase.instance.completePurchase(purchase);
+            }
+          } catch (e) {
+            
+            if (e.toString().contains('이미 존재하는 주문입니다') || e.toString().contains('400')) {
+              await InAppPurchase.instance.completePurchase(purchase);
+            } else {
+              Log.e('영수증 검증 실패: $e');
+            }
+          }
+        } else if (purchase.status == PurchaseStatus.error || purchase.status == PurchaseStatus.canceled) {
+          if (purchase.pendingCompletePurchase) {
+            await InAppPurchase.instance.completePurchase(purchase);
+          }
+          state = state.copyWith(isPurchasePending: false);
+          Log.e('❌ 구매 실패: ${purchase.error}');
         }
-
-        if (purchase.pendingCompletePurchase) {
-          await inAppPurchase.completePurchase(purchase);
-        }
-      } else if (purchase.status == PurchaseStatus.error) {
-        Log.e('❌ 구매 실패: ${purchase.error}');
       }
+    } catch (e) {
+      Log.e('결제 리스트 처리 중 에러: $e');
+    } finally {
+      state = state.copyWith(isPurchasePending: false);
+      await fetchHeartBalance();
     }
-
-    state = state.copyWith(isPurchasePending: false);
   }
 
   // 보유하트 조회
@@ -140,10 +156,6 @@ class StoreNotifier extends _$StoreNotifier {
   Future<void> verifyReceipt(String appReceipt) async {
     final useCase = ref.read(verifyReceiptUseCaseProvider);
 
-    try {
-      await useCase.call(appReceipt: appReceipt);
-    } catch (e) {
-      Log.e('영수증 검증 실패: $e');
-    }
+    await useCase.call(appReceipt: appReceipt);
   }
 }
