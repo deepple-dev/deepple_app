@@ -71,7 +71,7 @@ class ProfileExchangeDialog extends ConsumerWidget {
                       spacing: 4.0.w,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const DefaultIcon(IconPath.heartLine),
+                        const DefaultIcon(IconPath.heart),
                         Text(
                           '${Dimens.profileExchangeHeartCount}',
                           style: TextStyle(
