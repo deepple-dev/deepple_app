@@ -47,7 +47,7 @@ class StoreNotifier extends _$StoreNotifier {
     _subscription = InAppPurchase.instance.purchaseStream.listen(
       onPurchaseUpdated,
       onError: (error) {
-        Log.e('구매 스트림 에러: $error');
+        Log.e('Purchase stream error: $error');
       },
     );
   }
@@ -102,7 +102,7 @@ class StoreNotifier extends _$StoreNotifier {
             if (e.toString().contains('이미 존재하는 주문입니다') || e.toString().contains('400')) {
               await InAppPurchase.instance.completePurchase(purchase);
             } else {
-              Log.e('영수증 검증 실패: $e');
+              Log.e('Receipt verification failed: $e');
             }
           }
         } else if (purchase.status == PurchaseStatus.error || purchase.status == PurchaseStatus.canceled) {
@@ -110,11 +110,11 @@ class StoreNotifier extends _$StoreNotifier {
             await InAppPurchase.instance.completePurchase(purchase);
           }
           state = state.copyWith(isPurchasePending: false);
-          Log.e('❌ 구매 실패: ${purchase.error}');
+          Log.e('Purchase failed or canceled: $e');
         }
       }
     } catch (e) {
-      Log.e('결제 리스트 처리 중 에러: $e');
+      Log.e('Purchase stream error: $e');
     } finally {
       state = state.copyWith(isPurchasePending: hasPending);
       await fetchHeartBalance();
@@ -145,7 +145,7 @@ class StoreNotifier extends _$StoreNotifier {
     try {
       await ref.read(globalProvider.notifier).fetchHeartBalance();
     } catch (e) {
-      Log.e('보유 하트 수 재조회 실패: $e');
+      Log.e('Failed to fetch heart balance: $e');
       return;
     } finally {
       state = state.copyWith(
