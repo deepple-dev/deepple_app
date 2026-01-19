@@ -50,18 +50,6 @@ class FilterNotifier extends _$FilterNotifier {
     );
   }
 
-  void updateRange(RangeValues values) {
-    state = state.copyWith(rangeValues: values);
-  }
-
-  void updateCitys(List<String> citys) {
-    state = state.copyWith(selectedCitys: citys);
-  }
-
-  void updateGender(Gender? gender) {
-    state = state.copyWith(selectedGender: gender);
-  }
-
   void updateFilter({
     required Gender? newGender,
     required List<String> newCities,
@@ -72,10 +60,10 @@ class FilterNotifier extends _$FilterNotifier {
       selectedCitys: newCities,
       rangeValues: newRange,
     );
-    saveFilter();
+    _saveFilter();
   }
 
-  void saveFilter() {
+  void _saveFilter() {
     SharedPreferenceManager.setValue(
       SharedPreferenceKeys.preferredAgeStart,
       state.rangeValues.start.toInt(),
