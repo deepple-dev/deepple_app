@@ -31,8 +31,6 @@ class IntroduceFilterPage extends ConsumerWidget {
     final selectedGender = filterTempState.selectedGender;
     final hasChanged = filterTempState.hasChanged;
 
-    IntroduceNotifier introduceNotifier = ref.read(introduceProvider.notifier);
-
     return Scaffold(
       appBar: DefaultAppBar(
         title: '필터 설정',
