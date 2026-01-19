@@ -1,6 +1,7 @@
 import 'package:deepple_app/app/constants/enum.dart';
 import 'package:deepple_app/core/util/shared_preference/shared_preference_key.dart';
 import 'package:deepple_app/core/util/shared_preference/shared_preference_manager.dart';
+import 'package:deepple_app/features/home/presentation/provider/ideal_type_notifier.dart';
 import 'package:deepple_app/features/introduce/domain/provider/filter_state.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -11,6 +12,8 @@ part 'filter_notifier.g.dart';
 class FilterNotifier extends _$FilterNotifier {
   @override
   FilterState build() {
+    final idealState = ref.watch(idealTypeProvider).requireValue;
+
     final showAllGender = SharedPreferenceManager.getValue(
       SharedPreferenceKeys.showAllGender,
     );
@@ -25,13 +28,13 @@ class FilterNotifier extends _$FilterNotifier {
         SharedPreferenceManager.getValue(
           SharedPreferenceKeys.preferredAgeStart,
         ) ??
-        27;
+        idealState.idealType.minAge;
 
     final preferredAgeEnd =
         SharedPreferenceManager.getValue(
           SharedPreferenceKeys.preferredAgeEnd,
         ) ??
-        32;
+        idealState.idealType.maxAge;
 
     final preferredCities =
         SharedPreferenceManager.getValue(
