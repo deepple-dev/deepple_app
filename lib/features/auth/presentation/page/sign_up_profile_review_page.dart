@@ -1,3 +1,5 @@
+import 'package:deepple_app/app/provider/global_notifier.dart';
+import 'package:deepple_app/app/router/routing.dart';
 import 'package:deepple_app/app/widget/text/bullet_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -24,7 +26,20 @@ class SignUpProfileReviewPage extends ConsumerWidget {
               final bodyHeight = constraints.maxHeight;
 
               return RefreshIndicator(
-                onRefresh: () async {},
+                onRefresh: () async {
+                  final router = ref.read(routerProvider);
+                  await ref.read(globalProvider.notifier).initProfile();
+                  final profile = ref.read(globalProvider).profile;
+                  final activityStatus = ActivityStatus.parse(
+                    profile.activityStatus,
+                  );
+
+                  if (activityStatus == ActivityStatus.rejectedScreening) {
+                    router.goNamed(AppRoute.signUpProfileReject.name);
+                  } else if (activityStatus == ActivityStatus.active) {
+                    router.goNamed(AppRoute.mainTab.name);
+                  }
+                },
                 child: SingleChildScrollView(
                   physics: const AlwaysScrollableScrollPhysics(),
                   child: SizedBox(
