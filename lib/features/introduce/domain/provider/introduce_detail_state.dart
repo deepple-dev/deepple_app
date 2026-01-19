@@ -9,6 +9,7 @@ abstract class IntroduceDetailState with _$IntroduceDetailState {
     @Default(-1) int introduceId,
     @Default(null) IntroduceDetail? introduceDetail,
     @Default(false) bool isLoaded,
+    @Default(0) int heartPoint,
   }) = _IntroduceDetailState;
 
   const IntroduceDetailState._();

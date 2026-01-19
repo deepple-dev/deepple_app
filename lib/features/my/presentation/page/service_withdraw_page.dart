@@ -20,8 +20,11 @@ class ServiceWithdrawPage extends ConsumerWidget {
     return Scaffold(
       appBar: const DefaultAppBar(title: '서비스 탈퇴'),
       body: SafeArea(
+        bottom: false,
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(
+            16.0,
+          ).copyWith(bottom: Dimens.bottomPadding),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

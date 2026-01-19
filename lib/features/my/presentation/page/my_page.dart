@@ -1,5 +1,4 @@
 import 'package:deepple_app/app/widget/view/default_app_bar_action_group.dart';
-import 'package:deepple_app/core/state/base_page_state.dart';
 import 'package:deepple_app/app/constants/constants.dart';
 import 'package:deepple_app/app/router/router.dart';
 import 'package:deepple_app/app/widget/icon/default_icon.dart';
@@ -20,11 +19,6 @@ const List<MenuItem> _menuItems = [
     iconPath: IconPath.idealSetting,
     route: AppRoute.idealSetting,
   ),
-  (
-    title: '차단친구 관리',
-    iconPath: IconPath.blockFriend,
-    route: AppRoute.blockFriend,
-  ),
   (title: '스토어', iconPath: IconPath.store, route: AppRoute.store),
   (
     title: '고객센터',
@@ -41,33 +35,28 @@ class MyPage extends ConsumerStatefulWidget {
   MyPageState createState() => MyPageState();
 }
 
-class MyPageState extends BaseConsumerStatefulPageState<MyPage> {
-  MyPageState() : super(isAppBar: false, isHorizontalMargin: true);
+class MyPageState extends ConsumerState<MyPage> {
+  MyPageState();
 
   @override
-  Widget buildPage(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(top: screenHeight * 0.1),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 4.0),
-                child: Text(
-                  '마이페이지',
-                  style: Fonts.header03().copyWith(fontWeight: FontWeight.w700),
-                ),
-              ),
-              const DefaultAppBarActionGroup(),
-            ],
-          ),
-          const Gap(16),
-          ..._menuItems.map((item) => _MyPageListItem(item: item)),
-        ],
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: false,
+        title: Text(
+          '마이페이지',
+          style: Fonts.header03().copyWith(fontWeight: FontWeight.w700),
+        ),
+        actions: [const DefaultAppBarActionGroup()],
+        actionsPadding: const EdgeInsets.symmetric(horizontal: 10),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 24),
+        child: Column(
+          children: _menuItems
+              .map((item) => _MyPageListItem(item: item))
+              .toList(),
+        ),
       ),
     );
   }

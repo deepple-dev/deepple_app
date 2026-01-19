@@ -1,9 +1,8 @@
-import 'package:deepple_app/core/util/log.dart';
-import 'package:deepple_app/features/favorite_list/data/repository/favorite_repository.dart';
+import 'package:deepple_app/app/provider/provider.dart';
+import 'package:deepple_app/core/util/toast.dart';
 import 'package:deepple_app/features/introduce/domain/provider/introduce_detail_state.dart';
 import 'package:deepple_app/features/introduce/domain/usecase/fetch_introduce_detail_use_case.dart';
 import 'package:deepple_app/features/profile/data/repository/profile_repository.dart';
-import 'package:deepple_app/features/profile/domain/common/enum.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'introduce_detail_notifier.g.dart';
@@ -13,6 +12,10 @@ class IntroduceDetailNotifier extends _$IntroduceDetailNotifier {
   @override
   Future<IntroduceDetailState> build({required int introduceId}) async {
     try {
+      final heartPoint = ref
+          .read(globalProvider)
+          .heartBalance
+          .totalHeartBalance;
       final introduceDetail = await ref
           .read(fetchIntroduceDetailUseCaseProvider)
           .execute(introduceId: introduceId);
@@ -21,6 +24,7 @@ class IntroduceDetailNotifier extends _$IntroduceDetailNotifier {
         introduceId: introduceId,
         introduceDetail: introduceDetail,
         isLoaded: true,
+        heartPoint: heartPoint,
       );
     } catch (e) {
       return IntroduceDetailState(
@@ -35,25 +39,15 @@ class IntroduceDetailNotifier extends _$IntroduceDetailNotifier {
     final introduceDetail = await ref
         .read(fetchIntroduceDetailUseCaseProvider)
         .execute(introduceId: introduceId);
+    final heartPoint = ref.read(globalProvider).heartBalance.totalHeartBalance;
 
     state = AsyncValue.data(
-      state.requireValue.copyWith(introduceDetail: introduceDetail),
+      state.requireValue.copyWith(
+        introduceDetail: introduceDetail,
+        heartPoint: heartPoint,
+      ),
     );
     return true;
-  }
-
-  Future<void> setFavoriteType({
-    required int memberId,
-    required FavoriteType type,
-  }) async {
-    try {
-      await ref
-          .read(favoriteRepositoryProvider)
-          .requestFavorite(memberId, type: type);
-    } catch (e) {
-      Log.e('좋아요 설정 실패: $e');
-      rethrow;
-    }
   }
 
   Future<bool> requestProfileExchange(int responderId) async {
@@ -62,18 +56,23 @@ class IntroduceDetailNotifier extends _$IntroduceDetailNotifier {
     final success = await repository.requestProfileExchange(responderId);
 
     if (!success) {
-      // TODO: 에러 처리
+      showToastMessage('프로필 교환 요청에 실패했습니다. 다시 시도해주세요.');
       return false;
     }
 
-    // success했으면 introduceDetail 갱신해보자
+    final updatedHeartBalance = await ref
+        .read(globalProvider.notifier)
+        .fetchHeartBalance();
 
     final introduceDetail = await ref
         .read(fetchIntroduceDetailUseCaseProvider)
         .execute(introduceId: introduceId);
 
     state = AsyncValue.data(
-      state.requireValue.copyWith(introduceDetail: introduceDetail),
+      state.requireValue.copyWith(
+        introduceDetail: introduceDetail,
+        heartPoint: updatedHeartBalance?.totalHeartBalance ?? 0,
+      ),
     );
     return true;
   }

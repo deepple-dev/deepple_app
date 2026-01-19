@@ -1,3 +1,4 @@
+import 'package:deepple_app/app/constants/constants.dart';
 import 'package:deepple_app/app/router/route_arguments.dart';
 import 'package:deepple_app/app/router/router.dart';
 import 'package:deepple_app/app/widget/widget.dart';
@@ -278,7 +279,7 @@ class _QuestionBottomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: screenHeight * 0.05),
+      padding: const EdgeInsets.only(bottom: Dimens.bottomPadding),
       child: Row(
         spacing: 8.0,
         children: [

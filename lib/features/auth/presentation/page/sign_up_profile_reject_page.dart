@@ -15,8 +15,11 @@ class SignUpProfileRejectPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       body: SafeArea(
+        bottom: false,
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 12.0),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 12.0,
+          ).copyWith(top: 24.0, bottom: Dimens.bottomPadding),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [

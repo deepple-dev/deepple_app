@@ -1,8 +1,7 @@
-import 'package:deepple_app/core/extension/extended_context.dart';
-import 'package:flutter/material.dart';
-
 import 'package:deepple_app/app/constants/constants.dart';
 import 'package:deepple_app/app/widget/view/default_progress_indicator.dart';
+import 'package:deepple_app/core/extension/extended_context.dart';
+import 'package:flutter/material.dart';
 
 class DefaultOutlinedButton extends StatelessWidget {
   const DefaultOutlinedButton({
@@ -47,13 +46,14 @@ class DefaultOutlinedButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color foregroundColor = primary ?? context.palette.primary;
-    final Color disabledForegroundColor = foregroundColor.withOpacity(0.4);
+    final foregroundColor = primary ?? context.palette.primary;
+    final resolvedTextColor = textColor ?? foregroundColor;
+    final disabledForegroundColor = resolvedTextColor.withValues(alpha: .4);
 
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
         backgroundColor: backgroundColor,
-        foregroundColor: textColor ?? foregroundColor,
+        foregroundColor: resolvedTextColor,
         disabledForegroundColor: disabledForegroundColor,
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
         padding: padding,

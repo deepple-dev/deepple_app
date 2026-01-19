@@ -19,8 +19,11 @@ class DormantReleasePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       body: SafeArea(
+        bottom: false,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 12.0,
+          ).copyWith(bottom: Dimens.bottomPadding),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [

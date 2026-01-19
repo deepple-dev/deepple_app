@@ -40,9 +40,8 @@ class IntroduceFilterPageState extends ConsumerState<IntroduceFilterPage> {
       appBar: DefaultAppBar(
         title: '필터 설정',
         leadingAction: (context) {
-          filterNotifer.initChangedState();
-          if (!context.mounted) return;
-          context.pop();
+          // 필터 원상복귀
+          Navigator.of(context).pop();
         },
       ),
       body: Column(
@@ -100,7 +99,10 @@ class IntroduceFilterPageState extends ConsumerState<IntroduceFilterPage> {
           ),
           const Spacer(),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24,
+              vertical: Dimens.bottomPadding,
+            ),
             child: DefaultElevatedButton(
               onPressed: hasChanged
                   ? () {
@@ -108,7 +110,13 @@ class IntroduceFilterPageState extends ConsumerState<IntroduceFilterPage> {
                       context.pop();
                     }
                   : null,
-              child: const Text('필터 적용하기'),
+              child: Text(
+                '필터 적용하기',
+                style: Fonts.bold(
+                  fontSize: 14,
+                  color: hasChanged ? Palette.colorWhite : Palette.colorGrey300,
+                ),
+              ),
             ),
           ),
         ],
