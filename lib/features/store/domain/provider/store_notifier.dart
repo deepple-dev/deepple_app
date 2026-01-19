@@ -80,14 +80,17 @@ class StoreNotifier extends _$StoreNotifier {
   // 앱 내 구매상태 변경 시 콜백
   void onPurchaseUpdated(List<PurchaseDetails> purchases) async {
     state = state.copyWith(isPurchasePending: true);
+    bool hasPending = false;
 
     try {
       for (final purchase in purchases) {
+        if (purchase.status == PurchaseStatus.pending) {
+          hasPending = true;
+          continue;
+        }
         if (purchase.status == PurchaseStatus.purchased || purchase.status == PurchaseStatus.restored) {
           final String jwsToken = purchase.verificationData.serverVerificationData;
 
-          if (purchase.status == PurchaseStatus.pending) continue;
-          
           try {  
             await verifyReceipt(jwsToken);
             
@@ -113,7 +116,7 @@ class StoreNotifier extends _$StoreNotifier {
     } catch (e) {
       Log.e('결제 리스트 처리 중 에러: $e');
     } finally {
-      state = state.copyWith(isPurchasePending: false);
+      state = state.copyWith(isPurchasePending: hasPending);
       await fetchHeartBalance();
     }
   }
