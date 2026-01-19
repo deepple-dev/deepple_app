@@ -110,7 +110,7 @@ class StoreNotifier extends _$StoreNotifier {
             await InAppPurchase.instance.completePurchase(purchase);
           }
           state = state.copyWith(isPurchasePending: false);
-          Log.e('Purchase failed or canceled: $e');
+          Log.e('Purchase failed or canceled: ${purchase.error}');
         }
       }
     } catch (e) {
