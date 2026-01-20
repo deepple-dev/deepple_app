@@ -44,7 +44,7 @@ class _RegionSelectDialogState extends State<RegionSelectDialog> {
   @override
   void initState() {
     super.initState();
-    selectedCityList = widget.selectedCityList;
+    selectedCityList = List<String>.of(widget.selectedCityList);
   }
 
   @override
