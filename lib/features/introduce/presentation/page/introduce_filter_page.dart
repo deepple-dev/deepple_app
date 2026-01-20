@@ -51,7 +51,6 @@ class _IntroduceFilterPageState extends ConsumerState<IntroduceFilterPage> {
 
   @override
   Widget build(BuildContext context) {
-    print('hasChanged $hasChanged');
     return Scaffold(
       appBar: DefaultAppBar(
         title: '필터 설정',
