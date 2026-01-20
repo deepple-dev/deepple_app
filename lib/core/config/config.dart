@@ -41,10 +41,7 @@ abstract class Config {
 
   static Future<void> initialize() async {
     try {
-      const envFile = String.fromEnvironment(
-        'ENV_FILE',
-        defaultValue: '.env.prod',
-      );
+      const envFile = String.fromEnvironment('ENV_FILE', defaultValue: '.env');
       await dotenv.load(fileName: 'assets/$envFile');
     } catch (e) {
       Log.e('environment file load failed: $e');
