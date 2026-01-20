@@ -20,7 +20,7 @@ class IntroduceNotifier extends _$IntroduceNotifier {
       final introduces = await ref
           .read(fetchIntroduceListUseCaseProvider)
           .execute(
-            preferredCities: filterState.selectedCitysEng,
+            preferredCities: filterState.selectedCitiesEng,
             fromAge: filterState.rangeValues.start.toInt(),
             toAge: filterState.rangeValues.end.toInt(),
             gender: filterState.getGender,
@@ -48,7 +48,7 @@ class IntroduceNotifier extends _$IntroduceNotifier {
       final introduces = await ref
           .read(fetchIntroduceListUseCaseProvider)
           .execute(
-            preferredCities: filterState.selectedCitysEng,
+            preferredCities: filterState.selectedCitiesEng,
             fromAge: filterState.rangeValues.start.toInt(),
             toAge: filterState.rangeValues.end.toInt(),
             gender: filterState.getGender,
@@ -80,7 +80,7 @@ class IntroduceNotifier extends _$IntroduceNotifier {
       final introduces = await ref
           .read(fetchIntroduceListUseCaseProvider)
           .execute(
-            preferredCities: filterState.selectedCitysEng,
+            preferredCities: filterState.selectedCitiesEng,
             fromAge: filterState.rangeValues.start.toInt(),
             toAge: filterState.rangeValues.end.toInt(),
             gender: filterState.getGender,

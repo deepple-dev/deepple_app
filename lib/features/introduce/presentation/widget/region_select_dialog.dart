@@ -1,14 +1,24 @@
 import 'package:deepple_app/app/widget/list/list_chip.dart';
-import 'package:deepple_app/features/introduce/domain/provider/filter_temp_notifier.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:deepple_app/app/constants/constants.dart';
 import 'package:deepple_app/app/widget/button/button.dart';
-import 'package:deepple_app/features/introduce/domain/provider/filter_notifier.dart';
 
-class Regionselectdialog extends ConsumerWidget {
-  const Regionselectdialog({super.key});
+class RegionSelectDialog extends StatefulWidget {
+  final List<String> selectedCityList;
+  const RegionSelectDialog({super.key, required this.selectedCityList});
 
+  @override
+  State<RegionSelectDialog> createState() => _RegionSelectDialogState();
+
+  static Future open(BuildContext context, List<String> selectedCityList) =>
+      showDialog<List<String>>(
+        context: context,
+        builder: (context) =>
+            RegionSelectDialog(selectedCityList: selectedCityList),
+      );
+}
+
+class _RegionSelectDialogState extends State<RegionSelectDialog> {
   static const List<String> _cityList = [
     '서울',
     '인천',
@@ -29,15 +39,16 @@ class Regionselectdialog extends ConsumerWidget {
     '전라북도',
   ];
 
-  static Future open(BuildContext context) => showDialog(
-    context: context,
-    builder: (context) => const Regionselectdialog(),
-  );
+  List<String> selectedCityList = [];
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final selectedCityList = ref.watch(filterTempProvider).selectedCitys;
+  void initState() {
+    super.initState();
+    selectedCityList = widget.selectedCityList;
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Dialog(
       insetPadding: const EdgeInsets.symmetric(horizontal: 16.0),
       shape: const RoundedRectangleBorder(borderRadius: Dimens.dialogRadius),
@@ -68,15 +79,16 @@ class Regionselectdialog extends ConsumerWidget {
                   selectedOptions: selectedCityList,
                   onSelectionChanged: (updatedSelections) {
                     if (updatedSelections.length > 2) return;
-                    ref
-                        .read(filterTempProvider.notifier)
-                        .updateCitys(updatedSelections);
+
+                    setState(() {
+                      selectedCityList = updatedSelections;
+                    });
                   },
                 ),
               ],
             ),
             DefaultElevatedButton(
-              onPressed: Navigator.of(context).pop,
+              onPressed: () => Navigator.of(context).pop(selectedCityList),
               padding: const EdgeInsets.symmetric(vertical: 16.0),
               child: const Text('확인'),
             ),

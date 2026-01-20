@@ -8,6 +8,8 @@ class RowTextFormField extends StatefulWidget {
   final String hintText;
   final String? initialValue;
   final TextStyle? textStyle;
+  final List<String> selectedCityList;
+  final void Function(List<String>) onSelectedCity;
 
   const RowTextFormField({
     super.key,
@@ -15,6 +17,8 @@ class RowTextFormField extends StatefulWidget {
     required this.hintText,
     this.initialValue,
     this.textStyle,
+    required this.selectedCityList,
+    required this.onSelectedCity,
   });
 
   @override
@@ -45,8 +49,12 @@ class _RowTextFormFieldState extends State<RowTextFormField> {
       child: DefaultTextFormField(
         initialValue: widget.initialValue,
         controller: controller,
-        onTap: () {
-          Regionselectdialog.open(context);
+        onTap: () async {
+          final selected = await RegionSelectDialog.open(
+            context,
+            widget.selectedCityList,
+          );
+          widget.onSelectedCity(selected);
         },
         enabled: true,
         readOnly: true,

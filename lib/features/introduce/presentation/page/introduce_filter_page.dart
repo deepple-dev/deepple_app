@@ -1,8 +1,6 @@
 import 'package:deepple_app/app/provider/global_notifier.dart';
 import 'package:deepple_app/app/widget/input/selection.dart';
 import 'package:deepple_app/app/widget/widget.dart';
-import 'package:deepple_app/features/introduce/domain/provider/filter_temp_notifier.dart';
-import 'package:deepple_app/features/introduce/domain/provider/filter_temp_state.dart';
 import 'package:deepple_app/features/introduce/introduce.dart';
 import 'package:deepple_app/features/introduce/presentation/widget/age_range_slider.dart';
 import 'package:deepple_app/features/introduce/presentation/widget/row_text_form_field.dart';
@@ -12,25 +10,48 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
-class IntroduceFilterPage extends ConsumerWidget {
+class IntroduceFilterPage extends ConsumerStatefulWidget {
   const IntroduceFilterPage({super.key});
 
+  @override
+  ConsumerState<IntroduceFilterPage> createState() =>
+      _IntroduceFilterPageState();
+}
+
+class _IntroduceFilterPageState extends ConsumerState<IntroduceFilterPage> {
   static const String ALL = '전체 보기';
   static const String OPPOSITE = '이성만 보기';
 
+  late RangeValues initialAgeRange;
+  List<String> initialSelectedCityList = [];
+  late Gender? initialSelectedGender;
+  late RangeValues ageRange;
+  List<String> selectedCityList = [];
+  late Gender? selectedGender;
+  bool isMale = false;
+
+  bool hasChanged = false;
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    FilterTempNotifier filterTempNotifier = ref.read(
-      filterTempProvider.notifier,
-    );
-    FilterTempState filterTempState = ref.watch(filterTempProvider);
+  void initState() {
+    super.initState();
 
-    final isMale = ref.read(globalProvider).profile.isMale;
-    final ageRange = filterTempState.rangeValues;
-    final selectedCityList = filterTempState.selectedCitys;
-    final selectedGender = filterTempState.selectedGender;
-    final hasChanged = filterTempState.hasChanged;
+    final filterState = ref.read(filterProvider);
+    initialAgeRange = filterState.rangeValues;
 
+    initialSelectedCityList = List<String>.of(filterState.selectedCities);
+    initialSelectedGender = filterState.selectedGender;
+
+    ageRange = initialAgeRange;
+    selectedCityList = initialSelectedCityList;
+    selectedGender = initialSelectedGender;
+
+    isMale = ref.read(globalProvider).profile.isMale;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    print('hasChanged $hasChanged');
     return Scaffold(
       appBar: DefaultAppBar(
         title: '필터 설정',
@@ -54,7 +75,15 @@ class IntroduceFilterPage extends ConsumerWidget {
               ],
             ),
           ),
-          const AgeRangeSlider(),
+          AgeRangeSlider(
+            ageRange: ageRange,
+            onChanged: (newAgeRange) {
+              setState(() {
+                ageRange = newAgeRange;
+                hasChanged = true;
+              });
+            },
+          ),
           Gap(12.h),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -67,6 +96,13 @@ class IntroduceFilterPage extends ConsumerWidget {
                   initialValue: selectedCityList.isNotEmpty
                       ? selectedCityList.join(', ')
                       : null,
+                  selectedCityList: selectedCityList,
+                  onSelectedCity: (newSelectedList) {
+                    setState(() {
+                      selectedCityList = newSelectedList;
+                      hasChanged = true;
+                    });
+                  },
                 ),
 
                 Gap(24.h),
@@ -78,14 +114,14 @@ class IntroduceFilterPage extends ConsumerWidget {
                     options: [ALL, OPPOSITE],
                     initialOptions: selectedGender == null ? ALL : OPPOSITE,
                     onChange: (str) {
-                      // hive 저장?
                       if (str == ALL) {
-                        filterTempNotifier.updateGender(null);
+                        selectedGender = null;
                       } else {
-                        filterTempNotifier.updateGender(
-                          isMale ? Gender.female : Gender.male,
-                        );
+                        selectedGender = isMale ? Gender.female : Gender.male;
                       }
+                      setState(() {
+                        hasChanged = true;
+                      });
                     },
                   ),
                 ),
@@ -104,9 +140,9 @@ class IntroduceFilterPage extends ConsumerWidget {
                       ref
                           .read(filterProvider.notifier)
                           .updateFilter(
-                            newGender: filterTempState.selectedGender,
-                            newCities: filterTempState.selectedCitys,
-                            newRange: filterTempState.rangeValues,
+                            newGender: selectedGender,
+                            newCities: selectedCityList,
+                            newRange: ageRange,
                           );
                       Navigator.of(context).pop();
                     }

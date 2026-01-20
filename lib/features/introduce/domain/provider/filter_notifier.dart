@@ -48,7 +48,7 @@ class FilterNotifier extends _$FilterNotifier {
         preferredAgeStart.toDouble(),
         preferredAgeEnd.toDouble(),
       ),
-      selectedCitys: preferredCities,
+      selectedCities: preferredCities,
       selectedGender: selectedGender,
     );
   }
@@ -60,7 +60,7 @@ class FilterNotifier extends _$FilterNotifier {
   }) {
     state = state.copyWith(
       selectedGender: newGender,
-      selectedCitys: newCities,
+      selectedCities: newCities,
       rangeValues: newRange,
     );
     _saveFilter();
@@ -77,7 +77,7 @@ class FilterNotifier extends _$FilterNotifier {
     );
     SharedPreferenceManager.setValue(
       SharedPreferenceKeys.preferredCities,
-      state.selectedCitys,
+      state.selectedCities,
     );
     SharedPreferenceManager.setValue(
       SharedPreferenceKeys.showAllGender,
