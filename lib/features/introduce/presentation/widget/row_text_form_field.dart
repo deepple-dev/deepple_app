@@ -36,6 +36,7 @@ class _RowTextFormFieldState extends State<RowTextFormField> {
 
   @override
   void dispose() {
+    controller.dispose();
     super.dispose();
   }
 
@@ -54,7 +55,7 @@ class _RowTextFormFieldState extends State<RowTextFormField> {
             context,
             widget.selectedCityList,
           );
-          widget.onSelectedCity(selected);
+          widget.onSelectedCity(selected ?? []);
         },
         enabled: true,
         readOnly: true,

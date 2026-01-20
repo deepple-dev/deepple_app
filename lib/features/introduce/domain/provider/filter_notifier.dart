@@ -42,8 +42,6 @@ class FilterNotifier extends _$FilterNotifier {
         ) ??
         [];
 
-    // TODO: 서버로부터 받은 선호나이를 반영해야함
-
     return FilterState(
       rangeValues: RangeValues(
         preferredAgeStart.toDouble(),
