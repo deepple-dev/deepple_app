@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'package:deepple_app/core/network/network_exception.dart';
 import 'package:deepple_app/app/provider/global_notifier.dart';
 import 'package:deepple_app/core/util/log.dart';
 import 'package:deepple_app/features/store/domain/provider/usecase_providers.dart';
@@ -25,7 +25,7 @@ class StoreNotifier extends _$StoreNotifier {
 
   @override
   StoreState build() {
-    Future.microtask(() => _initialize());
+    _initialize();
 
     ref.onDispose(() {
       _subscription?.cancel();
@@ -98,8 +98,7 @@ class StoreNotifier extends _$StoreNotifier {
               await InAppPurchase.instance.completePurchase(purchase);
             }
           } catch (e) {
-            
-            if (e.toString().contains('이미 존재하는 주문입니다') || e.toString().contains('400')) {
+            if (e is NetworkException && e.status == 400) {
               await InAppPurchase.instance.completePurchase(purchase);
             } else {
               Log.e('Receipt verification failed: $e');
@@ -124,7 +123,7 @@ class StoreNotifier extends _$StoreNotifier {
   // 보유하트 조회
   Future<void> _initializeHeartBalanceItem() async {
     try {
-      final heartBalance = ref.watch(globalProvider).heartBalance;
+      final heartBalance = ref.read(globalProvider).heartBalance;
 
       state = state.copyWith(
         heartBalance: heartBalance,
@@ -148,11 +147,13 @@ class StoreNotifier extends _$StoreNotifier {
       Log.e('Failed to fetch heart balance: $e');
       return;
     } finally {
-      state = state.copyWith(
-        heartBalance: ref.watch(globalProvider).heartBalance,
-        isLoaded: true,
-        error: null,
-      );
+      if (ref.mounted) {
+        state = state.copyWith(
+          heartBalance: ref.watch(globalProvider).heartBalance,
+          isLoaded: true,
+          error: null,
+        );
+      }
     }
   }
 
