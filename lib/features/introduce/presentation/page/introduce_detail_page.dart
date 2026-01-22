@@ -64,11 +64,9 @@ class IntroduceDetailPageState
                 horizontalPadding: horizontalPadding,
                 notifier: notifier,
               ),
-              Expanded(
-                child: _IntroduceContentSection(
-                  introduceDetail: introduceDetail,
-                  horizontalPadding: horizontalPadding,
-                ),
+              _IntroduceContentSection(
+                introduceDetail: introduceDetail,
+                horizontalPadding: horizontalPadding,
               ),
             ],
           );
@@ -119,7 +117,7 @@ class _IntroduceProfileSection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               RoundedImage(imageURL: member.profileImageUrl, size: 100),
-              SizedBox(width: 16.w),
+              const Gap(16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -178,47 +176,50 @@ class _IntroduceContentSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Palette.colorGrey100,
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: horizontalPadding,
-            vertical: 12.0,
-          ),
-          child: Container(
-            decoration: const BoxDecoration(
-              color: Palette.colorWhite,
-              borderRadius: BorderRadius.vertical(
-                top: Radius.circular(16.0),
-                bottom: Radius.circular(16.0),
-              ),
+    return Expanded(
+      child: Container(
+        color: Palette.colorGrey100,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: horizontalPadding,
+              vertical: 12.0,
             ),
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: horizontalPadding,
-                vertical: 20.0,
+            child: Container(
+              decoration: const BoxDecoration(
+                color: Palette.colorWhite,
+                borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(16.0),
+                  bottom: Radius.circular(16.0),
+                ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    introduceDetail.title,
-                    style: Fonts.semibold(
-                      color: Palette.colorBlack,
-                      fontSize: 16,
+              width: double.infinity,
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: horizontalPadding,
+                  vertical: 20.0,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      introduceDetail.title,
+                      style: Fonts.semibold(
+                        color: Palette.colorBlack,
+                        fontSize: 16,
+                      ),
                     ),
-                  ),
-                  const Gap(12),
-                  Text(
-                    introduceDetail.content,
-                    style: Fonts.regular(
-                      color: Palette.colorGrey600,
-                      fontSize: 14,
-                      lineHeight: 1.5,
+                    const Gap(12),
+                    Text(
+                      introduceDetail.content,
+                      style: Fonts.regular(
+                        color: Palette.colorGrey600,
+                        fontSize: 14,
+                        lineHeight: 1.5,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
