@@ -149,7 +149,7 @@ class StoreNotifier extends _$StoreNotifier {
     } finally {
       if (ref.mounted) {
         state = state.copyWith(
-          heartBalance: ref.watch(globalProvider).heartBalance,
+          heartBalance: ref.read(globalProvider).heartBalance,
           isLoaded: true,
           error: null,
         );
