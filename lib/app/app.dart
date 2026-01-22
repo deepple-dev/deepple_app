@@ -79,6 +79,12 @@ class _AppState extends ConsumerState<App> {
           theme: createThemeData(Palette.lightScheme),
           darkTheme: createThemeData(Palette.darkScheme),
           routerConfig: ref.watch(routerProvider),
+          builder: (context, child) => MediaQuery(
+            data: MediaQuery.of(
+              context,
+            ).copyWith(textScaler: TextScaler.noScaling),
+            child: child!,
+          ),
         ),
       ),
     );

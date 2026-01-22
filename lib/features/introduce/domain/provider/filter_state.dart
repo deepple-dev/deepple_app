@@ -23,6 +23,9 @@ abstract class FilterState with _$FilterState {
     required RangeValues rangeValues,
     required List<String> selectedCitys,
     required Gender? selectedGender,
+    required RangeValues newRangeValues,
+    @Default([]) List<String> newSelectedCitys,
+    Gender? newSelectedGender,
     required bool hasChanged,
   }) = _FilterState;
 
@@ -31,6 +34,8 @@ abstract class FilterState with _$FilterState {
     rangeValues: RangeValues(27, 32),
     selectedCitys: [],
     selectedGender: null,
+    newRangeValues: RangeValues(27, 32),
+    newSelectedCitys: [],
     hasChanged: false,
   );
 }
