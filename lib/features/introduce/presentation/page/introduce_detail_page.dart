@@ -238,6 +238,7 @@ class _InteractionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: DefaultElevatedButton(
+        height: 40,
         padding: const EdgeInsets.symmetric(vertical: 10.0),
         onPressed: onPressed,
         child: Row(
@@ -259,6 +260,7 @@ class _WaitingButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: DefaultElevatedButton(
+        height: 40,
         padding: const EdgeInsets.symmetric(vertical: 10.0),
         onPressed: null,
         child: Row(
