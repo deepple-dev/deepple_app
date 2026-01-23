@@ -160,7 +160,7 @@ class _IntroduceProfileSection extends StatelessWidget {
                       })
                     : introduceDetail.profileExchangeStatus ==
                           ProfileExchangeStatus.rejected
-                    ? const _WaitingButton('상대방이 거절하셨습니다')
+                    ? const _WaitingButton('상대방이 프로필 교환을 거절하셨습니다')
                     : const _WaitingButton('상대방의 수락을 기다리고 있어요'),
               ],
             ),
