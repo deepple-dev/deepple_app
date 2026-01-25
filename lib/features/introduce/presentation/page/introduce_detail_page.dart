@@ -141,24 +141,23 @@ class _IntroduceProfileSection extends StatelessWidget {
           ),
           const Gap(16),
           if (myGender != member.gender)
-            Row(
-              children: [
-                introduceDetail.profileExchangeStatus ==
-                        ProfileExchangeStatus.none
-                    ? _InteractionButton('프로필 교환하기', () {
-                        ProfileExchangeDialog.open(
-                          context,
-                          myHeartPoint: heartPoint,
-                          onSendExchange: () {
-                            // 프로필 교환 보내기
-                            notifier.requestProfileExchange(member.memberId);
-                            Navigator.of(context).pop();
-                          },
-                        );
-                      })
-                    : const _WaitingButton('상대방의 수락을 기다리고 있어요'),
-              ],
-            ),
+            switch (introduceDetail.profileExchangeStatus) {
+              ProfileExchangeStatus.none => _InteractionButton('프로필 교환하기', () {
+                ProfileExchangeDialog.open(
+                  context,
+                  myHeartPoint: heartPoint,
+                  onSendExchange: () {
+                    // 프로필 교환 보내기
+                    notifier.requestProfileExchange(member.memberId);
+                    Navigator.of(context).pop();
+                  },
+                );
+              }),
+              ProfileExchangeStatus.rejected => const _WaitingButton(
+                '상대방이 프로필 교환을 거절하셨습니다',
+              ),
+              _ => const _WaitingButton('상대방의 수락을 기다리고 있어요'),
+            },
         ],
       ),
     );
@@ -237,15 +236,14 @@ class _InteractionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: DefaultElevatedButton(
-        padding: const EdgeInsets.symmetric(vertical: 10.0),
-        onPressed: onPressed,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [Text(text, style: Fonts.body02Medium(Colors.white))],
-        ),
+    return DefaultElevatedButton(
+      height: 40,
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      onPressed: onPressed,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [Text(text, style: Fonts.body02Medium(Colors.white))],
       ),
     );
   }
@@ -258,15 +256,14 @@ class _WaitingButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: DefaultElevatedButton(
-        padding: const EdgeInsets.symmetric(vertical: 10.0),
-        onPressed: null,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [Text(text, style: Fonts.body02Medium(Colors.white))],
-        ),
+    return DefaultElevatedButton(
+      height: 40,
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      onPressed: null,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [Text(text, style: Fonts.body02Medium(Colors.white))],
       ),
     );
   }
