@@ -1,4 +1,3 @@
-/// 서버에서 사용하는 알림 타입 enum
 enum ServerNotificationType {
   unknown(''),
   matchRequest('MATCH_REQUEST'),
@@ -19,8 +18,10 @@ enum ServerNotificationType {
   final String key;
 
   static final Map<String, ServerNotificationType> _byValue = {
-    for (final level in ServerNotificationType.values) level.key: level,
+    for (final level in ServerNotificationType.validValues) level.key: level,
   };
+
+  static List<ServerNotificationType> get validValues => values.where((type) => type != unknown).toList();
 
   static ServerNotificationType? tryParse(String? value) =>
       _byValue[value?.toUpperCase()];
