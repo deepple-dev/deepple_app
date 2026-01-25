@@ -80,7 +80,7 @@ class NotificationRepository extends BaseRepository {
   List<ServerNotificationType> _parseEnabledServerTypes(
     Map<String, bool> serverPreferences,
   ) {
-    return ServerNotificationType.values
+    return ServerNotificationType.validValues
         .where((type) => serverPreferences[type.key] == true)
         .toList();
   }
@@ -109,7 +109,7 @@ class NotificationRepository extends BaseRepository {
   Future<void> _syncToServer(List<ServerNotificationType> enabledTypes) async {
     try {
       final serverPreferences = Map.fromEntries(
-        ServerNotificationType.values.map(
+        ServerNotificationType.validValues.map(
           (type) => MapEntry(type.key, enabledTypes.contains(type)),
         ),
       );
@@ -122,7 +122,7 @@ class NotificationRepository extends BaseRepository {
 
   Future<void> enableAllNotifications() async {
     await _updateNotificationPermission(true);
-    final allEnabled = ServerNotificationType.values.toList();
+    final allEnabled = ServerNotificationType.validValues.toList();
     await saveEnableNotificationTypes(allEnabled);
   }
 
