@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:deepple_app/app/router/router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:deepple_app/app/constants/constants.dart';
+import 'package:go_router/go_router.dart';
 
 class InterviewRegisterPage extends ConsumerStatefulWidget {
   final String question;
@@ -111,7 +112,8 @@ class InterviewRegisterPageState extends ConsumerState<InterviewRegisterPage> {
             context: context,
             content: '이 페이지를 벗어나면\n작성된 내용은 저장되지 않습니다.',
             onElevatedButtonPressed: () {
-              navigate(context, route: AppRoute.interview);
+              context.pop();
+              context.pop();
             },
           );
         },
