@@ -98,7 +98,7 @@ class StoreNotifier extends _$StoreNotifier {
               await InAppPurchase.instance.completePurchase(purchase);
             }
           } catch (e) {
-            if (e is NetworkException && e.status == 400) {
+            if (e is NetworkException && e.status == 400 && e.code == 400102) {
               await InAppPurchase.instance.completePurchase(purchase);
             } else {
               Log.e('Receipt verification failed: $e');
