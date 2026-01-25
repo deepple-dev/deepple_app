@@ -152,13 +152,14 @@ class ProfileNotifier extends _$ProfileNotifier {
     }
   }
 
-  Future<void> approveMatch() async {
+  Future<void> approveMatch(ContactMethod method) async {
     if (state.profile == null) return;
 
     try {
       await ProfileMatchApproveUseCase(ref).call(
         matchId: state.profile!.matchStatus.matchId,
         message: state.message,
+        contactMethod: method,
       );
 
       _initializeProfileState(userId);
