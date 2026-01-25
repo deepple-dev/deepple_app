@@ -392,7 +392,7 @@ class AddressData {
 
     final district = _districtByValue[city.label]![districtValue];
 
-    return '${city.label} ${district!.label}';
+    return '${city.label} ${district?.label}';
   }
 
   /// 서버 데이터를 CityAddressItem으로 반환

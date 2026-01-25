@@ -119,7 +119,7 @@ class _IntroduceProfileSection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               RoundedImage(imageURL: member.profileImageUrl, size: 100),
-              SizedBox(width: 16.w),
+              const Gap(16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -143,24 +143,23 @@ class _IntroduceProfileSection extends StatelessWidget {
           ),
           const Gap(16),
           if (myGender != member.gender)
-            Row(
-              children: [
-                introduceDetail.profileExchangeStatus ==
-                        ProfileExchangeStatus.none
-                    ? _InteractionButton('프로필 교환하기', () {
-                        ProfileExchangeDialog.open(
-                          context,
-                          myHeartPoint: heartPoint,
-                          onSendExchange: () {
-                            // 프로필 교환 보내기
-                            notifier.requestProfileExchange(member.memberId);
-                            Navigator.of(context).pop();
-                          },
-                        );
-                      })
-                    : const _WaitingButton('상대방의 수락을 기다리고 있어요'),
-              ],
-            ),
+            switch (introduceDetail.profileExchangeStatus) {
+              ProfileExchangeStatus.none => _InteractionButton('프로필 교환하기', () {
+                ProfileExchangeDialog.open(
+                  context,
+                  myHeartPoint: heartPoint,
+                  onSendExchange: () {
+                    // 프로필 교환 보내기
+                    notifier.requestProfileExchange(member.memberId);
+                    Navigator.of(context).pop();
+                  },
+                );
+              }),
+              ProfileExchangeStatus.rejected => const _WaitingButton(
+                '상대방이 프로필 교환을 거절하셨습니다',
+              ),
+              _ => const _WaitingButton('상대방의 수락을 기다리고 있어요'),
+            },
         ],
       ),
     );
@@ -194,32 +193,31 @@ class _IntroduceContentSection extends StatelessWidget {
                 bottom: Radius.circular(16.0),
               ),
             ),
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: horizontalPadding,
-                vertical: 20.0,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    introduceDetail.title,
-                    style: Fonts.semibold(
-                      color: Palette.colorBlack,
-                      fontSize: 16,
-                    ),
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(
+              horizontal: horizontalPadding,
+              vertical: 20.0,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  introduceDetail.title,
+                  style: Fonts.semibold(
+                    color: Palette.colorBlack,
+                    fontSize: 16,
                   ),
-                  const Gap(12),
-                  Text(
-                    introduceDetail.content,
-                    style: Fonts.regular(
-                      color: Palette.colorGrey600,
-                      fontSize: 14,
-                      lineHeight: 1.5,
-                    ),
+                ),
+                const Gap(12),
+                Text(
+                  introduceDetail.content,
+                  style: Fonts.regular(
+                    color: Palette.colorGrey600,
+                    fontSize: 14,
+                    lineHeight: 1.5,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
@@ -236,15 +234,14 @@ class _InteractionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: DefaultElevatedButton(
-        padding: const EdgeInsets.symmetric(vertical: 10.0),
-        onPressed: onPressed,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [Text(text, style: Fonts.body02Medium(Colors.white))],
-        ),
+    return DefaultElevatedButton(
+      height: 40,
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      onPressed: onPressed,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [Text(text, style: Fonts.body02Medium(Colors.white))],
       ),
     );
   }
@@ -257,15 +254,14 @@ class _WaitingButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: DefaultElevatedButton(
-        padding: const EdgeInsets.symmetric(vertical: 10.0),
-        onPressed: null,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [Text(text, style: Fonts.body02Medium(Colors.white))],
-        ),
+    return DefaultElevatedButton(
+      height: 40,
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      onPressed: null,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [Text(text, style: Fonts.body02Medium(Colors.white))],
       ),
     );
   }
