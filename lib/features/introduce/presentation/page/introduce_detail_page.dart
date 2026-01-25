@@ -119,7 +119,7 @@ class _IntroduceProfileSection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               RoundedImage(imageURL: member.profileImageUrl, size: 100),
-              SizedBox(width: 16.w),
+              const Gap(16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -193,32 +193,31 @@ class _IntroduceContentSection extends StatelessWidget {
                 bottom: Radius.circular(16.0),
               ),
             ),
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: horizontalPadding,
-                vertical: 20.0,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    introduceDetail.title,
-                    style: Fonts.semibold(
-                      color: Palette.colorBlack,
-                      fontSize: 16,
-                    ),
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(
+              horizontal: horizontalPadding,
+              vertical: 20.0,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  introduceDetail.title,
+                  style: Fonts.semibold(
+                    color: Palette.colorBlack,
+                    fontSize: 16,
                   ),
-                  const Gap(12),
-                  Text(
-                    introduceDetail.content,
-                    style: Fonts.regular(
-                      color: Palette.colorGrey600,
-                      fontSize: 14,
-                      lineHeight: 1.5,
-                    ),
+                ),
+                const Gap(12),
+                Text(
+                  introduceDetail.content,
+                  style: Fonts.regular(
+                    color: Palette.colorGrey600,
+                    fontSize: 14,
+                    lineHeight: 1.5,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
