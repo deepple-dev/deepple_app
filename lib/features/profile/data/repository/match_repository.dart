@@ -32,10 +32,14 @@ class MatchRepository extends BaseRepository {
     await apiService.patchJson('$path/$matchId/check');
   }
 
-  Future<void> approveMatch(int matchId, String message) async {
+  Future<void> approveMatch({
+    required int matchId,
+    required String message,
+    required ContactMethod contactMethod,
+  }) async {
     await apiService.patchJson(
       '$path/$matchId/approve',
-      data: {'responseMessage': message},
+      data: {'responseMessage': message, 'contactType': contactMethod.value},
     );
   }
 }
