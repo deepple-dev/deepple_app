@@ -1,5 +1,6 @@
 import 'package:deepple_app/app/constants/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class ProfileAppbar extends StatelessWidget implements PreferredSizeWidget {
   const ProfileAppbar({super.key, this.onBackButtonPressed, this.onTapInfo})
@@ -22,7 +23,7 @@ class ProfileAppbar extends StatelessWidget implements PreferredSizeWidget {
       title: matched ? Text('매칭 확인', style: Fonts.body01Medium()) : null,
       centerTitle: true,
       leading: GestureDetector(
-        onTap: onBackButtonPressed,
+        onTap: onBackButtonPressed ?? context.pop,
         child: const Icon(Icons.arrow_back_ios),
       ),
       actions: [
