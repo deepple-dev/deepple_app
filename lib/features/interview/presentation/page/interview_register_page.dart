@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:deepple_app/app/router/router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:deepple_app/app/constants/constants.dart';
+import 'package:go_router/go_router.dart';
 
 class InterviewRegisterPage extends ConsumerStatefulWidget {
   final String question;
