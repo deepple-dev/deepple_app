@@ -7,7 +7,9 @@ import 'package:deepple_app/core/extension/extended_context.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HomeBannerArea extends ConsumerWidget {
-  const HomeBannerArea({super.key});
+  final double horizontalPadding;
+
+  const HomeBannerArea({super.key, required this.horizontalPadding});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -16,20 +18,23 @@ class HomeBannerArea extends ConsumerWidget {
         .profile
         .isDatingExamSubmitted;
 
-    return GestureDetector(
-      onTap: () {
-        isDatingExamSubmitted
-            ? navigate(
-                context,
-                route: AppRoute.examResult,
-                extra: const ExamResultArguments(isFromDirectAccess: true),
-              )
-            : navigate(context, route: AppRoute.exam);
-      },
-      child: Image.asset(
-        ImagePath.homeTest,
-        fit: BoxFit.cover,
-        width: context.screenWidth,
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+      child: GestureDetector(
+        onTap: () {
+          isDatingExamSubmitted
+              ? navigate(
+                  context,
+                  route: AppRoute.examResult,
+                  extra: const ExamResultArguments(isFromDirectAccess: true),
+                )
+              : navigate(context, route: AppRoute.exam);
+        },
+        child: Image.asset(
+          ImagePath.homeTest,
+          fit: BoxFit.cover,
+          width: context.screenWidth,
+        ),
       ),
     );
   }

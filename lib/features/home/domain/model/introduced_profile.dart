@@ -16,7 +16,6 @@ abstract class IntroducedProfile with _$IntroducedProfile {
     required String? religion, // 종교
     required int age, // 나이
     required String nickname, // 닉네임
-    required String city, // 시
-    required String district, // 구
+    required String region, // 시 + 구
   }) = _IntroducedProfile;
 }
