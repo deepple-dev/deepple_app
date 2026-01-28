@@ -62,7 +62,9 @@ class _HomeProfileCardAreaState extends ConsumerState<HomeProfileCardArea> {
             AspectRatio(
               aspectRatio: 1.1,
               child: PageView.builder(
+                controller: PageController(viewportFraction: 0.9),
                 itemCount: profiles.length,
+                padEnds: true,
                 onPageChanged: (index) => setState(() => _currentPage = index),
                 itemBuilder: (context, index) {
                   final profile = profiles[index];
@@ -73,22 +75,30 @@ class _HomeProfileCardAreaState extends ConsumerState<HomeProfileCardArea> {
                       route: AppRoute.profile,
                       extra: ProfileDetailArguments(userId: profile.memberId),
                     ),
-                    child: _ProfileCardWidget(
-                      profile: profile,
-                      onTapFavorite: () async {
-                        if (profile.favoriteType != null) return;
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: _ProfileCardWidget(
+                            profile: profile,
+                            maxWidth: constraints.maxWidth,
+                            onTapFavorite: () async {
+                              if (profile.favoriteType != null) return;
 
-                        final favoriteType =
-                            await FavoriteTypeSelectDialog.open(
-                              context,
-                              userId: profile.memberId,
-                              favoriteType: profile.favoriteType,
-                            );
-                        if (favoriteType == null) return;
+                              final favoriteType =
+                                  await FavoriteTypeSelectDialog.open(
+                                    context,
+                                    userId: profile.memberId,
+                                    favoriteType: profile.favoriteType,
+                                  );
+                              if (favoriteType == null) return;
 
-                        homeNotifier.setFavoriteType(
-                          memberId: profile.memberId,
-                          type: favoriteType,
+                              homeNotifier.setFavoriteType(
+                                memberId: profile.memberId,
+                                type: favoriteType,
+                              );
+                            },
+                          ),
                         );
                       },
                     ),
@@ -160,17 +170,20 @@ class _EmptyProfileCard extends StatelessWidget {
 class _ProfileCardWidget extends StatelessWidget {
   const _ProfileCardWidget({
     required this.profile,
+    required this.maxWidth,
     required this.onTapFavorite,
   });
 
   final IntroducedProfile profile;
+  final double maxWidth;
   final VoidCallback onTapFavorite;
 
   @override
   Widget build(BuildContext context) {
+    print('maxWidthv $maxWidth');
     return Container(
       clipBehavior: Clip.hardEdge,
-      width: context.screenWidth,
+      width: maxWidth - 48,
       decoration: BoxDecoration(
         // 카드 색상 및 둥근모서리 설정
         color: Palette.colorGrey50,
