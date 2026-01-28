@@ -18,8 +18,6 @@ import 'package:deepple_app/core/network/dio_service.dart';
 import 'package:deepple_app/core/network/network_exception.dart';
 import 'package:deepple_app/core/network/token_interceptor.dart';
 
-const _refreshTokenKey = 'refresh_token';
-
 final apiServiceProvider = Provider<ApiServiceImpl>((ref) {
   return ApiServiceImpl(
     ref: ref,
@@ -35,6 +33,8 @@ class ApiServiceImpl implements ApiService {
   late final DioService _dioService;
   late final PersistCookieJar _cookieJar;
   final Completer<void> _initCompleter = Completer();
+
+  Future<void> ensureInitialized() => _initCompleter.future;
 
   PersistCookieJar get cookieJar => _cookieJar;
 
@@ -74,11 +74,7 @@ class ApiServiceImpl implements ApiService {
 
       if (enableAuth) {
         _dioService.interceptors.add(
-          TokenInterceptor(
-            ref: ref,
-            dio: _dioService,
-            cookieJar: cookieJar,
-          ),
+          TokenInterceptor(ref: ref, dio: _dioService, cookieJar: cookieJar),
         );
       }
 
@@ -92,6 +88,7 @@ class ApiServiceImpl implements ApiService {
       if (!_initCompleter.isCompleted) {
         _initCompleter.completeError(e, st);
       }
+      return;
     } finally {
       // 성공 case만 처리
       if (!_initCompleter.isCompleted) {
@@ -107,19 +104,12 @@ class ApiServiceImpl implements ApiService {
     await _initCompleter.future;
     final finalHeaders = <String, dynamic>{'Accept': '*/*', ...?headers};
 
-    if (requiresAccessToken) {
-      final accessToken = await ref.read(authUsecaseProvider).getAccessToken();
-      final refreshToken = await ref
-          .read(localStorageProvider)
-          .getEncrypted(SecureStorageItem.refreshToken);
+    if (!requiresAccessToken) return finalHeaders;
 
-      if (accessToken != null) {
-        finalHeaders['Authorization'] = 'Bearer $accessToken';
-      }
-      if (refreshToken != null) {
-        finalHeaders['x-refresh-token'] = refreshToken;
-      }
-    }
+    final accessToken = await ref.read(authUsecaseProvider).getAccessToken();
+    if (accessToken == null) return finalHeaders;
+
+    finalHeaders['authorization'] = 'Bearer $accessToken';
 
     return finalHeaders;
   }
@@ -133,7 +123,10 @@ class ApiServiceImpl implements ApiService {
     if (refreshToken == null) return;
 
     final uri = Uri.parse(_baseUrl);
-    _cookieJar.saveFromResponse(uri, [Cookie(_refreshTokenKey, refreshToken)]);
+    final cookies = setCookieHeaders
+        .map((value) => Cookie.fromSetCookieValue(value))
+        .toList();
+    await _cookieJar.saveFromResponse(uri, cookies);
 
     await ref
         .read(localStorageProvider)
