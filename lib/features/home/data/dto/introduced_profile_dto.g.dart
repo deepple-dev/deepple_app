@@ -22,16 +22,19 @@ class IntroducedProfileDtoAdapter extends TypeAdapter<IntroducedProfileDto> {
       hobbies: (fields[2] as List).cast<String>(),
       mbti: fields[3] as String,
       religion: fields[4] as String?,
-      interviewAnswerContent: fields[5] as String,
       likeLevel: fields[6] as String?,
       isIntroduced: fields[7] as bool,
+      age: (fields[8] as num).toInt(),
+      nickname: fields[9] as String,
+      city: fields[10] as String,
+      district: fields[11] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, IntroducedProfileDto obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(11)
       ..writeByte(0)
       ..write(obj.memberId)
       ..writeByte(1)
@@ -42,12 +45,18 @@ class IntroducedProfileDtoAdapter extends TypeAdapter<IntroducedProfileDto> {
       ..write(obj.mbti)
       ..writeByte(4)
       ..write(obj.religion)
-      ..writeByte(5)
-      ..write(obj.interviewAnswerContent)
       ..writeByte(6)
       ..write(obj.likeLevel)
       ..writeByte(7)
-      ..write(obj.isIntroduced);
+      ..write(obj.isIntroduced)
+      ..writeByte(8)
+      ..write(obj.age)
+      ..writeByte(9)
+      ..write(obj.nickname)
+      ..writeByte(10)
+      ..write(obj.city)
+      ..writeByte(11)
+      ..write(obj.district);
   }
 
   @override
@@ -73,9 +82,12 @@ _IntroducedProfileDto _$IntroducedProfileDtoFromJson(
   hobbies: (json['hobbies'] as List<dynamic>).map((e) => e as String).toList(),
   mbti: json['mbti'] as String,
   religion: json['religion'] as String?,
-  interviewAnswerContent: json['interviewAnswerContent'] as String,
   likeLevel: json['likeLevel'] as String?,
   isIntroduced: json['isIntroduced'] as bool,
+  age: (json['age'] as num).toInt(),
+  nickname: json['nickname'] as String,
+  city: json['city'] as String,
+  district: json['district'] as String,
 );
 
 Map<String, dynamic> _$IntroducedProfileDtoToJson(
@@ -86,7 +98,10 @@ Map<String, dynamic> _$IntroducedProfileDtoToJson(
   'hobbies': instance.hobbies,
   'mbti': instance.mbti,
   'religion': instance.religion,
-  'interviewAnswerContent': instance.interviewAnswerContent,
   'likeLevel': instance.likeLevel,
   'isIntroduced': instance.isIntroduced,
+  'age': instance.age,
+  'nickname': instance.nickname,
+  'city': instance.city,
+  'district': instance.district,
 };

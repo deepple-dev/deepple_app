@@ -14,9 +14,13 @@ abstract class IntroducedProfileDto with _$IntroducedProfileDto {
     @HiveField(2) required List<String> hobbies,
     @HiveField(3) required String mbti,
     @HiveField(4) required String? religion,
-    @HiveField(5) required String interviewAnswerContent,
+    // @HiveField(5) required String? interviewAnswerContent,
     @HiveField(6) String? likeLevel,
     @HiveField(7) required bool isIntroduced,
+    @HiveField(8) required int age,
+    @HiveField(9) required String nickname,
+    @HiveField(10) required String city,
+    @HiveField(11) required String district,
   }) = _IntroducedProfileDto;
 
   factory IntroducedProfileDto.fromJson(Map<String, dynamic> json) =>

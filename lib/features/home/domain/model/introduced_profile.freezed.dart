@@ -15,10 +15,15 @@ T _$identity<T>(T value) => value;
 mixin _$IntroducedProfile {
 
  int get memberId; String get profileImageUrl;// imageUrl
- List<String> get tags;// 취미 + 종교 + mbti
- String get interviewContent;// 인터뷰 첫 대답
+ String get mbti; List<String> get hobbies;// 취미
+// required String interviewContent, // 인터뷰 첫 대답
  bool get isIntroduced;// 프로필 소개 여부
- FavoriteType? get favoriteType;
+ FavoriteType? get favoriteType;// 좋아요 여부
+ String? get religion;// 종교
+ int get age;// 나이
+ String get nickname;// 닉네임
+ String get city;// 시
+ String get district;
 /// Create a copy of IntroducedProfile
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +34,16 @@ $IntroducedProfileCopyWith<IntroducedProfile> get copyWith => _$IntroducedProfil
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is IntroducedProfile&&(identical(other.memberId, memberId) || other.memberId == memberId)&&(identical(other.profileImageUrl, profileImageUrl) || other.profileImageUrl == profileImageUrl)&&const DeepCollectionEquality().equals(other.tags, tags)&&(identical(other.interviewContent, interviewContent) || other.interviewContent == interviewContent)&&(identical(other.isIntroduced, isIntroduced) || other.isIntroduced == isIntroduced)&&(identical(other.favoriteType, favoriteType) || other.favoriteType == favoriteType));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is IntroducedProfile&&(identical(other.memberId, memberId) || other.memberId == memberId)&&(identical(other.profileImageUrl, profileImageUrl) || other.profileImageUrl == profileImageUrl)&&(identical(other.mbti, mbti) || other.mbti == mbti)&&const DeepCollectionEquality().equals(other.hobbies, hobbies)&&(identical(other.isIntroduced, isIntroduced) || other.isIntroduced == isIntroduced)&&(identical(other.favoriteType, favoriteType) || other.favoriteType == favoriteType)&&(identical(other.religion, religion) || other.religion == religion)&&(identical(other.age, age) || other.age == age)&&(identical(other.nickname, nickname) || other.nickname == nickname)&&(identical(other.city, city) || other.city == city)&&(identical(other.district, district) || other.district == district));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,memberId,profileImageUrl,const DeepCollectionEquality().hash(tags),interviewContent,isIntroduced,favoriteType);
+int get hashCode => Object.hash(runtimeType,memberId,profileImageUrl,mbti,const DeepCollectionEquality().hash(hobbies),isIntroduced,favoriteType,religion,age,nickname,city,district);
 
 @override
 String toString() {
-  return 'IntroducedProfile(memberId: $memberId, profileImageUrl: $profileImageUrl, tags: $tags, interviewContent: $interviewContent, isIntroduced: $isIntroduced, favoriteType: $favoriteType)';
+  return 'IntroducedProfile(memberId: $memberId, profileImageUrl: $profileImageUrl, mbti: $mbti, hobbies: $hobbies, isIntroduced: $isIntroduced, favoriteType: $favoriteType, religion: $religion, age: $age, nickname: $nickname, city: $city, district: $district)';
 }
 
 
@@ -49,7 +54,7 @@ abstract mixin class $IntroducedProfileCopyWith<$Res>  {
   factory $IntroducedProfileCopyWith(IntroducedProfile value, $Res Function(IntroducedProfile) _then) = _$IntroducedProfileCopyWithImpl;
 @useResult
 $Res call({
- int memberId, String profileImageUrl, List<String> tags, String interviewContent, bool isIntroduced, FavoriteType? favoriteType
+ int memberId, String profileImageUrl, String mbti, List<String> hobbies, bool isIntroduced, FavoriteType? favoriteType, String? religion, int age, String nickname, String city, String district
 });
 
 
@@ -66,15 +71,20 @@ class _$IntroducedProfileCopyWithImpl<$Res>
 
 /// Create a copy of IntroducedProfile
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? memberId = null,Object? profileImageUrl = null,Object? tags = null,Object? interviewContent = null,Object? isIntroduced = null,Object? favoriteType = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? memberId = null,Object? profileImageUrl = null,Object? mbti = null,Object? hobbies = null,Object? isIntroduced = null,Object? favoriteType = freezed,Object? religion = freezed,Object? age = null,Object? nickname = null,Object? city = null,Object? district = null,}) {
   return _then(_self.copyWith(
 memberId: null == memberId ? _self.memberId : memberId // ignore: cast_nullable_to_non_nullable
 as int,profileImageUrl: null == profileImageUrl ? _self.profileImageUrl : profileImageUrl // ignore: cast_nullable_to_non_nullable
-as String,tags: null == tags ? _self.tags : tags // ignore: cast_nullable_to_non_nullable
-as List<String>,interviewContent: null == interviewContent ? _self.interviewContent : interviewContent // ignore: cast_nullable_to_non_nullable
-as String,isIntroduced: null == isIntroduced ? _self.isIntroduced : isIntroduced // ignore: cast_nullable_to_non_nullable
+as String,mbti: null == mbti ? _self.mbti : mbti // ignore: cast_nullable_to_non_nullable
+as String,hobbies: null == hobbies ? _self.hobbies : hobbies // ignore: cast_nullable_to_non_nullable
+as List<String>,isIntroduced: null == isIntroduced ? _self.isIntroduced : isIntroduced // ignore: cast_nullable_to_non_nullable
 as bool,favoriteType: freezed == favoriteType ? _self.favoriteType : favoriteType // ignore: cast_nullable_to_non_nullable
-as FavoriteType?,
+as FavoriteType?,religion: freezed == religion ? _self.religion : religion // ignore: cast_nullable_to_non_nullable
+as String?,age: null == age ? _self.age : age // ignore: cast_nullable_to_non_nullable
+as int,nickname: null == nickname ? _self.nickname : nickname // ignore: cast_nullable_to_non_nullable
+as String,city: null == city ? _self.city : city // ignore: cast_nullable_to_non_nullable
+as String,district: null == district ? _self.district : district // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 
@@ -159,10 +169,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int memberId,  String profileImageUrl,  List<String> tags,  String interviewContent,  bool isIntroduced,  FavoriteType? favoriteType)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int memberId,  String profileImageUrl,  String mbti,  List<String> hobbies,  bool isIntroduced,  FavoriteType? favoriteType,  String? religion,  int age,  String nickname,  String city,  String district)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _IntroducedProfile() when $default != null:
-return $default(_that.memberId,_that.profileImageUrl,_that.tags,_that.interviewContent,_that.isIntroduced,_that.favoriteType);case _:
+return $default(_that.memberId,_that.profileImageUrl,_that.mbti,_that.hobbies,_that.isIntroduced,_that.favoriteType,_that.religion,_that.age,_that.nickname,_that.city,_that.district);case _:
   return orElse();
 
 }
@@ -180,10 +190,10 @@ return $default(_that.memberId,_that.profileImageUrl,_that.tags,_that.interviewC
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int memberId,  String profileImageUrl,  List<String> tags,  String interviewContent,  bool isIntroduced,  FavoriteType? favoriteType)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int memberId,  String profileImageUrl,  String mbti,  List<String> hobbies,  bool isIntroduced,  FavoriteType? favoriteType,  String? religion,  int age,  String nickname,  String city,  String district)  $default,) {final _that = this;
 switch (_that) {
 case _IntroducedProfile():
-return $default(_that.memberId,_that.profileImageUrl,_that.tags,_that.interviewContent,_that.isIntroduced,_that.favoriteType);case _:
+return $default(_that.memberId,_that.profileImageUrl,_that.mbti,_that.hobbies,_that.isIntroduced,_that.favoriteType,_that.religion,_that.age,_that.nickname,_that.city,_that.district);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -200,10 +210,10 @@ return $default(_that.memberId,_that.profileImageUrl,_that.tags,_that.interviewC
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int memberId,  String profileImageUrl,  List<String> tags,  String interviewContent,  bool isIntroduced,  FavoriteType? favoriteType)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int memberId,  String profileImageUrl,  String mbti,  List<String> hobbies,  bool isIntroduced,  FavoriteType? favoriteType,  String? religion,  int age,  String nickname,  String city,  String district)?  $default,) {final _that = this;
 switch (_that) {
 case _IntroducedProfile() when $default != null:
-return $default(_that.memberId,_that.profileImageUrl,_that.tags,_that.interviewContent,_that.isIntroduced,_that.favoriteType);case _:
+return $default(_that.memberId,_that.profileImageUrl,_that.mbti,_that.hobbies,_that.isIntroduced,_that.favoriteType,_that.religion,_that.age,_that.nickname,_that.city,_that.district);case _:
   return null;
 
 }
@@ -215,26 +225,35 @@ return $default(_that.memberId,_that.profileImageUrl,_that.tags,_that.interviewC
 
 
 class _IntroducedProfile implements IntroducedProfile {
-  const _IntroducedProfile({required this.memberId, required this.profileImageUrl, required final  List<String> tags, required this.interviewContent, required this.isIntroduced, required this.favoriteType}): _tags = tags;
+  const _IntroducedProfile({required this.memberId, required this.profileImageUrl, required this.mbti, required final  List<String> hobbies, required this.isIntroduced, required this.favoriteType, required this.religion, required this.age, required this.nickname, required this.city, required this.district}): _hobbies = hobbies;
   
 
 @override final  int memberId;
 @override final  String profileImageUrl;
 // imageUrl
- final  List<String> _tags;
-// imageUrl
-@override List<String> get tags {
-  if (_tags is EqualUnmodifiableListView) return _tags;
+@override final  String mbti;
+ final  List<String> _hobbies;
+@override List<String> get hobbies {
+  if (_hobbies is EqualUnmodifiableListView) return _hobbies;
   // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_tags);
+  return EqualUnmodifiableListView(_hobbies);
 }
 
-// 취미 + 종교 + mbti
-@override final  String interviewContent;
-// 인터뷰 첫 대답
+// 취미
+// required String interviewContent, // 인터뷰 첫 대답
 @override final  bool isIntroduced;
 // 프로필 소개 여부
 @override final  FavoriteType? favoriteType;
+// 좋아요 여부
+@override final  String? religion;
+// 종교
+@override final  int age;
+// 나이
+@override final  String nickname;
+// 닉네임
+@override final  String city;
+// 시
+@override final  String district;
 
 /// Create a copy of IntroducedProfile
 /// with the given fields replaced by the non-null parameter values.
@@ -246,16 +265,16 @@ _$IntroducedProfileCopyWith<_IntroducedProfile> get copyWith => __$IntroducedPro
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _IntroducedProfile&&(identical(other.memberId, memberId) || other.memberId == memberId)&&(identical(other.profileImageUrl, profileImageUrl) || other.profileImageUrl == profileImageUrl)&&const DeepCollectionEquality().equals(other._tags, _tags)&&(identical(other.interviewContent, interviewContent) || other.interviewContent == interviewContent)&&(identical(other.isIntroduced, isIntroduced) || other.isIntroduced == isIntroduced)&&(identical(other.favoriteType, favoriteType) || other.favoriteType == favoriteType));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _IntroducedProfile&&(identical(other.memberId, memberId) || other.memberId == memberId)&&(identical(other.profileImageUrl, profileImageUrl) || other.profileImageUrl == profileImageUrl)&&(identical(other.mbti, mbti) || other.mbti == mbti)&&const DeepCollectionEquality().equals(other._hobbies, _hobbies)&&(identical(other.isIntroduced, isIntroduced) || other.isIntroduced == isIntroduced)&&(identical(other.favoriteType, favoriteType) || other.favoriteType == favoriteType)&&(identical(other.religion, religion) || other.religion == religion)&&(identical(other.age, age) || other.age == age)&&(identical(other.nickname, nickname) || other.nickname == nickname)&&(identical(other.city, city) || other.city == city)&&(identical(other.district, district) || other.district == district));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,memberId,profileImageUrl,const DeepCollectionEquality().hash(_tags),interviewContent,isIntroduced,favoriteType);
+int get hashCode => Object.hash(runtimeType,memberId,profileImageUrl,mbti,const DeepCollectionEquality().hash(_hobbies),isIntroduced,favoriteType,religion,age,nickname,city,district);
 
 @override
 String toString() {
-  return 'IntroducedProfile(memberId: $memberId, profileImageUrl: $profileImageUrl, tags: $tags, interviewContent: $interviewContent, isIntroduced: $isIntroduced, favoriteType: $favoriteType)';
+  return 'IntroducedProfile(memberId: $memberId, profileImageUrl: $profileImageUrl, mbti: $mbti, hobbies: $hobbies, isIntroduced: $isIntroduced, favoriteType: $favoriteType, religion: $religion, age: $age, nickname: $nickname, city: $city, district: $district)';
 }
 
 
@@ -266,7 +285,7 @@ abstract mixin class _$IntroducedProfileCopyWith<$Res> implements $IntroducedPro
   factory _$IntroducedProfileCopyWith(_IntroducedProfile value, $Res Function(_IntroducedProfile) _then) = __$IntroducedProfileCopyWithImpl;
 @override @useResult
 $Res call({
- int memberId, String profileImageUrl, List<String> tags, String interviewContent, bool isIntroduced, FavoriteType? favoriteType
+ int memberId, String profileImageUrl, String mbti, List<String> hobbies, bool isIntroduced, FavoriteType? favoriteType, String? religion, int age, String nickname, String city, String district
 });
 
 
@@ -283,15 +302,20 @@ class __$IntroducedProfileCopyWithImpl<$Res>
 
 /// Create a copy of IntroducedProfile
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? memberId = null,Object? profileImageUrl = null,Object? tags = null,Object? interviewContent = null,Object? isIntroduced = null,Object? favoriteType = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? memberId = null,Object? profileImageUrl = null,Object? mbti = null,Object? hobbies = null,Object? isIntroduced = null,Object? favoriteType = freezed,Object? religion = freezed,Object? age = null,Object? nickname = null,Object? city = null,Object? district = null,}) {
   return _then(_IntroducedProfile(
 memberId: null == memberId ? _self.memberId : memberId // ignore: cast_nullable_to_non_nullable
 as int,profileImageUrl: null == profileImageUrl ? _self.profileImageUrl : profileImageUrl // ignore: cast_nullable_to_non_nullable
-as String,tags: null == tags ? _self._tags : tags // ignore: cast_nullable_to_non_nullable
-as List<String>,interviewContent: null == interviewContent ? _self.interviewContent : interviewContent // ignore: cast_nullable_to_non_nullable
-as String,isIntroduced: null == isIntroduced ? _self.isIntroduced : isIntroduced // ignore: cast_nullable_to_non_nullable
+as String,mbti: null == mbti ? _self.mbti : mbti // ignore: cast_nullable_to_non_nullable
+as String,hobbies: null == hobbies ? _self._hobbies : hobbies // ignore: cast_nullable_to_non_nullable
+as List<String>,isIntroduced: null == isIntroduced ? _self.isIntroduced : isIntroduced // ignore: cast_nullable_to_non_nullable
 as bool,favoriteType: freezed == favoriteType ? _self.favoriteType : favoriteType // ignore: cast_nullable_to_non_nullable
-as FavoriteType?,
+as FavoriteType?,religion: freezed == religion ? _self.religion : religion // ignore: cast_nullable_to_non_nullable
+as String?,age: null == age ? _self.age : age // ignore: cast_nullable_to_non_nullable
+as int,nickname: null == nickname ? _self.nickname : nickname // ignore: cast_nullable_to_non_nullable
+as String,city: null == city ? _self.city : city // ignore: cast_nullable_to_non_nullable
+as String,district: null == district ? _self.district : district // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 

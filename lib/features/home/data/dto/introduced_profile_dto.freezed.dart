@@ -16,7 +16,8 @@ T _$identity<T>(T value) => value;
 mixin _$IntroducedProfileDto {
 
 // HiveField 어노테이션은 그대로 유지
-@HiveField(0) int get memberId;@HiveField(1) String get profileImageUrl;@HiveField(2) List<String> get hobbies;@HiveField(3) String get mbti;@HiveField(4) String? get religion;@HiveField(5) String get interviewAnswerContent;@HiveField(6) String? get likeLevel;@HiveField(7) bool get isIntroduced;
+@HiveField(0) int get memberId;@HiveField(1) String get profileImageUrl;@HiveField(2) List<String> get hobbies;@HiveField(3) String get mbti;@HiveField(4) String? get religion;// @HiveField(5) required String? interviewAnswerContent,
+@HiveField(6) String? get likeLevel;@HiveField(7) bool get isIntroduced;@HiveField(8) int get age;@HiveField(9) String get nickname;@HiveField(10) String get city;@HiveField(11) String get district;
 /// Create a copy of IntroducedProfileDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +30,16 @@ $IntroducedProfileDtoCopyWith<IntroducedProfileDto> get copyWith => _$Introduced
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is IntroducedProfileDto&&(identical(other.memberId, memberId) || other.memberId == memberId)&&(identical(other.profileImageUrl, profileImageUrl) || other.profileImageUrl == profileImageUrl)&&const DeepCollectionEquality().equals(other.hobbies, hobbies)&&(identical(other.mbti, mbti) || other.mbti == mbti)&&(identical(other.religion, religion) || other.religion == religion)&&(identical(other.interviewAnswerContent, interviewAnswerContent) || other.interviewAnswerContent == interviewAnswerContent)&&(identical(other.likeLevel, likeLevel) || other.likeLevel == likeLevel)&&(identical(other.isIntroduced, isIntroduced) || other.isIntroduced == isIntroduced));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is IntroducedProfileDto&&(identical(other.memberId, memberId) || other.memberId == memberId)&&(identical(other.profileImageUrl, profileImageUrl) || other.profileImageUrl == profileImageUrl)&&const DeepCollectionEquality().equals(other.hobbies, hobbies)&&(identical(other.mbti, mbti) || other.mbti == mbti)&&(identical(other.religion, religion) || other.religion == religion)&&(identical(other.likeLevel, likeLevel) || other.likeLevel == likeLevel)&&(identical(other.isIntroduced, isIntroduced) || other.isIntroduced == isIntroduced)&&(identical(other.age, age) || other.age == age)&&(identical(other.nickname, nickname) || other.nickname == nickname)&&(identical(other.city, city) || other.city == city)&&(identical(other.district, district) || other.district == district));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,memberId,profileImageUrl,const DeepCollectionEquality().hash(hobbies),mbti,religion,interviewAnswerContent,likeLevel,isIntroduced);
+int get hashCode => Object.hash(runtimeType,memberId,profileImageUrl,const DeepCollectionEquality().hash(hobbies),mbti,religion,likeLevel,isIntroduced,age,nickname,city,district);
 
 @override
 String toString() {
-  return 'IntroducedProfileDto(memberId: $memberId, profileImageUrl: $profileImageUrl, hobbies: $hobbies, mbti: $mbti, religion: $religion, interviewAnswerContent: $interviewAnswerContent, likeLevel: $likeLevel, isIntroduced: $isIntroduced)';
+  return 'IntroducedProfileDto(memberId: $memberId, profileImageUrl: $profileImageUrl, hobbies: $hobbies, mbti: $mbti, religion: $religion, likeLevel: $likeLevel, isIntroduced: $isIntroduced, age: $age, nickname: $nickname, city: $city, district: $district)';
 }
 
 
@@ -49,7 +50,7 @@ abstract mixin class $IntroducedProfileDtoCopyWith<$Res>  {
   factory $IntroducedProfileDtoCopyWith(IntroducedProfileDto value, $Res Function(IntroducedProfileDto) _then) = _$IntroducedProfileDtoCopyWithImpl;
 @useResult
 $Res call({
-@HiveField(0) int memberId,@HiveField(1) String profileImageUrl,@HiveField(2) List<String> hobbies,@HiveField(3) String mbti,@HiveField(4) String? religion,@HiveField(5) String interviewAnswerContent,@HiveField(6) String? likeLevel,@HiveField(7) bool isIntroduced
+@HiveField(0) int memberId,@HiveField(1) String profileImageUrl,@HiveField(2) List<String> hobbies,@HiveField(3) String mbti,@HiveField(4) String? religion,@HiveField(6) String? likeLevel,@HiveField(7) bool isIntroduced,@HiveField(8) int age,@HiveField(9) String nickname,@HiveField(10) String city,@HiveField(11) String district
 });
 
 
@@ -66,17 +67,20 @@ class _$IntroducedProfileDtoCopyWithImpl<$Res>
 
 /// Create a copy of IntroducedProfileDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? memberId = null,Object? profileImageUrl = null,Object? hobbies = null,Object? mbti = null,Object? religion = freezed,Object? interviewAnswerContent = null,Object? likeLevel = freezed,Object? isIntroduced = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? memberId = null,Object? profileImageUrl = null,Object? hobbies = null,Object? mbti = null,Object? religion = freezed,Object? likeLevel = freezed,Object? isIntroduced = null,Object? age = null,Object? nickname = null,Object? city = null,Object? district = null,}) {
   return _then(_self.copyWith(
 memberId: null == memberId ? _self.memberId : memberId // ignore: cast_nullable_to_non_nullable
 as int,profileImageUrl: null == profileImageUrl ? _self.profileImageUrl : profileImageUrl // ignore: cast_nullable_to_non_nullable
 as String,hobbies: null == hobbies ? _self.hobbies : hobbies // ignore: cast_nullable_to_non_nullable
 as List<String>,mbti: null == mbti ? _self.mbti : mbti // ignore: cast_nullable_to_non_nullable
 as String,religion: freezed == religion ? _self.religion : religion // ignore: cast_nullable_to_non_nullable
-as String?,interviewAnswerContent: null == interviewAnswerContent ? _self.interviewAnswerContent : interviewAnswerContent // ignore: cast_nullable_to_non_nullable
-as String,likeLevel: freezed == likeLevel ? _self.likeLevel : likeLevel // ignore: cast_nullable_to_non_nullable
+as String?,likeLevel: freezed == likeLevel ? _self.likeLevel : likeLevel // ignore: cast_nullable_to_non_nullable
 as String?,isIntroduced: null == isIntroduced ? _self.isIntroduced : isIntroduced // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,age: null == age ? _self.age : age // ignore: cast_nullable_to_non_nullable
+as int,nickname: null == nickname ? _self.nickname : nickname // ignore: cast_nullable_to_non_nullable
+as String,city: null == city ? _self.city : city // ignore: cast_nullable_to_non_nullable
+as String,district: null == district ? _self.district : district // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 
@@ -161,10 +165,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@HiveField(0)  int memberId, @HiveField(1)  String profileImageUrl, @HiveField(2)  List<String> hobbies, @HiveField(3)  String mbti, @HiveField(4)  String? religion, @HiveField(5)  String interviewAnswerContent, @HiveField(6)  String? likeLevel, @HiveField(7)  bool isIntroduced)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@HiveField(0)  int memberId, @HiveField(1)  String profileImageUrl, @HiveField(2)  List<String> hobbies, @HiveField(3)  String mbti, @HiveField(4)  String? religion, @HiveField(6)  String? likeLevel, @HiveField(7)  bool isIntroduced, @HiveField(8)  int age, @HiveField(9)  String nickname, @HiveField(10)  String city, @HiveField(11)  String district)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _IntroducedProfileDto() when $default != null:
-return $default(_that.memberId,_that.profileImageUrl,_that.hobbies,_that.mbti,_that.religion,_that.interviewAnswerContent,_that.likeLevel,_that.isIntroduced);case _:
+return $default(_that.memberId,_that.profileImageUrl,_that.hobbies,_that.mbti,_that.religion,_that.likeLevel,_that.isIntroduced,_that.age,_that.nickname,_that.city,_that.district);case _:
   return orElse();
 
 }
@@ -182,10 +186,10 @@ return $default(_that.memberId,_that.profileImageUrl,_that.hobbies,_that.mbti,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@HiveField(0)  int memberId, @HiveField(1)  String profileImageUrl, @HiveField(2)  List<String> hobbies, @HiveField(3)  String mbti, @HiveField(4)  String? religion, @HiveField(5)  String interviewAnswerContent, @HiveField(6)  String? likeLevel, @HiveField(7)  bool isIntroduced)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@HiveField(0)  int memberId, @HiveField(1)  String profileImageUrl, @HiveField(2)  List<String> hobbies, @HiveField(3)  String mbti, @HiveField(4)  String? religion, @HiveField(6)  String? likeLevel, @HiveField(7)  bool isIntroduced, @HiveField(8)  int age, @HiveField(9)  String nickname, @HiveField(10)  String city, @HiveField(11)  String district)  $default,) {final _that = this;
 switch (_that) {
 case _IntroducedProfileDto():
-return $default(_that.memberId,_that.profileImageUrl,_that.hobbies,_that.mbti,_that.religion,_that.interviewAnswerContent,_that.likeLevel,_that.isIntroduced);case _:
+return $default(_that.memberId,_that.profileImageUrl,_that.hobbies,_that.mbti,_that.religion,_that.likeLevel,_that.isIntroduced,_that.age,_that.nickname,_that.city,_that.district);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -202,10 +206,10 @@ return $default(_that.memberId,_that.profileImageUrl,_that.hobbies,_that.mbti,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@HiveField(0)  int memberId, @HiveField(1)  String profileImageUrl, @HiveField(2)  List<String> hobbies, @HiveField(3)  String mbti, @HiveField(4)  String? religion, @HiveField(5)  String interviewAnswerContent, @HiveField(6)  String? likeLevel, @HiveField(7)  bool isIntroduced)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@HiveField(0)  int memberId, @HiveField(1)  String profileImageUrl, @HiveField(2)  List<String> hobbies, @HiveField(3)  String mbti, @HiveField(4)  String? religion, @HiveField(6)  String? likeLevel, @HiveField(7)  bool isIntroduced, @HiveField(8)  int age, @HiveField(9)  String nickname, @HiveField(10)  String city, @HiveField(11)  String district)?  $default,) {final _that = this;
 switch (_that) {
 case _IntroducedProfileDto() when $default != null:
-return $default(_that.memberId,_that.profileImageUrl,_that.hobbies,_that.mbti,_that.religion,_that.interviewAnswerContent,_that.likeLevel,_that.isIntroduced);case _:
+return $default(_that.memberId,_that.profileImageUrl,_that.hobbies,_that.mbti,_that.religion,_that.likeLevel,_that.isIntroduced,_that.age,_that.nickname,_that.city,_that.district);case _:
   return null;
 
 }
@@ -217,7 +221,7 @@ return $default(_that.memberId,_that.profileImageUrl,_that.hobbies,_that.mbti,_t
 @JsonSerializable()
 
 class _IntroducedProfileDto implements IntroducedProfileDto {
-  const _IntroducedProfileDto({@HiveField(0) required this.memberId, @HiveField(1) required this.profileImageUrl, @HiveField(2) required final  List<String> hobbies, @HiveField(3) required this.mbti, @HiveField(4) required this.religion, @HiveField(5) required this.interviewAnswerContent, @HiveField(6) this.likeLevel, @HiveField(7) required this.isIntroduced}): _hobbies = hobbies;
+  const _IntroducedProfileDto({@HiveField(0) required this.memberId, @HiveField(1) required this.profileImageUrl, @HiveField(2) required final  List<String> hobbies, @HiveField(3) required this.mbti, @HiveField(4) required this.religion, @HiveField(6) this.likeLevel, @HiveField(7) required this.isIntroduced, @HiveField(8) required this.age, @HiveField(9) required this.nickname, @HiveField(10) required this.city, @HiveField(11) required this.district}): _hobbies = hobbies;
   factory _IntroducedProfileDto.fromJson(Map<String, dynamic> json) => _$IntroducedProfileDtoFromJson(json);
 
 // HiveField 어노테이션은 그대로 유지
@@ -232,9 +236,13 @@ class _IntroducedProfileDto implements IntroducedProfileDto {
 
 @override@HiveField(3) final  String mbti;
 @override@HiveField(4) final  String? religion;
-@override@HiveField(5) final  String interviewAnswerContent;
+// @HiveField(5) required String? interviewAnswerContent,
 @override@HiveField(6) final  String? likeLevel;
 @override@HiveField(7) final  bool isIntroduced;
+@override@HiveField(8) final  int age;
+@override@HiveField(9) final  String nickname;
+@override@HiveField(10) final  String city;
+@override@HiveField(11) final  String district;
 
 /// Create a copy of IntroducedProfileDto
 /// with the given fields replaced by the non-null parameter values.
@@ -249,16 +257,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _IntroducedProfileDto&&(identical(other.memberId, memberId) || other.memberId == memberId)&&(identical(other.profileImageUrl, profileImageUrl) || other.profileImageUrl == profileImageUrl)&&const DeepCollectionEquality().equals(other._hobbies, _hobbies)&&(identical(other.mbti, mbti) || other.mbti == mbti)&&(identical(other.religion, religion) || other.religion == religion)&&(identical(other.interviewAnswerContent, interviewAnswerContent) || other.interviewAnswerContent == interviewAnswerContent)&&(identical(other.likeLevel, likeLevel) || other.likeLevel == likeLevel)&&(identical(other.isIntroduced, isIntroduced) || other.isIntroduced == isIntroduced));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _IntroducedProfileDto&&(identical(other.memberId, memberId) || other.memberId == memberId)&&(identical(other.profileImageUrl, profileImageUrl) || other.profileImageUrl == profileImageUrl)&&const DeepCollectionEquality().equals(other._hobbies, _hobbies)&&(identical(other.mbti, mbti) || other.mbti == mbti)&&(identical(other.religion, religion) || other.religion == religion)&&(identical(other.likeLevel, likeLevel) || other.likeLevel == likeLevel)&&(identical(other.isIntroduced, isIntroduced) || other.isIntroduced == isIntroduced)&&(identical(other.age, age) || other.age == age)&&(identical(other.nickname, nickname) || other.nickname == nickname)&&(identical(other.city, city) || other.city == city)&&(identical(other.district, district) || other.district == district));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,memberId,profileImageUrl,const DeepCollectionEquality().hash(_hobbies),mbti,religion,interviewAnswerContent,likeLevel,isIntroduced);
+int get hashCode => Object.hash(runtimeType,memberId,profileImageUrl,const DeepCollectionEquality().hash(_hobbies),mbti,religion,likeLevel,isIntroduced,age,nickname,city,district);
 
 @override
 String toString() {
-  return 'IntroducedProfileDto(memberId: $memberId, profileImageUrl: $profileImageUrl, hobbies: $hobbies, mbti: $mbti, religion: $religion, interviewAnswerContent: $interviewAnswerContent, likeLevel: $likeLevel, isIntroduced: $isIntroduced)';
+  return 'IntroducedProfileDto(memberId: $memberId, profileImageUrl: $profileImageUrl, hobbies: $hobbies, mbti: $mbti, religion: $religion, likeLevel: $likeLevel, isIntroduced: $isIntroduced, age: $age, nickname: $nickname, city: $city, district: $district)';
 }
 
 
@@ -269,7 +277,7 @@ abstract mixin class _$IntroducedProfileDtoCopyWith<$Res> implements $Introduced
   factory _$IntroducedProfileDtoCopyWith(_IntroducedProfileDto value, $Res Function(_IntroducedProfileDto) _then) = __$IntroducedProfileDtoCopyWithImpl;
 @override @useResult
 $Res call({
-@HiveField(0) int memberId,@HiveField(1) String profileImageUrl,@HiveField(2) List<String> hobbies,@HiveField(3) String mbti,@HiveField(4) String? religion,@HiveField(5) String interviewAnswerContent,@HiveField(6) String? likeLevel,@HiveField(7) bool isIntroduced
+@HiveField(0) int memberId,@HiveField(1) String profileImageUrl,@HiveField(2) List<String> hobbies,@HiveField(3) String mbti,@HiveField(4) String? religion,@HiveField(6) String? likeLevel,@HiveField(7) bool isIntroduced,@HiveField(8) int age,@HiveField(9) String nickname,@HiveField(10) String city,@HiveField(11) String district
 });
 
 
@@ -286,17 +294,20 @@ class __$IntroducedProfileDtoCopyWithImpl<$Res>
 
 /// Create a copy of IntroducedProfileDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? memberId = null,Object? profileImageUrl = null,Object? hobbies = null,Object? mbti = null,Object? religion = freezed,Object? interviewAnswerContent = null,Object? likeLevel = freezed,Object? isIntroduced = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? memberId = null,Object? profileImageUrl = null,Object? hobbies = null,Object? mbti = null,Object? religion = freezed,Object? likeLevel = freezed,Object? isIntroduced = null,Object? age = null,Object? nickname = null,Object? city = null,Object? district = null,}) {
   return _then(_IntroducedProfileDto(
 memberId: null == memberId ? _self.memberId : memberId // ignore: cast_nullable_to_non_nullable
 as int,profileImageUrl: null == profileImageUrl ? _self.profileImageUrl : profileImageUrl // ignore: cast_nullable_to_non_nullable
 as String,hobbies: null == hobbies ? _self._hobbies : hobbies // ignore: cast_nullable_to_non_nullable
 as List<String>,mbti: null == mbti ? _self.mbti : mbti // ignore: cast_nullable_to_non_nullable
 as String,religion: freezed == religion ? _self.religion : religion // ignore: cast_nullable_to_non_nullable
-as String?,interviewAnswerContent: null == interviewAnswerContent ? _self.interviewAnswerContent : interviewAnswerContent // ignore: cast_nullable_to_non_nullable
-as String,likeLevel: freezed == likeLevel ? _self.likeLevel : likeLevel // ignore: cast_nullable_to_non_nullable
+as String?,likeLevel: freezed == likeLevel ? _self.likeLevel : likeLevel // ignore: cast_nullable_to_non_nullable
 as String?,isIntroduced: null == isIntroduced ? _self.isIntroduced : isIntroduced // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,age: null == age ? _self.age : age // ignore: cast_nullable_to_non_nullable
+as int,nickname: null == nickname ? _self.nickname : nickname // ignore: cast_nullable_to_non_nullable
+as String,city: null == city ? _self.city : city // ignore: cast_nullable_to_non_nullable
+as String,district: null == district ? _self.district : district // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 
