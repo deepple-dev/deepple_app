@@ -5,6 +5,7 @@ import 'package:deepple_app/app/widget/widget.dart';
 import 'package:deepple_app/core/extension/extended_context.dart';
 import 'package:deepple_app/features/home/domain/model/introduced_profile.dart';
 import 'package:deepple_app/features/home/presentation/provider/home_notifier.dart';
+import 'package:deepple_app/features/home/presentation/widget/blur_cover_widget.dart';
 import 'package:deepple_app/features/home/presentation/widget/hobby_wrap.dart';
 import 'package:deepple_app/features/profile/presentation/widget/widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -180,7 +181,6 @@ class _ProfileCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('maxWidthv $maxWidth');
     return Container(
       clipBehavior: Clip.hardEdge,
       width: maxWidth - 48,
@@ -222,7 +222,7 @@ class _ProfileCardWidget extends StatelessWidget {
               ],
             ),
           ),
-          // const BlurCoverWidget(),
+          const BlurCoverWidget(isRect: true),
         ],
       ),
     );
