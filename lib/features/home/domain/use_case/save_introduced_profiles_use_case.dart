@@ -3,6 +3,7 @@ import 'package:deepple_app/core/util/util.dart';
 import 'package:deepple_app/features/home/data/dto/introduced_profile_dto.dart';
 import 'package:deepple_app/features/home/data/mapper/introduced_profile_mapper.dart';
 import 'package:deepple_app/features/home/home.dart';
+import 'package:deepple_app/features/profile/domain/common/enum.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_ce/hive.dart';
 
@@ -91,13 +92,16 @@ List<IntroducedProfile> convertToIntroducedProfiles(
   List<IntroducedProfileDto> profileDtos,
 ) {
   return profileDtos.map((profile) {
-    final hobbyLabels = profile.hobbies
-        .map((e) => Hobby.parse(e).label)
-        .toList(); // 취미
+    final hobbyLabels = profile.hobbies.map((e) => Hobby.parse(e).label); // 취미
+    final religion = Religion.parse(profile.religion).label;
 
-    final sortedTags = hobbyLabels
-      ..sort((a, b) => a.length.compareTo(b.length)); // 텍스트 길이순 오름차순
+    final tags = [
+      ...hobbyLabels,
+      religion,
+    ].whereType<String>().toList(); // null 제거
 
-    return profile.toIntroducedProfile(sortedTags); // dto -> 모델 변환
+    tags.sort((a, b) => a.length.compareTo(b.length)); // 텍스트 길이순 오름차순
+
+    return profile.toIntroducedProfile(tags); // dto -> 모델 변환
   }).toList();
 }
