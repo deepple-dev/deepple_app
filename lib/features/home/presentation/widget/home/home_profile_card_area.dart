@@ -218,7 +218,7 @@ class _ProfileCardWidget extends StatelessWidget {
                     height: 1.5,
                   ),
                 ),
-                HobbyWrap(hobbies: profile.hobbies),
+                HobbyWrap(hobbies: profile.tags),
               ],
             ),
           ),

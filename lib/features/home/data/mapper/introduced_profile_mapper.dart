@@ -4,16 +4,14 @@ import 'package:deepple_app/features/home/home.dart';
 import 'package:deepple_app/features/profile/domain/common/enum.dart';
 
 extension IntroducedProfileMapper on IntroducedProfileDto {
-  IntroducedProfile toIntroducedProfile(List<String> parsedHobbies) {
+  IntroducedProfile toIntroducedProfile(List<String> tags) {
     return IntroducedProfile(
       memberId: memberId,
       mbti: mbti,
       profileImageUrl: profileImageUrl,
-      hobbies: parsedHobbies,
-      // interviewContent: interviewAnswerContent ?? '',
+      tags: tags,
       isIntroduced: isIntroduced,
       favoriteType: FavoriteType.tryParse(likeLevel),
-      religion: religion,
       age: age,
       nickname: nickname,
       region: addressData.getLocationString(city, district),

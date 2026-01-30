@@ -22,12 +22,12 @@ class IntroducedProfileDtoAdapter extends TypeAdapter<IntroducedProfileDto> {
       hobbies: (fields[2] as List).cast<String>(),
       mbti: fields[3] as String,
       religion: fields[4] as String?,
-      likeLevel: fields[6] as String?,
-      isIntroduced: fields[7] as bool,
-      age: (fields[8] as num).toInt(),
-      nickname: fields[9] as String,
-      city: fields[10] as String,
-      district: fields[11] as String,
+      likeLevel: fields[5] as String?,
+      isIntroduced: fields[6] as bool,
+      age: (fields[7] as num).toInt(),
+      nickname: fields[8] as String,
+      city: fields[9] as String,
+      district: fields[10] as String,
     );
   }
 
@@ -45,17 +45,17 @@ class IntroducedProfileDtoAdapter extends TypeAdapter<IntroducedProfileDto> {
       ..write(obj.mbti)
       ..writeByte(4)
       ..write(obj.religion)
-      ..writeByte(6)
+      ..writeByte(5)
       ..write(obj.likeLevel)
-      ..writeByte(7)
+      ..writeByte(6)
       ..write(obj.isIntroduced)
-      ..writeByte(8)
+      ..writeByte(7)
       ..write(obj.age)
-      ..writeByte(9)
+      ..writeByte(8)
       ..write(obj.nickname)
-      ..writeByte(10)
+      ..writeByte(9)
       ..write(obj.city)
-      ..writeByte(11)
+      ..writeByte(10)
       ..write(obj.district);
   }
 

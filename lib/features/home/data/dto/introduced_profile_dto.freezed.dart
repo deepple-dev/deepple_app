@@ -16,8 +16,7 @@ T _$identity<T>(T value) => value;
 mixin _$IntroducedProfileDto {
 
 // HiveField 어노테이션은 그대로 유지
-@HiveField(0) int get memberId;@HiveField(1) String get profileImageUrl;@HiveField(2) List<String> get hobbies;@HiveField(3) String get mbti;@HiveField(4) String? get religion;// @HiveField(5) required String? interviewAnswerContent,
-@HiveField(6) String? get likeLevel;@HiveField(7) bool get isIntroduced;@HiveField(8) int get age;@HiveField(9) String get nickname;@HiveField(10) String get city;@HiveField(11) String get district;
+@HiveField(0) int get memberId;@HiveField(1) String get profileImageUrl;@HiveField(2) List<String> get hobbies;@HiveField(3) String get mbti;@HiveField(4) String? get religion;@HiveField(5) String? get likeLevel;@HiveField(6) bool get isIntroduced;@HiveField(7) int get age;@HiveField(8) String get nickname;@HiveField(9) String get city;@HiveField(10) String get district;
 /// Create a copy of IntroducedProfileDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -50,7 +49,7 @@ abstract mixin class $IntroducedProfileDtoCopyWith<$Res>  {
   factory $IntroducedProfileDtoCopyWith(IntroducedProfileDto value, $Res Function(IntroducedProfileDto) _then) = _$IntroducedProfileDtoCopyWithImpl;
 @useResult
 $Res call({
-@HiveField(0) int memberId,@HiveField(1) String profileImageUrl,@HiveField(2) List<String> hobbies,@HiveField(3) String mbti,@HiveField(4) String? religion,@HiveField(6) String? likeLevel,@HiveField(7) bool isIntroduced,@HiveField(8) int age,@HiveField(9) String nickname,@HiveField(10) String city,@HiveField(11) String district
+@HiveField(0) int memberId,@HiveField(1) String profileImageUrl,@HiveField(2) List<String> hobbies,@HiveField(3) String mbti,@HiveField(4) String? religion,@HiveField(5) String? likeLevel,@HiveField(6) bool isIntroduced,@HiveField(7) int age,@HiveField(8) String nickname,@HiveField(9) String city,@HiveField(10) String district
 });
 
 
@@ -165,7 +164,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@HiveField(0)  int memberId, @HiveField(1)  String profileImageUrl, @HiveField(2)  List<String> hobbies, @HiveField(3)  String mbti, @HiveField(4)  String? religion, @HiveField(6)  String? likeLevel, @HiveField(7)  bool isIntroduced, @HiveField(8)  int age, @HiveField(9)  String nickname, @HiveField(10)  String city, @HiveField(11)  String district)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@HiveField(0)  int memberId, @HiveField(1)  String profileImageUrl, @HiveField(2)  List<String> hobbies, @HiveField(3)  String mbti, @HiveField(4)  String? religion, @HiveField(5)  String? likeLevel, @HiveField(6)  bool isIntroduced, @HiveField(7)  int age, @HiveField(8)  String nickname, @HiveField(9)  String city, @HiveField(10)  String district)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _IntroducedProfileDto() when $default != null:
 return $default(_that.memberId,_that.profileImageUrl,_that.hobbies,_that.mbti,_that.religion,_that.likeLevel,_that.isIntroduced,_that.age,_that.nickname,_that.city,_that.district);case _:
@@ -186,7 +185,7 @@ return $default(_that.memberId,_that.profileImageUrl,_that.hobbies,_that.mbti,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@HiveField(0)  int memberId, @HiveField(1)  String profileImageUrl, @HiveField(2)  List<String> hobbies, @HiveField(3)  String mbti, @HiveField(4)  String? religion, @HiveField(6)  String? likeLevel, @HiveField(7)  bool isIntroduced, @HiveField(8)  int age, @HiveField(9)  String nickname, @HiveField(10)  String city, @HiveField(11)  String district)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@HiveField(0)  int memberId, @HiveField(1)  String profileImageUrl, @HiveField(2)  List<String> hobbies, @HiveField(3)  String mbti, @HiveField(4)  String? religion, @HiveField(5)  String? likeLevel, @HiveField(6)  bool isIntroduced, @HiveField(7)  int age, @HiveField(8)  String nickname, @HiveField(9)  String city, @HiveField(10)  String district)  $default,) {final _that = this;
 switch (_that) {
 case _IntroducedProfileDto():
 return $default(_that.memberId,_that.profileImageUrl,_that.hobbies,_that.mbti,_that.religion,_that.likeLevel,_that.isIntroduced,_that.age,_that.nickname,_that.city,_that.district);case _:
@@ -206,7 +205,7 @@ return $default(_that.memberId,_that.profileImageUrl,_that.hobbies,_that.mbti,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@HiveField(0)  int memberId, @HiveField(1)  String profileImageUrl, @HiveField(2)  List<String> hobbies, @HiveField(3)  String mbti, @HiveField(4)  String? religion, @HiveField(6)  String? likeLevel, @HiveField(7)  bool isIntroduced, @HiveField(8)  int age, @HiveField(9)  String nickname, @HiveField(10)  String city, @HiveField(11)  String district)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@HiveField(0)  int memberId, @HiveField(1)  String profileImageUrl, @HiveField(2)  List<String> hobbies, @HiveField(3)  String mbti, @HiveField(4)  String? religion, @HiveField(5)  String? likeLevel, @HiveField(6)  bool isIntroduced, @HiveField(7)  int age, @HiveField(8)  String nickname, @HiveField(9)  String city, @HiveField(10)  String district)?  $default,) {final _that = this;
 switch (_that) {
 case _IntroducedProfileDto() when $default != null:
 return $default(_that.memberId,_that.profileImageUrl,_that.hobbies,_that.mbti,_that.religion,_that.likeLevel,_that.isIntroduced,_that.age,_that.nickname,_that.city,_that.district);case _:
@@ -221,7 +220,7 @@ return $default(_that.memberId,_that.profileImageUrl,_that.hobbies,_that.mbti,_t
 @JsonSerializable()
 
 class _IntroducedProfileDto implements IntroducedProfileDto {
-  const _IntroducedProfileDto({@HiveField(0) required this.memberId, @HiveField(1) required this.profileImageUrl, @HiveField(2) required final  List<String> hobbies, @HiveField(3) required this.mbti, @HiveField(4) required this.religion, @HiveField(6) this.likeLevel, @HiveField(7) required this.isIntroduced, @HiveField(8) required this.age, @HiveField(9) required this.nickname, @HiveField(10) required this.city, @HiveField(11) required this.district}): _hobbies = hobbies;
+  const _IntroducedProfileDto({@HiveField(0) required this.memberId, @HiveField(1) required this.profileImageUrl, @HiveField(2) required final  List<String> hobbies, @HiveField(3) required this.mbti, @HiveField(4) required this.religion, @HiveField(5) this.likeLevel, @HiveField(6) required this.isIntroduced, @HiveField(7) required this.age, @HiveField(8) required this.nickname, @HiveField(9) required this.city, @HiveField(10) required this.district}): _hobbies = hobbies;
   factory _IntroducedProfileDto.fromJson(Map<String, dynamic> json) => _$IntroducedProfileDtoFromJson(json);
 
 // HiveField 어노테이션은 그대로 유지
@@ -236,13 +235,12 @@ class _IntroducedProfileDto implements IntroducedProfileDto {
 
 @override@HiveField(3) final  String mbti;
 @override@HiveField(4) final  String? religion;
-// @HiveField(5) required String? interviewAnswerContent,
-@override@HiveField(6) final  String? likeLevel;
-@override@HiveField(7) final  bool isIntroduced;
-@override@HiveField(8) final  int age;
-@override@HiveField(9) final  String nickname;
-@override@HiveField(10) final  String city;
-@override@HiveField(11) final  String district;
+@override@HiveField(5) final  String? likeLevel;
+@override@HiveField(6) final  bool isIntroduced;
+@override@HiveField(7) final  int age;
+@override@HiveField(8) final  String nickname;
+@override@HiveField(9) final  String city;
+@override@HiveField(10) final  String district;
 
 /// Create a copy of IntroducedProfileDto
 /// with the given fields replaced by the non-null parameter values.
@@ -277,7 +275,7 @@ abstract mixin class _$IntroducedProfileDtoCopyWith<$Res> implements $Introduced
   factory _$IntroducedProfileDtoCopyWith(_IntroducedProfileDto value, $Res Function(_IntroducedProfileDto) _then) = __$IntroducedProfileDtoCopyWithImpl;
 @override @useResult
 $Res call({
-@HiveField(0) int memberId,@HiveField(1) String profileImageUrl,@HiveField(2) List<String> hobbies,@HiveField(3) String mbti,@HiveField(4) String? religion,@HiveField(6) String? likeLevel,@HiveField(7) bool isIntroduced,@HiveField(8) int age,@HiveField(9) String nickname,@HiveField(10) String city,@HiveField(11) String district
+@HiveField(0) int memberId,@HiveField(1) String profileImageUrl,@HiveField(2) List<String> hobbies,@HiveField(3) String mbti,@HiveField(4) String? religion,@HiveField(5) String? likeLevel,@HiveField(6) bool isIntroduced,@HiveField(7) int age,@HiveField(8) String nickname,@HiveField(9) String city,@HiveField(10) String district
 });
 
 

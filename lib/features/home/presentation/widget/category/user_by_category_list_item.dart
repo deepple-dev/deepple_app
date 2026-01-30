@@ -70,7 +70,7 @@ class UserByCategoryListItem extends ConsumerWidget {
                     ),
                   ),
                   const Spacer(),
-                  HashtagWrap(tags: profile.hobbies),
+                  HashtagWrap(tags: profile.tags),
                 ],
               ),
             ),
