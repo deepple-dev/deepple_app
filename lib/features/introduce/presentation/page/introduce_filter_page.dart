@@ -19,9 +19,6 @@ class IntroduceFilterPage extends ConsumerStatefulWidget {
 }
 
 class _IntroduceFilterPageState extends ConsumerState<IntroduceFilterPage> {
-  static const String ALL = '전체 보기';
-  static const String OPPOSITE = '이성만 보기';
-
   late RangeValues _initialAgeRange;
   List<String> _initialSelectedCityList = [];
   late Gender? _initialSelectedGender;
@@ -50,6 +47,9 @@ class _IntroduceFilterPageState extends ConsumerState<IntroduceFilterPage> {
 
   @override
   Widget build(BuildContext context) {
+    final all = IntroduceFilter.all.label;
+    final opposite = IntroduceFilter.opposite.label;
+
     return Scaffold(
       appBar: DefaultAppBar(
         title: '필터 설정',
@@ -109,10 +109,10 @@ class _IntroduceFilterPageState extends ConsumerState<IntroduceFilterPage> {
                   label: '성별',
                   textStyle: Fonts.body02Medium(),
                   child: SelectionWidget(
-                    options: [ALL, OPPOSITE],
-                    initialOptions: _selectedGender == null ? ALL : OPPOSITE,
+                    options: [all, opposite],
+                    initialOptions: _selectedGender == null ? all : opposite,
                     onChange: (str) {
-                      if (str == ALL) {
+                      if (str == all) {
                         _selectedGender = null;
                       } else {
                         _selectedGender = _isMale ? Gender.female : Gender.male;
