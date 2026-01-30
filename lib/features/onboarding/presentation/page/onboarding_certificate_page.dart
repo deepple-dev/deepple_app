@@ -99,6 +99,7 @@ class _OnboardingCertificationPageState
                           Expanded(
                             flex: 3,
                             child: DefaultOutlinedButton(
+                              height: 50,
                               primary: Palette.colorGrey100,
                               textColor: palette.onSurface,
                               onPressed: state.leftSeconds == 0

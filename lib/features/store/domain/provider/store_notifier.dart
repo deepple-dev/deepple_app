@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'package:deepple_app/core/network/network_exception.dart';
 import 'package:deepple_app/app/provider/global_notifier.dart';
 import 'package:deepple_app/core/util/log.dart';
 import 'package:deepple_app/features/store/domain/provider/usecase_providers.dart';
@@ -26,12 +26,18 @@ class StoreNotifier extends _$StoreNotifier {
   @override
   StoreState build() {
     _initialize();
+
+    ref.onDispose(() {
+      _subscription?.cancel();
+    });
     return StoreState.initial();
   }
 
   Future<void> _initialize() async {
-    await _initializeAppPurchase();
-    await _initializeHeartBalanceItem();
+    await Future.wait([
+      _initializeAppPurchase(),
+      _initializeHeartBalanceItem(),
+    ]);
     _subscribeToPurchaseUpdates();
   }
 
@@ -41,7 +47,7 @@ class StoreNotifier extends _$StoreNotifier {
     _subscription = InAppPurchase.instance.purchaseStream.listen(
       onPurchaseUpdated,
       onError: (error) {
-        Log.e('구매 스트림 에러: $error');
+        Log.e('Purchase stream error: $error');
       },
     );
   }
@@ -73,39 +79,51 @@ class StoreNotifier extends _$StoreNotifier {
 
   // 앱 내 구매상태 변경 시 콜백
   void onPurchaseUpdated(List<PurchaseDetails> purchases) async {
-    final inAppPurchase = InAppPurchase.instance;
-
     state = state.copyWith(isPurchasePending: true);
+    bool hasPending = false;
 
-    for (final purchase in purchases) {
-      if (purchase.status == PurchaseStatus.purchased) {
-        try {
-          // 영수증 서버 검증
-          await ref
-              .read(storeProvider.notifier)
-              .verifyReceipt(purchase.verificationData.serverVerificationData);
-
-          // 보유하트 재조회
-          await fetchHeartBalance();
-        } catch (e) {
-          Log.e('영수증 검증 또는 하트 조회 실패: $e');
+    try {
+      for (final purchase in purchases) {
+        if (purchase.status == PurchaseStatus.pending) {
+          hasPending = true;
+          continue;
         }
+        if (purchase.status == PurchaseStatus.purchased || purchase.status == PurchaseStatus.restored) {
+          final String jwsToken = purchase.verificationData.serverVerificationData;
 
-        if (purchase.pendingCompletePurchase) {
-          await inAppPurchase.completePurchase(purchase);
+          try {  
+            await verifyReceipt(jwsToken);
+            
+            if (purchase.pendingCompletePurchase) {
+              await InAppPurchase.instance.completePurchase(purchase);
+            }
+          } catch (e) {
+            if (e is NetworkException && e.status == 400 && e.code == 400102) {
+              await InAppPurchase.instance.completePurchase(purchase);
+            } else {
+              Log.e('Receipt verification failed: $e');
+            }
+          }
+        } else if (purchase.status == PurchaseStatus.error || purchase.status == PurchaseStatus.canceled) {
+          if (purchase.pendingCompletePurchase) {
+            await InAppPurchase.instance.completePurchase(purchase);
+          }
+          state = state.copyWith(isPurchasePending: false);
+          Log.e('Purchase failed or canceled: ${purchase.error}');
         }
-      } else if (purchase.status == PurchaseStatus.error) {
-        Log.e('❌ 구매 실패: ${purchase.error}');
       }
+    } catch (e) {
+      Log.e('Purchase stream error: $e');
+    } finally {
+      state = state.copyWith(isPurchasePending: hasPending);
+      await fetchHeartBalance();
     }
-
-    state = state.copyWith(isPurchasePending: false);
   }
 
   // 보유하트 조회
   Future<void> _initializeHeartBalanceItem() async {
     try {
-      final heartBalance = ref.watch(globalProvider).heartBalance;
+      final heartBalance = ref.read(globalProvider).heartBalance;
 
       state = state.copyWith(
         heartBalance: heartBalance,
@@ -126,24 +144,22 @@ class StoreNotifier extends _$StoreNotifier {
     try {
       await ref.read(globalProvider.notifier).fetchHeartBalance();
     } catch (e) {
-      Log.e('보유 하트 수 재조회 실패: $e');
+      Log.e('Failed to fetch heart balance: $e');
       return;
     } finally {
-      state = state.copyWith(
-        heartBalance: ref.watch(globalProvider).heartBalance,
-        isLoaded: true,
-        error: null,
-      );
+      if (ref.mounted) {
+        state = state.copyWith(
+          heartBalance: ref.read(globalProvider).heartBalance,
+          isLoaded: true,
+          error: null,
+        );
+      }
     }
   }
 
   Future<void> verifyReceipt(String appReceipt) async {
     final useCase = ref.read(verifyReceiptUseCaseProvider);
 
-    try {
-      await useCase.call(appReceipt: appReceipt);
-    } catch (e) {
-      Log.e('영수증 검증 실패: $e');
-    }
+    await useCase.call(appReceipt: appReceipt);
   }
 }

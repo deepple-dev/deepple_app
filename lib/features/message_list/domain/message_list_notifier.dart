@@ -10,11 +10,12 @@ part 'message_list_notifier.g.dart';
 class MessageListNotifier extends _$MessageListNotifier {
   @override
   MessageListState build() {
-    _initializeMessageLists();
+    initialize();
     return MessageListState.initial();
   }
 
-  Future<void> _initializeMessageLists() async {
+  // TODO(Han): 추후 event bus 또는 해당 함수를 통해 실시간 리스트 갱신이 되도록 수정
+  Future<void> initialize() async {
     try {
       final repository = ref.read(messageRepositoryProvider);
       final (myMessages, messageMe) = await (

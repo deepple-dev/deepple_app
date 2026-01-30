@@ -118,7 +118,7 @@ class ExamResultPageState
         notifier.resetCurrentSubjectIndex();
 
         Navigator.of(context).pop();
-        navigate(context, route: AppRoute.mainTab);
+        Navigator.of(context).pop();
       },
     );
   }

@@ -1,3 +1,4 @@
+import 'package:deepple_app/app/enum/contact_method.dart';
 import 'package:deepple_app/app/router/router.dart';
 import 'package:deepple_app/app/widget/dialogue/error_dialog.dart';
 import 'package:deepple_app/app/widget/error/dialogue_error.dart';
@@ -47,14 +48,15 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   }
 
   void _listener(ProfileState? prev, ProfileState curr) {
-    final isContactSettingInitialized = ref
-        .read(contactSettingProvider)
-        .isContactSettingInitialized;
+    final contactProvider = ref.read(contactSettingProvider);
+    final (isContactSettingInitialized, contactMethod) =
+        (contactProvider.isContactSettingInitialized, contactProvider.method,);
 
     if (prev?.matchStatus != curr.matchStatus) {
       _handleStatusChanged(
         curr.matchStatus,
         isContactInitialized: isContactSettingInitialized,
+        contactMethod: contactMethod,
       );
     }
 
@@ -66,6 +68,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   void _handleStatusChanged(
     MatchStatus? status, {
     required bool isContactInitialized,
+    required ContactMethod? contactMethod,
   }) {
     if (status == null || !mounted) return;
     final profileNotifier = ref.read(profileProvider(widget.userId).notifier);
@@ -91,7 +94,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
               userId: widget.userId,
               onSubmit: () => ref
                   .read(profileProvider(widget.userId).notifier)
-                  .approveMatch(),
+                  .approveMatch(contactMethod ?? ContactMethod.phone),
             );
           },
           cancelLabel: '거절',
