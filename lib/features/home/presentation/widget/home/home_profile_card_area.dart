@@ -6,7 +6,7 @@ import 'package:deepple_app/core/extension/extended_context.dart';
 import 'package:deepple_app/features/home/domain/model/introduced_profile.dart';
 import 'package:deepple_app/features/home/presentation/provider/home_notifier.dart';
 import 'package:deepple_app/features/home/presentation/widget/blur_cover_widget.dart';
-import 'package:deepple_app/features/home/presentation/widget/hobby_wrap.dart';
+import 'package:deepple_app/features/home/presentation/widget/tag_capsule.dart';
 import 'package:deepple_app/features/profile/presentation/widget/widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +25,20 @@ class HomeProfileCardArea extends ConsumerStatefulWidget {
 
 class _HomeProfileCardAreaState extends ConsumerState<HomeProfileCardArea> {
   int _currentPage = 0; // 현재 페이지 0으로 설정
+
+  late PageController pageController;
+
+  @override
+  void initState() {
+    super.initState();
+    pageController = PageController(viewportFraction: 0.9);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    pageController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +77,7 @@ class _HomeProfileCardAreaState extends ConsumerState<HomeProfileCardArea> {
             AspectRatio(
               aspectRatio: 1.1,
               child: PageView.builder(
-                controller: PageController(viewportFraction: 0.9),
+                controller: pageController,
                 itemCount: profiles.length,
                 padEnds: true,
                 onPageChanged: (index) => setState(() => _currentPage = index),
@@ -218,11 +232,11 @@ class _ProfileCardWidget extends StatelessWidget {
                     height: 1.5,
                   ),
                 ),
-                HobbyWrap(hobbies: profile.tags),
+                TagCapsules(hobbies: profile.tags),
               ],
             ),
           ),
-          const BlurCoverWidget(isRect: true),
+          // const BlurCoverWidget(isRect: true),
         ],
       ),
     );
