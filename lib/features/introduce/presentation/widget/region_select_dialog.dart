@@ -11,7 +11,7 @@ class RegionSelectDialog extends StatefulWidget {
   State<RegionSelectDialog> createState() => _RegionSelectDialogState();
 
   static Future open(BuildContext context, List<String> selectedCityList) =>
-      showDialog<List<String>>(
+      showDialog<List<String>?>(
         context: context,
         builder: (context) =>
             RegionSelectDialog(selectedCityList: selectedCityList),
