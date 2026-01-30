@@ -22,14 +22,13 @@ class _IntroduceFilterPageState extends ConsumerState<IntroduceFilterPage> {
   static const String ALL = '전체 보기';
   static const String OPPOSITE = '이성만 보기';
 
-  late RangeValues initialAgeRange;
-  List<String> initialSelectedCityList = [];
-  late Gender? initialSelectedGender;
-  late RangeValues ageRange;
-  List<String> selectedCityList = [];
-  late Gender? selectedGender;
-  bool isMale = false;
-
+  late RangeValues _initialAgeRange;
+  List<String> _initialSelectedCityList = [];
+  late Gender? _initialSelectedGender;
+  late RangeValues _ageRange;
+  List<String> _selectedCityList = [];
+  late Gender? _selectedGender;
+  bool _isMale = false;
   bool hasChanged = false;
 
   @override
@@ -37,16 +36,16 @@ class _IntroduceFilterPageState extends ConsumerState<IntroduceFilterPage> {
     super.initState();
 
     final filterState = ref.read(filterProvider);
-    initialAgeRange = filterState.rangeValues;
+    _initialAgeRange = filterState.rangeValues;
 
-    initialSelectedCityList = List<String>.of(filterState.selectedCities);
-    initialSelectedGender = filterState.selectedGender;
+    _initialSelectedCityList = List<String>.of(filterState.selectedCities);
+    _initialSelectedGender = filterState.selectedGender;
 
-    ageRange = initialAgeRange;
-    selectedCityList = initialSelectedCityList;
-    selectedGender = initialSelectedGender;
+    _ageRange = _initialAgeRange;
+    _selectedCityList = _initialSelectedCityList;
+    _selectedGender = _initialSelectedGender;
 
-    isMale = ref.read(globalProvider).profile.isMale;
+    _isMale = ref.read(globalProvider).profile.isMale;
   }
 
   @override
@@ -68,17 +67,17 @@ class _IntroduceFilterPageState extends ConsumerState<IntroduceFilterPage> {
               children: [
                 Text('나이', style: Fonts.body02Medium()),
                 Text(
-                  '${ageRange.start.toInt()}세~${ageRange.end.toInt()}세',
+                  '${_ageRange.start.toInt()}세~${_ageRange.end.toInt()}세',
                   style: Fonts.body02Regular(Palette.colorBlack),
                 ),
               ],
             ),
           ),
           AgeRangeSlider(
-            ageRange: ageRange,
+            ageRange: _ageRange,
             onChanged: (newAgeRange) {
               setState(() {
-                ageRange = newAgeRange;
+                _ageRange = newAgeRange;
                 hasChanged = true;
               });
             },
@@ -92,13 +91,13 @@ class _IntroduceFilterPageState extends ConsumerState<IntroduceFilterPage> {
                   label: '선호 지역',
                   textStyle: Fonts.body02Medium(),
                   hintText: '선호 지역을 선택해주세요',
-                  initialValue: selectedCityList.isNotEmpty
-                      ? selectedCityList.join(', ')
+                  initialValue: _selectedCityList.isNotEmpty
+                      ? _selectedCityList.join(', ')
                       : null,
-                  selectedCityList: selectedCityList,
+                  selectedCityList: _selectedCityList,
                   onSelectedCity: (newSelectedList) {
                     setState(() {
-                      selectedCityList = newSelectedList;
+                      _selectedCityList = newSelectedList;
                       hasChanged = true;
                     });
                   },
@@ -111,12 +110,12 @@ class _IntroduceFilterPageState extends ConsumerState<IntroduceFilterPage> {
                   textStyle: Fonts.body02Medium(),
                   child: SelectionWidget(
                     options: [ALL, OPPOSITE],
-                    initialOptions: selectedGender == null ? ALL : OPPOSITE,
+                    initialOptions: _selectedGender == null ? ALL : OPPOSITE,
                     onChange: (str) {
                       if (str == ALL) {
-                        selectedGender = null;
+                        _selectedGender = null;
                       } else {
-                        selectedGender = isMale ? Gender.female : Gender.male;
+                        _selectedGender = _isMale ? Gender.female : Gender.male;
                       }
                       setState(() {
                         hasChanged = true;
@@ -139,9 +138,9 @@ class _IntroduceFilterPageState extends ConsumerState<IntroduceFilterPage> {
                       ref
                           .read(filterProvider.notifier)
                           .updateFilter(
-                            newGender: selectedGender,
-                            newCities: selectedCityList,
-                            newRange: ageRange,
+                            newGender: _selectedGender,
+                            newCities: _selectedCityList,
+                            newRange: _ageRange,
                           );
                       Navigator.of(context).pop();
                     }
