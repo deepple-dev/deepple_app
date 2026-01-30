@@ -12,7 +12,7 @@ part 'filter_notifier.g.dart';
 class FilterNotifier extends _$FilterNotifier {
   @override
   FilterState build() {
-    final idealState = ref.watch(idealTypeProvider).requireValue;
+    final idealState = ref.read(idealTypeProvider).value;
 
     final showAllGender = SharedPreferenceManager.getValue(
       SharedPreferenceKeys.showAllGender,
@@ -28,13 +28,13 @@ class FilterNotifier extends _$FilterNotifier {
         SharedPreferenceManager.getValue(
           SharedPreferenceKeys.preferredAgeStart,
         ) ??
-        idealState.idealType.minAge;
+        (idealState?.idealType.minAge ?? 20);
 
     final preferredAgeEnd =
         SharedPreferenceManager.getValue(
           SharedPreferenceKeys.preferredAgeEnd,
         ) ??
-        idealState.idealType.maxAge;
+        (idealState?.idealType.maxAge ?? 46);
 
     final preferredCities =
         SharedPreferenceManager.getValue(
