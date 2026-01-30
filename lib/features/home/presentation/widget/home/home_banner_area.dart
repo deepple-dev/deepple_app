@@ -3,7 +3,6 @@ import 'package:deepple_app/app/provider/provider.dart';
 import 'package:deepple_app/app/router/route_arguments.dart';
 import 'package:flutter/material.dart';
 import 'package:deepple_app/app/router/router.dart';
-import 'package:deepple_app/core/extension/extended_context.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HomeBannerArea extends ConsumerWidget {
@@ -19,7 +18,7 @@ class HomeBannerArea extends ConsumerWidget {
         .isDatingExamSubmitted;
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+      padding: const EdgeInsets.symmetric(horizontal: 0),
       child: GestureDetector(
         onTap: () {
           isDatingExamSubmitted
@@ -30,11 +29,7 @@ class HomeBannerArea extends ConsumerWidget {
                 )
               : navigate(context, route: AppRoute.exam);
         },
-        child: Image.asset(
-          ImagePath.homeTest,
-          fit: BoxFit.cover,
-          width: context.screenWidth,
-        ),
+        child: Image.asset(ImagePath.homeTest, fit: BoxFit.cover),
       ),
     );
   }
