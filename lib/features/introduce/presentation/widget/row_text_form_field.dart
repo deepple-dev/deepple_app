@@ -6,7 +6,7 @@ import 'package:deepple_app/app/constants/constants.dart';
 class RowTextFormField extends StatefulWidget {
   final String label;
   final String hintText;
-  final String? initialValue;
+  final String initialValue;
   final TextStyle? textStyle;
   final List<String> selectedCityList;
   final void Function(List<String>) onSelectedCity;
@@ -15,7 +15,7 @@ class RowTextFormField extends StatefulWidget {
     super.key,
     required this.label,
     required this.hintText,
-    this.initialValue,
+    required this.initialValue,
     this.textStyle,
     required this.selectedCityList,
     required this.onSelectedCity,
@@ -42,7 +42,7 @@ class _RowTextFormFieldState extends State<RowTextFormField> {
 
   @override
   Widget build(BuildContext context) {
-    controller.text = widget.initialValue ?? '';
+    controller.text = widget.initialValue;
     return buildLabeledRow(
       textStyle: widget.textStyle,
       context: context,
@@ -51,11 +51,11 @@ class _RowTextFormFieldState extends State<RowTextFormField> {
         initialValue: widget.initialValue,
         controller: controller,
         onTap: () async {
-          final selected = await RegionSelectDialog.open(
+          final selectedCities = await RegionSelectDialog.open(
             context,
             widget.selectedCityList,
           );
-          widget.onSelectedCity(selected ?? []);
+          widget.onSelectedCity(selectedCities ?? []);
         },
         enabled: true,
         readOnly: true,

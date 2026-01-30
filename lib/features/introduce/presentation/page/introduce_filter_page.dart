@@ -93,7 +93,7 @@ class _IntroduceFilterPageState extends ConsumerState<IntroduceFilterPage> {
                   hintText: '선호 지역을 선택해주세요',
                   initialValue: _selectedCityList.isNotEmpty
                       ? _selectedCityList.join(', ')
-                      : null,
+                      : '',
                   selectedCityList: _selectedCityList,
                   onSelectedCity: (newSelectedList) {
                     setState(() {
