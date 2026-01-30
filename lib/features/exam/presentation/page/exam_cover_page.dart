@@ -22,11 +22,7 @@ class ExamCoverPageState extends BaseConsumerStatefulPageState<ExamCoverPage> {
     : super(
         defaultAppBarTitle: '연애 모의고사',
         defaultAppBarLeadingAction: (context) {
-          navigate(
-            context,
-            route: AppRoute.mainTab,
-            method: NavigationMethod.go,
-          );
+          Navigator.of(context).pop();
         },
       );
 
@@ -127,11 +123,7 @@ class ExamCoverPageState extends BaseConsumerStatefulPageState<ExamCoverPage> {
             onPressed: () async {
               await notifier.fetchRequiredQuestions();
               if (!context.mounted) return;
-              navigate(
-                context,
-                route: AppRoute.examQuestion,
-                method: NavigationMethod.go,
-              );
+              navigate(context, route: AppRoute.examQuestion);
             },
             child: Text(
               '연애 모의고사 시작하기',

@@ -148,7 +148,7 @@ class ExamQuestionPageState
         notifier.setSubjectOptional(false);
         notifier.resetCurrentSubjectIndex();
 
-        navigate(context, route: AppRoute.mainTab, method: NavigationMethod.go);
+        context.popUntil(AppRoute.mainTab);
       },
     );
   }

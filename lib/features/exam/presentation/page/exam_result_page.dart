@@ -117,7 +117,8 @@ class ExamResultPageState
         notifier.setSubjectOptional(false);
         notifier.resetCurrentSubjectIndex();
 
-        navigate(context, route: AppRoute.mainTab, method: NavigationMethod.go);
+        // navigate(context, route: AppRoute.mainTab, method: NavigationMethod.go);
+        context.popUntil(AppRoute.mainTab);
       },
     );
   }
@@ -265,11 +266,7 @@ class _ResultBottomButton extends StatelessWidget {
           ? isDone
                 ? DefaultElevatedButton(
                     onPressed: () {
-                      navigate(
-                        context,
-                        route: AppRoute.mainTab,
-                        method: NavigationMethod.go,
-                      );
+                      context.popUntil(AppRoute.mainTab);
                     },
                     child: const Text('연애 모의고사 종료하기'),
                   )
