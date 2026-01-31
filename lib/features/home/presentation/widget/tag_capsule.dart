@@ -14,53 +14,73 @@ class TagCapsules extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final maxWidth = constraints.maxWidth;
+        final tagList = checkTagList(context, constraints);
 
-        double capsulesWidth = 0; // 전체 길이
-        final List<Widget> capsuled = [];
-        int hiddenCount = 0; // 가려진 위젯
-
-        for (int i = 0; i < hobbies.length; i++) {
-          final hobby = hobbies[i];
-
-          final textPainter = TextPainter(
-            text: TextSpan(text: hobby, style: Fonts.medium(fontSize: 12.0)),
-            maxLines: 1,
-            textDirection: TextDirection.ltr,
-          )..layout();
-
-          // 캡슐 너비
-          final capsuleWidth =
-              textPainter.width.ceil() + capsuleHorizontalPadding * 2 + spacing;
-
-          if (capsulesWidth + capsuleWidth < maxWidth) {
-            capsulesWidth += capsuleWidth;
-            capsuled.add(
-              _TagCapsule(
-                name: hobby,
-                horizontalPadding: capsuleHorizontalPadding,
-                verticalPadding: capsuleVerticalPadding,
-              ),
-            );
-          } else {
-            hiddenCount = hobbies.length - i;
-            break;
-          }
-        }
-
-        if (hiddenCount > 0) {
-          capsuled.add(
-            _TagCapsule(
-              name: '+$hiddenCount',
-              horizontalPadding: capsuleHorizontalPadding,
-              verticalPadding: capsuleVerticalPadding,
-            ),
-          );
-        }
-
-        return Row(spacing: spacing, children: capsuled);
+        return Row(
+          spacing: spacing,
+          children: tagList
+              .map(
+                (tag) => _TagCapsule(
+                  name: tag,
+                  horizontalPadding: capsuleHorizontalPadding,
+                  verticalPadding: capsuleVerticalPadding,
+                ),
+              )
+              .toList(),
+        );
       },
     );
+  }
+
+  TextPainter _makeTextPainter(String text) {
+    return TextPainter(
+      text: TextSpan(text: text, style: Fonts.medium(fontSize: 12.0)),
+      maxLines: 1,
+      textDirection: TextDirection.ltr,
+    )..layout();
+  }
+
+  List<String> checkTagList(BuildContext context, BoxConstraints constraints) {
+    final maxWidth = constraints.maxWidth;
+
+    double sumWidth = 0; // 전체 길이
+    final List<String> tagList = [];
+    int hiddenCount = 0; // 가려진 위젯
+
+    for (int i = 0; i < hobbies.length; i++) {
+      final hobby = hobbies[i];
+
+      final textPainter = _makeTextPainter(hobby);
+
+      // 캡슐 너비
+      final capsuleWidth =
+          textPainter.width.ceil() + capsuleHorizontalPadding * 2 + spacing;
+
+      if (sumWidth + capsuleWidth < maxWidth) {
+        sumWidth += capsuleWidth;
+        tagList.add(hobby);
+      } else {
+        hiddenCount = hobbies.length - i;
+        break;
+      }
+    }
+
+    if (hiddenCount > 0) {
+      // hidden 표시 캡슐의 길이 계산
+      final textPainter = _makeTextPainter('+$hiddenCount');
+
+      final capsuleWidth =
+          textPainter.width.ceil() + capsuleHorizontalPadding * 2 + spacing;
+
+      if (sumWidth + capsuleWidth > maxWidth) {
+        // 기존에 있던 태그 히든 추가
+        hiddenCount += 1;
+        tagList.removeLast();
+      }
+      tagList.add('+$hiddenCount');
+    }
+
+    return tagList;
   }
 }
 

@@ -36,8 +36,8 @@ class _HomeProfileCardAreaState extends ConsumerState<HomeProfileCardArea> {
 
   @override
   void dispose() {
-    super.dispose();
     pageController.dispose();
+    super.dispose();
   }
 
   @override
