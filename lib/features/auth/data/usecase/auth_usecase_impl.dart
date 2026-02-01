@@ -66,7 +66,7 @@ class AuthUseCaseImpl with LogMixin implements AuthUseCase {
           // 서버 로그아웃 먼저 처리
           await _userRepository.signOut();
         } catch (e) {
-          Log.e('서버 로그아웃 실패');
+          Log.e('server logout failed: $e');
           return false; // 실패 시 로그아웃 불가
         }
       }
@@ -77,7 +77,7 @@ class AuthUseCaseImpl with LogMixin implements AuthUseCase {
 
         await _globalNotifier.clearLocalData();
       } catch (e) {
-        Log.e('로컬 관련 데이터 삭제 실패');
+        Log.e('local data delete failed: $e');
       }
 
       return true;
