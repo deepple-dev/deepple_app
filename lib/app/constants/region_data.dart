@@ -172,7 +172,7 @@ final addressData = AddressData(
         DistrictAddressItem(label: '평창군', value: 'PYEONGCHANG_GUN'),
         DistrictAddressItem(label: '홍천군', value: 'HONGCHEON_GUN'),
         DistrictAddressItem(label: '화천군', value: 'HWACHEON_GUN'),
-        DistrictAddressItem(label: '횡성군', value: 'HWANGSEONG_GUN'),
+        DistrictAddressItem(label: '횡성군', value: 'HOENGSEONG_GUN'),
       ],
     ),
     CityAddressItem(
@@ -273,7 +273,7 @@ final addressData = AddressData(
         DistrictAddressItem(label: '고흥군', value: 'GOHEUNG_GUN'),
         DistrictAddressItem(label: '곡성군', value: 'GOKSEONG_GUN'),
         DistrictAddressItem(label: '광양시', value: 'GWANGYANG_SI'),
-        DistrictAddressItem(label: '구례군', value: 'GURAE_GUN'),
+        DistrictAddressItem(label: '구례군', value: 'GURYE_GUN'),
         DistrictAddressItem(label: '나주시', value: 'NAJU_SI'),
         DistrictAddressItem(label: '담양군', value: 'DAMYANG_GUN'),
         DistrictAddressItem(label: '목포시', value: 'MOKPO_SI'),
