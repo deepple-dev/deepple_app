@@ -9,8 +9,6 @@ import 'package:deepple_app/features/exam/presentation/widget/answer_radio_butto
 import 'package:deepple_app/features/exam/presentation/widget/step_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:deepple_app/app/constants/palette.dart';
-import 'package:deepple_app/app/constants/fonts.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:deepple_app/core/state/base_page_state.dart';
 import 'package:gap/gap.dart';
@@ -150,8 +148,7 @@ class ExamQuestionPageState
         notifier.setSubjectOptional(false);
         notifier.resetCurrentSubjectIndex();
 
-        Navigator.of(context).pop();
-        navigate(context, route: AppRoute.mainTab);
+        context.popUntil(AppRoute.mainTab);
       },
     );
   }

@@ -18,7 +18,13 @@ class ExamCoverPage extends ConsumerStatefulWidget {
 }
 
 class ExamCoverPageState extends BaseConsumerStatefulPageState<ExamCoverPage> {
-  ExamCoverPageState() : super(defaultAppBarTitle: '연애 모의고사');
+  ExamCoverPageState()
+    : super(
+        defaultAppBarTitle: '연애 모의고사',
+        defaultAppBarLeadingAction: (context) {
+          Navigator.of(context).pop();
+        },
+      );
 
   @override
   Widget buildPage(BuildContext context) {
@@ -117,11 +123,7 @@ class ExamCoverPageState extends BaseConsumerStatefulPageState<ExamCoverPage> {
             onPressed: () async {
               await notifier.fetchRequiredQuestions();
               if (!context.mounted) return;
-              navigate(
-                context,
-                route: AppRoute.examQuestion,
-                method: NavigationMethod.go,
-              );
+              navigate(context, route: AppRoute.examQuestion);
             },
             child: Text(
               '연애 모의고사 시작하기',
