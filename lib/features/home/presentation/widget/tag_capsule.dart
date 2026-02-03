@@ -66,14 +66,14 @@ class TagCapsules extends StatelessWidget {
     }
 
     if (hiddenCount > 0) {
-      // hidden 표시 캡슐의 길이 계산
+      // hidden 캡슐의 길이 계산
       final textPainter = _makeTextPainter('+$hiddenCount');
 
       final capsuleWidth =
           textPainter.width.ceil() + capsuleHorizontalPadding * 2 + spacing;
 
+      // 히든 캡슐 over 시 기존에 있던 캡슐 삭제 후 히든 캡슐 추가
       if (sumWidth + capsuleWidth > maxWidth) {
-        // 기존에 있던 태그 히든 추가
         hiddenCount += 1;
         tagList.removeLast();
       }
