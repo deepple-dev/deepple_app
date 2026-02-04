@@ -6,28 +6,33 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HomeNavbarArea extends ConsumerWidget {
-  const HomeNavbarArea({super.key});
+  final double horizontalPadding;
+
+  const HomeNavbarArea({super.key, required this.horizontalPadding});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final nickname = ref.watch(globalProvider).profile.nickname;
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        Text(
-          '딩동! $nickname님,\n오늘 소개해드릴 분들이에요!',
-          style: Fonts.header03().copyWith(
-            fontWeight: FontWeight.w700,
-            height: 1.2,
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Text(
+            '딩동! $nickname님,\n오늘 소개해드릴 분들이에요!',
+            style: Fonts.header03().copyWith(
+              fontWeight: FontWeight.w700,
+              height: 1.2,
+            ),
           ),
-        ),
-        const DefaultAppBarActionGroup(
-          showFilter: true,
-          filterRoute: AppRoute.ideal,
-        ),
-      ],
+          const DefaultAppBarActionGroup(
+            showFilter: true,
+            filterRoute: AppRoute.ideal,
+          ),
+        ],
+      ),
     );
   }
 }

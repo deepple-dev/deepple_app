@@ -3,19 +3,20 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class BlurCoverWidget extends StatelessWidget {
-  const BlurCoverWidget({super.key});
+  final bool isRect;
+  const BlurCoverWidget({super.key, required this.isRect});
 
   @override
   Widget build(BuildContext context) {
-    return Positioned.fill(
-      child: ClipOval(
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-          child: Container(
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(999)),
-          ),
-        ),
+    final filter = BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+      child: Container(
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(999)),
       ),
+    );
+
+    return Positioned.fill(
+      child: isRect ? ClipRect(child: filter) : ClipOval(child: filter),
     );
   }
 }

@@ -5,7 +5,8 @@ import 'package:deepple_app/app/widget/widget.dart';
 import 'package:deepple_app/core/extension/extended_context.dart';
 import 'package:deepple_app/features/home/domain/model/introduced_profile.dart';
 import 'package:deepple_app/features/home/presentation/provider/home_notifier.dart';
-import 'package:deepple_app/features/home/presentation/widget/widget.dart';
+import 'package:deepple_app/features/home/presentation/widget/blur_cover_widget.dart';
+import 'package:deepple_app/features/home/presentation/widget/tag_capsule.dart';
 import 'package:deepple_app/features/profile/presentation/widget/widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,20 @@ class HomeProfileCardArea extends ConsumerStatefulWidget {
 
 class _HomeProfileCardAreaState extends ConsumerState<HomeProfileCardArea> {
   int _currentPage = 0; // 현재 페이지 0으로 설정
+
+  late PageController pageController;
+
+  @override
+  void initState() {
+    super.initState();
+    pageController = PageController(viewportFraction: 0.9);
+  }
+
+  @override
+  void dispose() {
+    pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +77,9 @@ class _HomeProfileCardAreaState extends ConsumerState<HomeProfileCardArea> {
             AspectRatio(
               aspectRatio: 1.1,
               child: PageView.builder(
+                controller: pageController,
                 itemCount: profiles.length,
+                padEnds: true,
                 onPageChanged: (index) => setState(() => _currentPage = index),
                 itemBuilder: (context, index) {
                   final profile = profiles[index];
@@ -73,22 +90,30 @@ class _HomeProfileCardAreaState extends ConsumerState<HomeProfileCardArea> {
                       route: AppRoute.profile,
                       extra: ProfileDetailArguments(userId: profile.memberId),
                     ),
-                    child: _ProfileCardWidget(
-                      profile: profile,
-                      onTapFavorite: () async {
-                        if (profile.favoriteType != null) return;
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: _ProfileCardWidget(
+                            profile: profile,
+                            maxWidth: constraints.maxWidth,
+                            onTapFavorite: () async {
+                              if (profile.favoriteType != null) return;
 
-                        final favoriteType =
-                            await FavoriteTypeSelectDialog.open(
-                              context,
-                              userId: profile.memberId,
-                              favoriteType: profile.favoriteType,
-                            );
-                        if (favoriteType == null) return;
+                              final favoriteType =
+                                  await FavoriteTypeSelectDialog.open(
+                                    context,
+                                    userId: profile.memberId,
+                                    favoriteType: profile.favoriteType,
+                                  );
+                              if (favoriteType == null) return;
 
-                        homeNotifier.setFavoriteType(
-                          memberId: profile.memberId,
-                          type: favoriteType,
+                              homeNotifier.setFavoriteType(
+                                memberId: profile.memberId,
+                                type: favoriteType,
+                              );
+                            },
+                          ),
                         );
                       },
                     ),
@@ -160,75 +185,58 @@ class _EmptyProfileCard extends StatelessWidget {
 class _ProfileCardWidget extends StatelessWidget {
   const _ProfileCardWidget({
     required this.profile,
+    required this.maxWidth,
     required this.onTapFavorite,
   });
 
   final IntroducedProfile profile;
+  final double maxWidth;
   final VoidCallback onTapFavorite;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: context.screenWidth,
-      padding: const EdgeInsets.symmetric(horizontal: 45),
+      clipBehavior: Clip.hardEdge,
+      width: maxWidth - 48,
       decoration: BoxDecoration(
         // 카드 색상 및 둥근모서리 설정
         color: Palette.colorGrey50,
         borderRadius: BorderRadius.circular(16),
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
+      child: Stack(
+        fit: StackFit.expand,
         children: [
-          const Gap(20),
-          Stack(
-            children: [
-              SizedBox(
-                // 상단 프로필 사진
-                width: 100,
-                height: 100,
-                child: ClipOval(
-                  child: CachedNetworkImage(
-                    imageUrl: profile.profileImageUrl,
-                    fit: BoxFit.cover,
-                  ), // 추후 api 연동 시 NetworkImage로 변경
-                ),
-              ),
-              const BlurCoverWidget(),
-            ],
+          CachedNetworkImage(
+            imageUrl: profile.profileImageUrl,
+            fit: BoxFit.cover,
           ),
-          const Gap(16),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            // 하단 프로필 정보
-            children: [
-              Container(
-                // 해시태그 리스트 뷰
-                width: double.infinity,
-                height: 18,
-                padding: const EdgeInsets.symmetric(horizontal: 5),
-                child: HashtagWrap(tags: profile.tags, isCenter: true),
-              ),
-              const Gap(8),
-              Text(
-                profile.interviewContent,
-                style: Fonts.body02Medium().copyWith(
-                  fontWeight: FontWeight.w400,
-                  color: Palette.colorGrey600,
-                  height: 1.5,
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 6.0,
+              children: [
+                Text(
+                  '${profile.nickname}, ${profile.age}',
+                  style: Fonts.semibold(
+                    fontSize: 20,
+                    color: const Color(0xFF1F1E23),
+                  ),
                 ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const Gap(24),
-              FavoriteButton(
-                isFavoriteUser: profile.favoriteType != null,
-                onTap: onTapFavorite,
-                label: '좋아요',
-              ),
-              const Gap(20),
-            ],
+                Text(
+                  '${profile.mbti}・${profile.region}',
+                  style: Fonts.body02Medium().copyWith(
+                    color: Palette.colorGrey600,
+                    height: 1.5,
+                  ),
+                ),
+                TagCapsules(hobbies: profile.tags),
+              ],
+            ),
           ),
+          // const BlurCoverWidget(isRect: true),
         ],
       ),
     );

@@ -21,6 +21,9 @@ class HomePage extends ConsumerStatefulWidget {
 }
 
 class _HomePageState extends ConsumerState<HomePage> {
+  final double verticalPadding = 24.0;
+  final double horizontalPadding = 24.0;
+
   @override
   void initState() {
     super.initState();
@@ -39,14 +42,17 @@ class _HomePageState extends ConsumerState<HomePage> {
           data: (data) => Stack(
             children: [
               SingleChildScrollView(
-                padding: const EdgeInsets.all(24),
+                padding: EdgeInsets.symmetric(vertical: verticalPadding),
                 child: Column(
                   children: [
-                    const HomeNavbarArea(), // 홈 상단 네비게이션바
+                    HomeNavbarArea(
+                      horizontalPadding: horizontalPadding,
+                    ), // 홈 상단 네비게이션바
                     const Gap(16),
                     const HomeProfileCardArea(), // 소개받은 프로필 부분
                     const Gap(16),
                     HomeCategoryButtonsArea(
+                      horizontalPadding: horizontalPadding,
                       // 카테고리 버튼 영역
                       onTapButton: (category) async {
                         final hasProfiles = await homeNotifier
@@ -72,7 +78,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                       },
                     ),
                     const Gap(24),
-                    const HomeBannerArea(),
+                    HomeBannerArea(horizontalPadding: horizontalPadding),
                   ],
                 ),
               ),
