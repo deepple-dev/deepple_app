@@ -6,7 +6,6 @@ import 'package:deepple_app/app/constants/constants.dart';
 class RowTextFormField extends StatefulWidget {
   final String label;
   final String hintText;
-  final String initialValue;
   final TextStyle? textStyle;
   final List<String> selectedCityList;
   final void Function(List<String>) onSelectedCity;
@@ -15,7 +14,6 @@ class RowTextFormField extends StatefulWidget {
     super.key,
     required this.label,
     required this.hintText,
-    required this.initialValue,
     this.textStyle,
     required this.selectedCityList,
     required this.onSelectedCity,
@@ -27,10 +25,14 @@ class RowTextFormField extends StatefulWidget {
 
 class _RowTextFormFieldState extends State<RowTextFormField> {
   late TextEditingController controller;
+  late List<String>? _selectedCities;
 
   @override
   void initState() {
-    controller = TextEditingController(text: widget.initialValue);
+    _selectedCities = widget.selectedCityList;
+
+    controller = TextEditingController();
+    controller.text = _selectedCities?.join(', ') ?? '';
     super.initState();
   }
 
@@ -42,20 +44,21 @@ class _RowTextFormFieldState extends State<RowTextFormField> {
 
   @override
   Widget build(BuildContext context) {
-    controller.text = widget.initialValue;
     return buildLabeledRow(
       textStyle: widget.textStyle,
       context: context,
       label: widget.label,
       child: DefaultTextFormField(
-        initialValue: widget.initialValue,
+        initialValue: controller.text,
         controller: controller,
         onTap: () async {
-          final selectedCities = await RegionSelectDialog.open(
+          _selectedCities = await RegionSelectDialog.open(
             context,
             widget.selectedCityList,
           );
-          widget.onSelectedCity(selectedCities ?? []);
+
+          controller.text = _selectedCities?.join(', ') ?? '';
+          widget.onSelectedCity(_selectedCities ?? []);
         },
         enabled: true,
         readOnly: true,
