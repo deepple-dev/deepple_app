@@ -15,27 +15,20 @@ abstract class FilterState with _$FilterState {
     _ => null,
   };
 
-  List<String> get selectedCitysEng => selectedCitys
+  List<String> get selectedCitiesEng => selectedCities
       .map((label) => addressData.getCityByLabel(label).value)
       .toList();
 
   const factory FilterState({
     required RangeValues rangeValues,
-    required List<String> selectedCitys,
+    required List<String> selectedCities,
     required Gender? selectedGender,
-    required RangeValues newRangeValues,
-    @Default([]) List<String> newSelectedCitys,
-    Gender? newSelectedGender,
-    required bool hasChanged,
   }) = _FilterState;
 
   // 초기 상태
   factory FilterState.initial() => const FilterState(
     rangeValues: RangeValues(27, 32),
-    selectedCitys: [],
+    selectedCities: [],
     selectedGender: null,
-    newRangeValues: RangeValues(27, 32),
-    newSelectedCitys: [],
-    hasChanged: false,
   );
 }

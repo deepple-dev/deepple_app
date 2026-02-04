@@ -301,3 +301,11 @@ enum ActivityStatus {
   static ActivityStatus? parse(String? value) =>
       _byValue[value] ?? ActivityStatus.active;
 }
+
+enum IntroduceFilter {
+  all('전체 보기'),
+  opposite('이성만 보기');
+
+  final String label;
+  const IntroduceFilter(this.label);
+}

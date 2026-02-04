@@ -1,25 +1,22 @@
-import 'package:deepple_app/app/constants/region_data.dart';
-import 'package:deepple_app/features/home/presentation/widget/ideal/multi_btn_select_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:deepple_app/app/widget/input/default_text_form_field.dart';
-
+import 'package:deepple_app/features/introduce/presentation/widget/region_select_dialog.dart';
 import 'package:deepple_app/app/constants/constants.dart';
-import 'package:go_router/go_router.dart';
 
 class RowTextFormField extends StatefulWidget {
   final String label;
   final String hintText;
-  final List<String> initialValues;
   final TextStyle? textStyle;
-  final void Function(List<String>) onSubmit;
+  final List<String> selectedCityList;
+  final void Function(List<String>) onSelectedCity;
 
   const RowTextFormField({
     super.key,
     required this.label,
     required this.hintText,
-    required this.initialValues,
     this.textStyle,
-    required this.onSubmit,
+    required this.selectedCityList,
+    required this.onSelectedCity,
   });
 
   @override
@@ -27,23 +24,22 @@ class RowTextFormField extends StatefulWidget {
 }
 
 class _RowTextFormFieldState extends State<RowTextFormField> {
-  late List<String> selectedValues;
+  late TextEditingController controller;
+  late List<String>? _selectedCities;
 
   @override
   void initState() {
+    _selectedCities = widget.selectedCityList;
+
+    controller = TextEditingController();
+    controller.text = _selectedCities?.join(', ') ?? '';
     super.initState();
-    selectedValues = widget.initialValues;
   }
 
   @override
   void dispose() {
+    controller.dispose();
     super.dispose();
-  }
-
-  @override
-  void didUpdateWidget(covariant RowTextFormField oldWidget) {
-    selectedValues = widget.initialValues;
-    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -52,40 +48,24 @@ class _RowTextFormFieldState extends State<RowTextFormField> {
       textStyle: widget.textStyle,
       context: context,
       label: widget.label,
-      child: GestureDetector(
-        onTap: () => showDialog(
-          context: context,
-          builder: (context) => MultiBtnSelectDialog(
-            btnNames: addressData.cities.map((e) => e.label).toList(),
-            maxSelectableCount: 2,
-            title: '선호 지역',
-            selectedValues: selectedValues,
-            onSubmit: (selectedItems) {
-              widget.onSubmit(selectedItems);
-              if (context.mounted) {
-                context.pop();
-              }
-            },
-          ),
-        ),
-        child: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: Palette.colorGrey100,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Text(
-            selectedValues.isEmpty
-                ? widget.hintText
-                : selectedValues.join(', '),
-            style: Fonts.body02Regular(
-              selectedValues.isEmpty
-                  ? Palette.colorGrey500
-                  : Palette.colorBlack,
-            ),
-          ),
-        ),
+      child: DefaultTextFormField(
+        initialValue: controller.text,
+        controller: controller,
+        onTap: () async {
+          _selectedCities = await RegionSelectDialog.open(
+            context,
+            widget.selectedCityList,
+          );
+
+          controller.text = _selectedCities?.join(', ') ?? '';
+          widget.onSelectedCity(_selectedCities ?? []);
+        },
+        enabled: true,
+        readOnly: true,
+        autofocus: false,
+        keyboardType: TextInputType.text,
+        hintText: widget.hintText,
+        fillColor: Palette.colorGrey100,
       ),
     );
   }

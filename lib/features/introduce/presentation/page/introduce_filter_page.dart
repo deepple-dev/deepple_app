@@ -1,7 +1,7 @@
 import 'package:deepple_app/app/provider/global_notifier.dart';
 import 'package:deepple_app/app/widget/input/selection.dart';
 import 'package:deepple_app/app/widget/widget.dart';
-import 'package:deepple_app/features/introduce/domain/provider/filter_notifier.dart';
+import 'package:deepple_app/features/introduce/introduce.dart';
 import 'package:deepple_app/features/introduce/presentation/widget/age_range_slider.dart';
 import 'package:deepple_app/features/introduce/presentation/widget/row_text_form_field.dart';
 import 'package:flutter/material.dart';
@@ -9,32 +9,46 @@ import 'package:deepple_app/app/constants/constants.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:go_router/go_router.dart';
 
 class IntroduceFilterPage extends ConsumerStatefulWidget {
   const IntroduceFilterPage({super.key});
 
   @override
-  IntroduceFilterPageState createState() => IntroduceFilterPageState();
+  ConsumerState<IntroduceFilterPage> createState() =>
+      _IntroduceFilterPageState();
 }
 
-class IntroduceFilterPageState extends ConsumerState<IntroduceFilterPage> {
-  static const String ALL = '전체 보기';
-  static const String OPPOSITE = '이성만 보기';
+class _IntroduceFilterPageState extends ConsumerState<IntroduceFilterPage> {
+  late RangeValues _initialAgeRange;
+  List<String> _initialSelectedCityList = [];
+  late Gender? _initialSelectedGender;
+  late RangeValues _ageRange;
+  List<String> _selectedCityList = [];
+  late Gender? _selectedGender;
+  bool _isMale = false;
+  bool hasChanged = false;
 
   @override
-  void dispose() {
-    super.dispose();
+  void initState() {
+    super.initState();
+
+    final filterState = ref.read(filterProvider);
+    _initialAgeRange = filterState.rangeValues;
+
+    _initialSelectedCityList = List<String>.of(filterState.selectedCities);
+    _initialSelectedGender = filterState.selectedGender;
+
+    _ageRange = _initialAgeRange;
+    _selectedCityList = List<String>.of(filterState.selectedCities);
+    _selectedGender = _initialSelectedGender;
+
+    _isMale = ref.read(globalProvider).profile.isMale;
   }
 
   @override
   Widget build(BuildContext context) {
-    final filterNotifer = ref.read(filterProvider.notifier);
-    final isMale = ref.read(globalProvider).profile.isMale;
-    final ageRange = ref.watch(filterProvider).newRangeValues;
-    final selectedCityList = ref.watch(filterProvider).newSelectedCitys;
-    final selectedGender = ref.watch(filterProvider).newSelectedGender;
-    final hasChanged = ref.watch(filterProvider).hasChanged;
+    final all = IntroduceFilter.all.label;
+    final opposite = IntroduceFilter.opposite.label;
 
     return Scaffold(
       appBar: DefaultAppBar(
@@ -53,13 +67,21 @@ class IntroduceFilterPageState extends ConsumerState<IntroduceFilterPage> {
               children: [
                 Text('나이', style: Fonts.body02Medium()),
                 Text(
-                  '${ageRange.start.toInt()}세~${ageRange.end.toInt()}세',
+                  '${_ageRange.start.toInt()}세~${_ageRange.end.toInt()}세',
                   style: Fonts.body02Regular(Palette.colorBlack),
                 ),
               ],
             ),
           ),
-          const AgeRangeSlider(),
+          AgeRangeSlider(
+            ageRange: _ageRange,
+            onChanged: (newAgeRange) {
+              setState(() {
+                _ageRange = newAgeRange;
+                hasChanged = true;
+              });
+            },
+          ),
           Gap(12.h),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -69,9 +91,12 @@ class IntroduceFilterPageState extends ConsumerState<IntroduceFilterPage> {
                   label: '선호 지역',
                   textStyle: Fonts.body02Medium(),
                   hintText: '선호 지역을 선택해주세요',
-                  initialValues: selectedCityList,
-                  onSubmit: (updatedSelections) {
-                    filterNotifer.updateCitys(updatedSelections);
+                  selectedCityList: _selectedCityList,
+                  onSelectedCity: (newSelectedList) {
+                    setState(() {
+                      _selectedCityList = newSelectedList;
+                      hasChanged = true;
+                    });
                   },
                 ),
 
@@ -81,16 +106,17 @@ class IntroduceFilterPageState extends ConsumerState<IntroduceFilterPage> {
                   label: '성별',
                   textStyle: Fonts.body02Medium(),
                   child: SelectionWidget(
-                    options: [ALL, OPPOSITE],
-                    initialOptions: selectedGender == null ? ALL : OPPOSITE,
+                    options: [all, opposite],
+                    initialOptions: _selectedGender == null ? all : opposite,
                     onChange: (str) {
-                      if (str == ALL) {
-                        filterNotifer.updateGender(null);
+                      if (str == all) {
+                        _selectedGender = null;
                       } else {
-                        filterNotifer.updateGender(
-                          isMale ? Gender.female : Gender.male,
-                        );
+                        _selectedGender = _isMale ? Gender.female : Gender.male;
                       }
+                      setState(() {
+                        hasChanged = true;
+                      });
                     },
                   ),
                 ),
@@ -106,8 +132,14 @@ class IntroduceFilterPageState extends ConsumerState<IntroduceFilterPage> {
             child: DefaultElevatedButton(
               onPressed: hasChanged
                   ? () {
-                      filterNotifer.saveFilter();
-                      context.pop();
+                      ref
+                          .read(filterProvider.notifier)
+                          .updateFilter(
+                            newGender: _selectedGender,
+                            newCities: _selectedCityList,
+                            newRange: _ageRange,
+                          );
+                      Navigator.of(context).pop();
                     }
                   : null,
               child: Text(

@@ -23,12 +23,12 @@ class SharedPreferenceKeys {
   /// 셀프소개 필터 - 나이
   static const preferredAgeStart = SharedPreferencePrimitiveKey<int>(
     'preferredAgeStart',
-    defaultValue: 27,
+    defaultValue: null,
   );
 
   static const preferredAgeEnd = SharedPreferencePrimitiveKey<int>(
     'preferredAgeEnd',
-    defaultValue: 32,
+    defaultValue: null,
   );
 
   /// 셀프소개 필터 - 선호 지역(한글)

@@ -41,7 +41,7 @@ final class StoreNotifierProvider
   }
 }
 
-String _$storeNotifierHash() => r'03c47d226db907a2c86acf6d7ba3e2070a6ffd0b';
+String _$storeNotifierHash() => r'728f4812f3308f5811089e0fec509d46b7c3a981';
 
 abstract class _$StoreNotifier extends $Notifier<StoreState> {
   StoreState build();

@@ -1,15 +1,26 @@
-import 'package:deepple_app/app/widget/icon/default_icon.dart';
 import 'package:deepple_app/app/widget/list/list_chip.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:deepple_app/app/constants/constants.dart';
 import 'package:deepple_app/app/widget/button/button.dart';
-import 'package:deepple_app/features/introduce/domain/provider/filter_notifier.dart';
-import 'package:go_router/go_router.dart';
 
-class Regionselectdialog extends ConsumerWidget {
-  const Regionselectdialog({super.key});
+class RegionSelectDialog extends StatefulWidget {
+  final List<String> selectedCityList;
+  const RegionSelectDialog({super.key, required this.selectedCityList});
 
+  @override
+  State<RegionSelectDialog> createState() => _RegionSelectDialogState();
+
+  static Future<List<String>?> open(
+    BuildContext context,
+    List<String> selectedCityList,
+  ) => showDialog<List<String>?>(
+    context: context,
+    builder: (context) =>
+        RegionSelectDialog(selectedCityList: selectedCityList),
+  );
+}
+
+class _RegionSelectDialogState extends State<RegionSelectDialog> {
   static const List<String> _cityList = [
     '서울',
     '인천',
@@ -30,70 +41,58 @@ class Regionselectdialog extends ConsumerWidget {
     '전라북도',
   ];
 
-  static Future open(BuildContext context) => showDialog(
-    context: context,
-    builder: (context) => const Regionselectdialog(),
-  );
+  List<String> selectedCityList = [];
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final selectedCityList = ref.watch(filterProvider).selectedCitys;
+  void initState() {
+    super.initState();
+    selectedCityList = List<String>.of(widget.selectedCityList);
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Dialog(
       insetPadding: const EdgeInsets.symmetric(horizontal: 16.0),
       shape: const RoundedRectangleBorder(borderRadius: Dimens.dialogRadius),
       child: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
+          spacing: 20.0,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+            Column(
+              spacing: 14.0,
               children: [
-                GestureDetector(
-                  onTap: context.pop,
-                  child: const DefaultIcon(IconPath.close),
+                Text(
+                  '지역',
+                  style: Fonts.header03().copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: Palette.colorBlack,
+                  ),
+                ),
+                Text(
+                  '최대 2개 선택이 가능해요',
+                  style: Fonts.body02Regular().copyWith(
+                    color: Palette.colorGrey500,
+                  ),
+                ),
+                ListChip(
+                  options: _cityList,
+                  selectedOptions: selectedCityList,
+                  onSelectionChanged: (updatedSelections) {
+                    if (updatedSelections.length > 2) return;
+
+                    setState(() {
+                      selectedCityList = updatedSelections;
+                    });
+                  },
                 ),
               ],
             ),
-            Column(
-              spacing: 20.0,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Column(
-                  spacing: 14.0,
-                  children: [
-                    Text(
-                      '지역',
-                      style: Fonts.semibold(
-                        fontSize: 18,
-                        color: Palette.colorBlack,
-                      ),
-                    ),
-                    Text(
-                      '최대 2개까지 선택이 가능해요',
-                      style: Fonts.body02Regular().copyWith(
-                        color: Palette.colorGrey500,
-                      ),
-                    ),
-                    ListChip(
-                      options: _cityList,
-                      selectedOptions: selectedCityList,
-                      onSelectionChanged: (updatedSelections) {
-                        if (updatedSelections.length > 2) return;
-                        ref
-                            .read(filterProvider.notifier)
-                            .updateCitys(updatedSelections);
-                      },
-                    ),
-                  ],
-                ),
-                DefaultElevatedButton(
-                  onPressed: context.pop,
-                  padding: const EdgeInsets.symmetric(vertical: 16.0),
-                  child: const Text('확인'),
-                ),
-              ],
+            DefaultElevatedButton(
+              onPressed: () => Navigator.of(context).pop(selectedCityList),
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              child: const Text('확인'),
             ),
           ],
         ),

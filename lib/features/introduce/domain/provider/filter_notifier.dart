@@ -1,6 +1,7 @@
 import 'package:deepple_app/app/constants/enum.dart';
 import 'package:deepple_app/core/util/shared_preference/shared_preference_key.dart';
 import 'package:deepple_app/core/util/shared_preference/shared_preference_manager.dart';
+import 'package:deepple_app/features/home/presentation/provider/ideal_type_notifier.dart';
 import 'package:deepple_app/features/introduce/domain/provider/filter_state.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -11,6 +12,8 @@ part 'filter_notifier.g.dart';
 class FilterNotifier extends _$FilterNotifier {
   @override
   FilterState build() {
+    final idealState = ref.read(idealTypeProvider).value;
+
     final showAllGender = SharedPreferenceManager.getValue(
       SharedPreferenceKeys.showAllGender,
     );
@@ -25,13 +28,13 @@ class FilterNotifier extends _$FilterNotifier {
         SharedPreferenceManager.getValue(
           SharedPreferenceKeys.preferredAgeStart,
         ) ??
-        27;
+        (idealState?.idealType.minAge ?? 20);
 
     final preferredAgeEnd =
         SharedPreferenceManager.getValue(
           SharedPreferenceKeys.preferredAgeEnd,
         ) ??
-        32;
+        (idealState?.idealType.maxAge ?? 46);
 
     final preferredCities =
         SharedPreferenceManager.getValue(
@@ -39,47 +42,30 @@ class FilterNotifier extends _$FilterNotifier {
         ) ??
         [];
 
-    // TODO: 서버로부터 받은 선호나이를 반영해야함
-
     return FilterState(
       rangeValues: RangeValues(
         preferredAgeStart.toDouble(),
         preferredAgeEnd.toDouble(),
       ),
-      selectedCitys: preferredCities,
+      selectedCities: preferredCities,
       selectedGender: selectedGender,
-      newRangeValues: RangeValues(
-        preferredAgeStart.toDouble(),
-        preferredAgeEnd.toDouble(),
-      ),
-      newSelectedCitys: preferredCities,
-      newSelectedGender: selectedGender,
-      hasChanged: false,
     );
   }
 
-  void updateRange(RangeValues values) {
-    state = state.copyWith(newRangeValues: values, hasChanged: true);
-  }
-
-  void updateCitys(List<String> citys) {
-    state = state.copyWith(newSelectedCitys: citys, hasChanged: true);
-  }
-
-  void updateGender(Gender? gender) {
-    state = state.copyWith(newSelectedGender: gender, hasChanged: true);
-  }
-
-  void updateChanged(bool hasChanged) {
-    state = state.copyWith(hasChanged: hasChanged);
-  }
-
-  void saveFilter() {
+  void updateFilter({
+    required Gender? newGender,
+    required List<String> newCities,
+    required RangeValues newRange,
+  }) {
     state = state.copyWith(
-      rangeValues: state.newRangeValues,
-      selectedCitys: state.newSelectedCitys,
-      selectedGender: state.newSelectedGender,
+      selectedGender: newGender,
+      selectedCities: newCities,
+      rangeValues: newRange,
     );
+    _saveFilter();
+  }
+
+  void _saveFilter() {
     SharedPreferenceManager.setValue(
       SharedPreferenceKeys.preferredAgeStart,
       state.rangeValues.start.toInt(),
@@ -90,7 +76,7 @@ class FilterNotifier extends _$FilterNotifier {
     );
     SharedPreferenceManager.setValue(
       SharedPreferenceKeys.preferredCities,
-      state.selectedCitys,
+      state.selectedCities,
     );
     SharedPreferenceManager.setValue(
       SharedPreferenceKeys.showAllGender,
@@ -99,17 +85,6 @@ class FilterNotifier extends _$FilterNotifier {
           : state.selectedGender == Gender.female
           ? 2
           : 0,
-    );
-
-    initChangedState();
-  }
-
-  void initChangedState() {
-    state = state.copyWith(
-      newRangeValues: state.rangeValues,
-      newSelectedCitys: state.selectedCitys,
-      newSelectedGender: state.selectedGender,
-      hasChanged: false,
     );
   }
 }
