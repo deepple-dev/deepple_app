@@ -39,7 +39,7 @@ class _IntroduceFilterPageState extends ConsumerState<IntroduceFilterPage> {
     _initialSelectedGender = filterState.selectedGender;
 
     _ageRange = _initialAgeRange;
-    _selectedCityList = _initialSelectedCityList;
+    _selectedCityList = List<String>.of(filterState.selectedCities);
     _selectedGender = _initialSelectedGender;
 
     _isMale = ref.read(globalProvider).profile.isMale;
