@@ -25,7 +25,7 @@ class StoreNotifier extends _$StoreNotifier {
 
   @override
   StoreState build() {
-    _initialize();
+    Future.microtask(() => _initialize());
 
     ref.onDispose(() {
       _subscription?.cancel();
@@ -68,92 +68,98 @@ class StoreNotifier extends _$StoreNotifier {
 
   // 하트상품 구입
   void buyProduct(String productId) {
-    final inAppPurchase = InAppPurchase.instance;
-    final product = state.products.firstWhere((p) => p.id == productId);
+    final product = state.products.cast<ProductDetails?>().firstWhere(
+          (p) => p?.id == productId,
+          orElse: () => null,
+        );
+
+    if (product == null) return;
+
     final param = PurchaseParam(productDetails: product);
-
-    inAppPurchase.buyConsumable(purchaseParam: param, autoConsume: true);
-
+    
     state = state.copyWith(isPurchasePending: true);
+    
+    InAppPurchase.instance.buyConsumable(purchaseParam: param);
   }
-
+  
   // 앱 내 구매상태 변경 시 콜백
   void onPurchaseUpdated(List<PurchaseDetails> purchases) async {
-    state = state.copyWith(isPurchasePending: true);
-    bool hasPending = false;
+    for (final purchase in purchases) {
+      switch (purchase.status) {
+        case PurchaseStatus.pending:
+          state = state.copyWith(isPurchasePending: true);
+          break;
 
-    try {
-      for (final purchase in purchases) {
-        if (purchase.status == PurchaseStatus.pending) {
-          hasPending = true;
-          continue;
-        }
-        if (purchase.status == PurchaseStatus.purchased || purchase.status == PurchaseStatus.restored) {
-          final String jwsToken = purchase.verificationData.serverVerificationData;
+        case PurchaseStatus.purchased:
+        case PurchaseStatus.restored:
+          await _handleSuccessfulPurchase(purchase);
+          break;
 
-          try {  
-            await verifyReceipt(jwsToken);
-            
-            if (purchase.pendingCompletePurchase) {
-              await InAppPurchase.instance.completePurchase(purchase);
-            }
-          } catch (e) {
-            if (e is NetworkException && e.status == 400 && e.code == 400102) {
-              await InAppPurchase.instance.completePurchase(purchase);
-            } else {
-              Log.e('Receipt verification failed: $e');
-            }
-          }
-        } else if (purchase.status == PurchaseStatus.error || purchase.status == PurchaseStatus.canceled) {
-          if (purchase.pendingCompletePurchase) {
-            await InAppPurchase.instance.completePurchase(purchase);
-          }
-          state = state.copyWith(isPurchasePending: false);
-          Log.e('Purchase failed or canceled: ${purchase.error}');
-        }
+        case PurchaseStatus.error:
+        case PurchaseStatus.canceled:
+          _handleFailedPurchase(purchase);
+          break;
+
+        default:
+          break;
       }
-    } catch (e) {
-      Log.e('Purchase stream error: $e');
-    } finally {
-      state = state.copyWith(isPurchasePending: hasPending);
-      await fetchHeartBalance();
     }
+  }
+
+  // 성공한 결제 처리 (영수증 검증 포함)
+  Future<void> _handleSuccessfulPurchase(PurchaseDetails purchase) async {
+    try {
+      final String jwsToken = purchase.verificationData.serverVerificationData;
+
+      await verifyReceipt(jwsToken);
+
+      if (purchase.pendingCompletePurchase) {
+        await InAppPurchase.instance.completePurchase(purchase);
+      }
+    } on NetworkException catch (e) {
+      if (e.code.toString() == "400102") {
+        await InAppPurchase.instance.completePurchase(purchase);
+        return;
+      }
+      Log.e('Receipt verification failed: $e');
+    } finally {
+      await fetchHeartBalance();
+      state = state.copyWith(isPurchasePending: false);
+    }
+  }
+
+  /// 실패한 결제 처리
+  void _handleFailedPurchase(PurchaseDetails purchase) async {
+    Log.e('Purchase failed: ${purchase.error?.message}');
+    
+    if (purchase.pendingCompletePurchase) {
+      await InAppPurchase.instance.completePurchase(purchase);
+    }
+    
+    state = state.copyWith(isPurchasePending: false);
   }
 
   // 보유하트 조회
   Future<void> _initializeHeartBalanceItem() async {
     try {
-      final heartBalance = ref.read(globalProvider).heartBalance;
-
-      state = state.copyWith(
-        heartBalance: heartBalance,
-        isLoaded: true,
-        error: null,
-      );
+      final heartBalance = ref.watch(globalProvider).heartBalance;
+      state = state.copyWith(heartBalance: heartBalance);
     } catch (e) {
-      Log.e(e);
-      state = state.copyWith(
-        isLoaded: true,
-        error: HeartBalanceErrorType.network,
-      );
+      Log.e('Heart balance init error: $e');
     }
   }
 
   // 보유하트 수 재조회
   Future<void> fetchHeartBalance() async {
     try {
-      await ref.read(globalProvider.notifier).fetchHeartBalance();
-    } catch (e) {
-      Log.e('Failed to fetch heart balance: $e');
-      return;
-    } finally {
+      await ref.watch(globalProvider.notifier).fetchHeartBalance();
       if (ref.mounted) {
         state = state.copyWith(
-          heartBalance: ref.read(globalProvider).heartBalance,
-          isLoaded: true,
-          error: null,
+          heartBalance: ref.watch(globalProvider).heartBalance,
         );
       }
+    } catch (e) {
+      Log.e('Failed to fetch heart balance: $e');
     }
   }
 
