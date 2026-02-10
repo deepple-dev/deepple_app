@@ -68,10 +68,7 @@ class StoreNotifier extends _$StoreNotifier {
 
   // 하트상품 구입
   void buyProduct(String productId) {
-    final product = state.products.cast<ProductDetails?>().firstWhere(
-      (p) => p?.id == productId,
-      orElse: () => null,
-    );
+    final product = state.products.firstWhereOrNull((p) => p.id == productId);
 
     if (product == null) return;
 
