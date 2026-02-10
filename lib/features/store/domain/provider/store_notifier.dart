@@ -25,7 +25,7 @@ class StoreNotifier extends _$StoreNotifier {
 
   @override
   StoreState build() {
-    Future.microtask(() => _initialize());
+    _initialize();
 
     ref.onDispose(() {
       _subscription?.cancel();
@@ -97,7 +97,7 @@ class StoreNotifier extends _$StoreNotifier {
 
         case PurchaseStatus.error:
         case PurchaseStatus.canceled:
-          _handleFailedPurchase(purchase);
+          await _handleFailedPurchase(purchase);
           break;
 
         default:
@@ -129,7 +129,7 @@ class StoreNotifier extends _$StoreNotifier {
   }
 
   /// 실패한 결제 처리
-  void _handleFailedPurchase(PurchaseDetails purchase) async {
+  Future<void> _handleFailedPurchase(PurchaseDetails purchase) async {
     Log.e('Purchase failed: ${purchase.error?.message}');
     
     if (purchase.pendingCompletePurchase) {
@@ -142,7 +142,7 @@ class StoreNotifier extends _$StoreNotifier {
   // 보유하트 조회
   Future<void> _initializeHeartBalanceItem() async {
     try {
-      final heartBalance = ref.watch(globalProvider).heartBalance;
+      final heartBalance = ref.read(globalProvider).heartBalance;
       state = state.copyWith(heartBalance: heartBalance);
     } catch (e) {
       Log.e('Heart balance init error: $e');
@@ -152,10 +152,10 @@ class StoreNotifier extends _$StoreNotifier {
   // 보유하트 수 재조회
   Future<void> fetchHeartBalance() async {
     try {
-      await ref.watch(globalProvider.notifier).fetchHeartBalance();
+      await ref.read(globalProvider.notifier).fetchHeartBalance();
       if (ref.mounted) {
         state = state.copyWith(
-          heartBalance: ref.watch(globalProvider).heartBalance,
+          heartBalance: ref.read(globalProvider).heartBalance,
         );
       }
     } catch (e) {
