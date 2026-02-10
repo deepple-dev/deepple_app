@@ -5,7 +5,7 @@ import 'package:deepple_app/core/util/log.dart';
 import 'package:deepple_app/features/store/domain/provider/usecase_providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
-
+import 'package:collection/collection.dart';
 import 'package:deepple_app/features/store/domain/provider/store_state.dart';
 
 part 'store_notifier.g.dart';
@@ -87,10 +87,10 @@ class StoreNotifier extends _$StoreNotifier {
           case PurchaseStatus.pending:
             state = state.copyWith(isPurchasePending: true);
 
-          case PurchaseStatus.purchased || case PurchaseStatus.restored:
+          case PurchaseStatus.purchased || PurchaseStatus.restored:
             await _handleSuccessfulPurchase(purchase);
 
-          case PurchaseStatus.error || case PurchaseStatus.canceled:
+          case PurchaseStatus.error || PurchaseStatus.canceled:
             await _handleFailedPurchase(purchase);
         }
       }
