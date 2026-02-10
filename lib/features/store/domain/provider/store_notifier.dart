@@ -89,17 +89,12 @@ class StoreNotifier extends _$StoreNotifier {
         switch (purchase.status) {
           case PurchaseStatus.pending:
             state = state.copyWith(isPurchasePending: true);
-            break;
 
-          case PurchaseStatus.purchased:
-          case PurchaseStatus.restored:
+          case PurchaseStatus.purchased || case PurchaseStatus.restored:
             await _handleSuccessfulPurchase(purchase);
-            break;
 
-          case PurchaseStatus.error:
-          case PurchaseStatus.canceled:
+          case PurchaseStatus.error || case PurchaseStatus.canceled:
             await _handleFailedPurchase(purchase);
-            break;
         }
       }
     } catch (e) {
