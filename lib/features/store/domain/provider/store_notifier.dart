@@ -5,7 +5,6 @@ import 'package:deepple_app/core/util/log.dart';
 import 'package:deepple_app/features/store/domain/provider/usecase_providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
-import 'package:flutter/material.dart';
 
 import 'package:deepple_app/features/store/domain/provider/store_state.dart';
 
@@ -27,19 +26,18 @@ class StoreNotifier extends _$StoreNotifier {
 
   @override
   StoreState build() {
-    _initialize();
-
     ref.onDispose(() {
       _subscription?.cancel();
     });
+
+    _initialize();
+
     return StoreState.initial();
   }
 
   Future<void> _initialize() async {
-    await Future.wait([
-      _initializeAppPurchase(),
-      _initializeHeartBalanceItem(),
-    ]);
+    await _initializeAppPurchase();
+    _initializeHeartBalanceItem();
     _subscribeToPurchaseUpdates();
   }
 
@@ -71,19 +69,19 @@ class StoreNotifier extends _$StoreNotifier {
   // 하트상품 구입
   void buyProduct(String productId) {
     final product = state.products.cast<ProductDetails?>().firstWhere(
-          (p) => p?.id == productId,
-          orElse: () => null,
-        );
+      (p) => p?.id == productId,
+      orElse: () => null,
+    );
 
     if (product == null) return;
 
     final param = PurchaseParam(productDetails: product);
-    
+
     state = state.copyWith(isPurchasePending: true);
-    
+
     InAppPurchase.instance.buyConsumable(purchaseParam: param);
   }
-  
+
   // 앱 내 구매상태 변경 시 콜백
   void onPurchaseUpdated(List<PurchaseDetails> purchases) async {
     try {
@@ -102,14 +100,11 @@ class StoreNotifier extends _$StoreNotifier {
           case PurchaseStatus.canceled:
             await _handleFailedPurchase(purchase);
             break;
-
-          default:
-            break;
         }
       }
     } catch (e) {
-     Log.e('Unexpected error in purchase update: $e');
-     state = state.copyWith(isPurchasePending: false);
+      Log.e('Unexpected error in purchase update: $e');
+      state = state.copyWith(isPurchasePending: false);
     }
   }
 
@@ -138,16 +133,16 @@ class StoreNotifier extends _$StoreNotifier {
   /// 실패한 결제 처리
   Future<void> _handleFailedPurchase(PurchaseDetails purchase) async {
     Log.e('Purchase failed: ${purchase.error?.message}');
-    
+
     if (purchase.pendingCompletePurchase) {
       await InAppPurchase.instance.completePurchase(purchase);
     }
-    
+
     state = state.copyWith(isPurchasePending: false);
   }
 
   // 보유하트 조회
-  Future<void> _initializeHeartBalanceItem() async {
+  void _initializeHeartBalanceItem() {
     try {
       final heartBalance = ref.read(globalProvider).heartBalance;
       state = state.copyWith(heartBalance: heartBalance);
@@ -160,11 +155,9 @@ class StoreNotifier extends _$StoreNotifier {
   Future<void> fetchHeartBalance() async {
     try {
       await ref.read(globalProvider.notifier).fetchHeartBalance();
-      if (ref.mounted) {
-        state = state.copyWith(
-          heartBalance: ref.read(globalProvider).heartBalance,
-        );
-      }
+      state = state.copyWith(
+        heartBalance: ref.read(globalProvider).heartBalance,
+      );
     } catch (e) {
       Log.e('Failed to fetch heart balance: $e');
     }

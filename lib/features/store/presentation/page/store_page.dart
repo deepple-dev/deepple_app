@@ -1,6 +1,5 @@
 import 'package:deepple_app/app/router/router.dart';
 import 'package:deepple_app/app/widget/view/default_progress_indicator.dart';
-import 'package:deepple_app/core/state/base_page_state.dart';
 import 'package:deepple_app/app/widget/view/default_app_bar.dart';
 import 'package:deepple_app/features/store/domain/provider/store_notifier.dart';
 import 'package:deepple_app/features/store/domain/model/heart_product.dart';
@@ -13,14 +12,9 @@ import 'package:deepple_app/app/constants/constants.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
-class StorePage extends ConsumerStatefulWidget {
+class StorePage extends ConsumerWidget {
   const StorePage({super.key});
 
-  @override
-  StorePageState createState() => StorePageState();
-}
-
-class StorePageState extends AppBaseConsumerStatefulPageState<StorePage> {
   static final List<HeartProduct> _heartItems = [
     HeartProduct.heart45,
     HeartProduct.heart110,
@@ -29,15 +23,11 @@ class StorePageState extends AppBaseConsumerStatefulPageState<StorePage> {
   ];
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  Widget buildPage(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final storeState = ref.watch(storeProvider);
 
     const double tagSpacing = 16;
+    final double screenWidth = MediaQuery.sizeOf(context).width;
     final double horizontalPadding = screenWidth * 0.05;
     final EdgeInsets contentPadding = EdgeInsets.symmetric(
       horizontal: horizontalPadding,
