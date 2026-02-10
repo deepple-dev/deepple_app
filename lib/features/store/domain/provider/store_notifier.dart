@@ -86,25 +86,30 @@ class StoreNotifier extends _$StoreNotifier {
   
   // 앱 내 구매상태 변경 시 콜백
   void onPurchaseUpdated(List<PurchaseDetails> purchases) async {
-    for (final purchase in purchases) {
-      switch (purchase.status) {
-        case PurchaseStatus.pending:
-          state = state.copyWith(isPurchasePending: true);
-          break;
+    try {
+      for (final purchase in purchases) {
+        switch (purchase.status) {
+          case PurchaseStatus.pending:
+            state = state.copyWith(isPurchasePending: true);
+            break;
 
-        case PurchaseStatus.purchased:
-        case PurchaseStatus.restored:
-          await _handleSuccessfulPurchase(purchase);
-          break;
+          case PurchaseStatus.purchased:
+          case PurchaseStatus.restored:
+            await _handleSuccessfulPurchase(purchase);
+            break;
 
-        case PurchaseStatus.error:
-        case PurchaseStatus.canceled:
-          await _handleFailedPurchase(purchase);
-          break;
+          case PurchaseStatus.error:
+          case PurchaseStatus.canceled:
+            await _handleFailedPurchase(purchase);
+            break;
 
-        default:
-          break;
+          default:
+            break;
+        }
       }
+    } catch (e) {
+     Log.e('Unexpected error in purchase update: $e');
+     state = state.copyWith(isPurchasePending: false);
     }
   }
 
