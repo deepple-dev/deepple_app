@@ -21,6 +21,8 @@ class StoreNotifier extends _$StoreNotifier {
     'APP_ITEM_HEART_550',
   ];
 
+  static const String _errorCodeAlreadyInProgress = '400102';
+
   StreamSubscription<List<PurchaseDetails>>? _subscription;
 
   @override
@@ -117,7 +119,7 @@ class StoreNotifier extends _$StoreNotifier {
         await InAppPurchase.instance.completePurchase(purchase);
       }
     } on NetworkException catch (e) {
-      if (e.code.toString() == "400102") {
+      if (e.code.toString() == _errorCodeAlreadyInProgress) {
         await InAppPurchase.instance.completePurchase(purchase);
         return;
       }
