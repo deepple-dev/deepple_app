@@ -5,8 +5,7 @@ import 'package:deepple_app/core/util/log.dart';
 import 'package:deepple_app/features/store/domain/provider/usecase_providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
-import 'package:flutter/material.dart';
-
+import 'package:collection/collection.dart';
 import 'package:deepple_app/features/store/domain/provider/store_state.dart';
 
 part 'store_notifier.g.dart';
@@ -21,23 +20,24 @@ class StoreNotifier extends _$StoreNotifier {
     'APP_ITEM_HEART_550',
   ];
 
+  static const String _errorCodeAlreadyInProgress = '400102';
+
   StreamSubscription<List<PurchaseDetails>>? _subscription;
 
   @override
   StoreState build() {
-    _initialize();
-
     ref.onDispose(() {
       _subscription?.cancel();
     });
+
+    _initialize();
+
     return StoreState.initial();
   }
 
   Future<void> _initialize() async {
-    await Future.wait([
-      _initializeAppPurchase(),
-      _initializeHeartBalanceItem(),
-    ]);
+    await _initializeAppPurchase();
+    _initializeHeartBalanceItem();
     _subscribeToPurchaseUpdates();
   }
 
@@ -68,74 +68,78 @@ class StoreNotifier extends _$StoreNotifier {
 
   // 하트상품 구입
   void buyProduct(String productId) {
-    final inAppPurchase = InAppPurchase.instance;
-    final product = state.products.firstWhere((p) => p.id == productId);
+    final product = state.products.firstWhereOrNull((p) => p.id == productId);
+
+    if (product == null) return;
+
     final param = PurchaseParam(productDetails: product);
 
-    inAppPurchase.buyConsumable(purchaseParam: param, autoConsume: true);
-
     state = state.copyWith(isPurchasePending: true);
+
+    InAppPurchase.instance.buyConsumable(purchaseParam: param);
   }
 
   // 앱 내 구매상태 변경 시 콜백
   void onPurchaseUpdated(List<PurchaseDetails> purchases) async {
-    state = state.copyWith(isPurchasePending: true);
-    bool hasPending = false;
-
     try {
       for (final purchase in purchases) {
-        if (purchase.status == PurchaseStatus.pending) {
-          hasPending = true;
-          continue;
-        }
-        if (purchase.status == PurchaseStatus.purchased || purchase.status == PurchaseStatus.restored) {
-          final String jwsToken = purchase.verificationData.serverVerificationData;
+        switch (purchase.status) {
+          case PurchaseStatus.pending:
+            state = state.copyWith(isPurchasePending: true);
 
-          try {  
-            await verifyReceipt(jwsToken);
-            
-            if (purchase.pendingCompletePurchase) {
-              await InAppPurchase.instance.completePurchase(purchase);
-            }
-          } catch (e) {
-            if (e is NetworkException && e.status == 400 && e.code == 400102) {
-              await InAppPurchase.instance.completePurchase(purchase);
-            } else {
-              Log.e('Receipt verification failed: $e');
-            }
-          }
-        } else if (purchase.status == PurchaseStatus.error || purchase.status == PurchaseStatus.canceled) {
-          if (purchase.pendingCompletePurchase) {
-            await InAppPurchase.instance.completePurchase(purchase);
-          }
-          state = state.copyWith(isPurchasePending: false);
-          Log.e('Purchase failed or canceled: ${purchase.error}');
+          case PurchaseStatus.purchased || PurchaseStatus.restored:
+            await _handleSuccessfulPurchase(purchase);
+
+          case PurchaseStatus.error || PurchaseStatus.canceled:
+            await _handleFailedPurchase(purchase);
         }
       }
     } catch (e) {
-      Log.e('Purchase stream error: $e');
-    } finally {
-      state = state.copyWith(isPurchasePending: hasPending);
-      await fetchHeartBalance();
+      Log.e('Unexpected error in purchase update: $e');
+      state = state.copyWith(isPurchasePending: false);
     }
   }
 
+  // 성공한 결제 처리 (영수증 검증 포함)
+  Future<void> _handleSuccessfulPurchase(PurchaseDetails purchase) async {
+    try {
+      final String jwsToken = purchase.verificationData.serverVerificationData;
+
+      await verifyReceipt(jwsToken);
+
+      if (purchase.pendingCompletePurchase) {
+        await InAppPurchase.instance.completePurchase(purchase);
+      }
+    } on NetworkException catch (e) {
+      if (e.code.toString() == _errorCodeAlreadyInProgress) {
+        await InAppPurchase.instance.completePurchase(purchase);
+        return;
+      }
+      Log.e('Receipt verification failed: $e');
+    } finally {
+      await fetchHeartBalance();
+      state = state.copyWith(isPurchasePending: false);
+    }
+  }
+
+  /// 실패한 결제 처리
+  Future<void> _handleFailedPurchase(PurchaseDetails purchase) async {
+    Log.e('Purchase failed: ${purchase.error?.message}');
+
+    if (purchase.pendingCompletePurchase) {
+      await InAppPurchase.instance.completePurchase(purchase);
+    }
+
+    state = state.copyWith(isPurchasePending: false);
+  }
+
   // 보유하트 조회
-  Future<void> _initializeHeartBalanceItem() async {
+  void _initializeHeartBalanceItem() {
     try {
       final heartBalance = ref.read(globalProvider).heartBalance;
-
-      state = state.copyWith(
-        heartBalance: heartBalance,
-        isLoaded: true,
-        error: null,
-      );
+      state = state.copyWith(heartBalance: heartBalance);
     } catch (e) {
-      Log.e(e);
-      state = state.copyWith(
-        isLoaded: true,
-        error: HeartBalanceErrorType.network,
-      );
+      Log.e('Heart balance init error: $e');
     }
   }
 
@@ -143,17 +147,11 @@ class StoreNotifier extends _$StoreNotifier {
   Future<void> fetchHeartBalance() async {
     try {
       await ref.read(globalProvider.notifier).fetchHeartBalance();
+      state = state.copyWith(
+        heartBalance: ref.read(globalProvider).heartBalance,
+      );
     } catch (e) {
       Log.e('Failed to fetch heart balance: $e');
-      return;
-    } finally {
-      if (ref.mounted) {
-        state = state.copyWith(
-          heartBalance: ref.read(globalProvider).heartBalance,
-          isLoaded: true,
-          error: null,
-        );
-      }
     }
   }
 
