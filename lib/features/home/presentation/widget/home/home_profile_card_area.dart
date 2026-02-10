@@ -11,6 +11,7 @@ import 'package:deepple_app/features/profile/presentation/widget/widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -210,6 +211,7 @@ class _ProfileCardWidget extends StatelessWidget {
             imageUrl: profile.profileImageUrl,
             fit: BoxFit.cover,
           ),
+          const _GradientOverlay(),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -221,21 +223,21 @@ class _ProfileCardWidget extends StatelessWidget {
                 Text(
                   '${profile.nickname}, ${profile.age}',
                   style: Fonts.semibold(
-                    fontSize: 20,
+                    fontSize: 20.sp,
                     color: const Color(0xFF1F1E23),
                   ),
                 ),
                 Text(
                   '${profile.mbti}・${profile.region}',
-                  style: Fonts.body02Medium().copyWith(
+                  style: Fonts.body02Regular().copyWith(
                     color: Palette.colorGrey600,
-                    height: 1.5,
                   ),
                 ),
                 TagCapsules(hobbies: profile.tags),
               ],
             ),
           ),
+
           // const BlurCoverWidget(isRect: true),
         ],
       ),
@@ -270,6 +272,34 @@ class _PageCardIndicator extends StatelessWidget {
           ),
         );
       }),
+    );
+  }
+}
+
+/// 그라디언트 오버레이
+class _GradientOverlay extends StatelessWidget {
+  const _GradientOverlay();
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      bottom: 0,
+      left: 0,
+      right: 0,
+      height: 200,
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Palette.colorWhite.withValues(alpha: 0),
+              Palette.colorWhite.withValues(alpha: 1),
+            ],
+            stops: const [0.25, 1.0],
+          ),
+        ),
+      ),
     );
   }
 }

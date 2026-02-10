@@ -2,6 +2,7 @@ import 'package:deepple_app/app/constants/constants.dart';
 import 'package:deepple_app/app/widget/widget.dart';
 import 'package:deepple_app/core/extension/extended_context.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 
@@ -133,7 +134,7 @@ class _TitleColumn extends StatelessWidget {
       children: [
         Text(
           title,
-          style: Fonts.semibold(fontSize: 18, color: Palette.colorBlack),
+          style: Fonts.semibold(fontSize: 18.sp, color: Palette.colorBlack),
         ),
         const Gap(14),
         Text(

@@ -145,7 +145,7 @@ class _IntroduceFilterPageState extends ConsumerState<IntroduceFilterPage> {
               child: Text(
                 '필터 적용하기',
                 style: Fonts.bold(
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   color: hasChanged ? Palette.colorWhite : Palette.colorGrey300,
                 ),
               ),

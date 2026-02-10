@@ -145,47 +145,44 @@ class Fonts {
     height: 1.h,
   );
 
-  static TextStyle bold({
-    double fontSize = 32,
-    Color? color,
-    double lineHeight = 1,
-  }) => TextStyle(
-    fontFamily: fontPretendardBold,
-    color: color ?? Palette.colorBlack,
-    fontSize: fontSize.sp,
-    height: lineHeight.h,
-  );
+  static TextStyle bold({double? fontSize, Color? color, double? lineHeight}) =>
+      TextStyle(
+        fontFamily: fontPretendardBold,
+        color: color ?? Palette.colorBlack,
+        fontSize: fontSize ?? 32.sp,
+        height: lineHeight ?? 1.h,
+      );
 
   static TextStyle semibold({
-    double fontSize = 32,
+    double? fontSize,
     Color? color,
-    double lineHeight = 1,
+    double? lineHeight,
   }) => TextStyle(
     fontFamily: fontPretendardSemiBold,
     color: color ?? Palette.colorBlack,
-    fontSize: fontSize.sp,
-    height: lineHeight.h,
+    fontSize: fontSize ?? 32.sp,
+    height: lineHeight ?? 1.h,
   );
 
   static TextStyle regular({
-    double fontSize = 32,
+    double? fontSize,
     Color? color,
-    double lineHeight = 1,
+    double? lineHeight,
   }) => TextStyle(
     fontFamily: fontPretendardRegular,
     color: color ?? Palette.colorBlack,
-    fontSize: fontSize.sp,
-    height: lineHeight.h,
+    fontSize: fontSize ?? 32.sp,
+    height: lineHeight ?? 1.h,
   );
 
   static TextStyle medium({
-    double fontSize = 32,
+    double? fontSize,
     Color? color,
-    double lineHeight = 1,
+    double? lineHeight,
   }) => TextStyle(
     fontFamily: fontPretendardMedium,
     color: color ?? Palette.colorBlack,
-    fontSize: fontSize.sp,
-    height: lineHeight.h,
+    fontSize: fontSize ?? 32.sp,
+    height: lineHeight ?? 1.h,
   );
 }

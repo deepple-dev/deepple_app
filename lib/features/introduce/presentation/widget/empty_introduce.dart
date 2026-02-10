@@ -3,6 +3,7 @@ import 'package:deepple_app/app/constants/icon_path.dart';
 import 'package:deepple_app/app/widget/icon/default_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
 class EmptyIntroduce extends ConsumerWidget {
@@ -19,7 +20,7 @@ class EmptyIntroduce extends ConsumerWidget {
           Text(
             '아직 작성된 소개글이 없어요',
             textAlign: TextAlign.center,
-            style: Fonts.regular(fontSize: 14, lineHeight: 1.4),
+            style: Fonts.regular(fontSize: 14.sp, lineHeight: 1.4.h),
           ),
         ],
       ),
