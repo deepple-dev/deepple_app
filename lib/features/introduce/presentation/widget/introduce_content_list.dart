@@ -123,9 +123,7 @@ class IntroduceListItem extends ConsumerWidget {
           await navigate(
             context,
             route: AppRoute.introduceEdit,
-            extra: IntroduceEditArguments(
-              introduce: introduce,
-            ),
+            extra: IntroduceEditArguments(introduce: introduce),
           );
 
           await ref.read(introduceProvider.notifier).fetchIntroduceList();
@@ -146,9 +144,7 @@ class IntroduceListItem extends ConsumerWidget {
                 ? ProfileDetailArguments(
                     userId: detail.memberBasicInfo.memberId,
                   )
-                : IntroduceDetailArguments(
-                    introduceId: introduce.id,
-                  );
+                : IntroduceDetailArguments(introduceId: introduce.id);
 
             if (context.mounted) {
               navigate(context, route: route, extra: arguements);
@@ -177,10 +173,7 @@ class IntroduceListItem extends ConsumerWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              RoundedImage(
-                size: thumbSize,
-                imageURL: introduce.profileUrl,
-              ),
+              RoundedImage(size: thumbSize, imageURL: introduce.profileUrl),
               const Gap(16.0),
               Expanded(
                 child: Column(
@@ -189,7 +182,7 @@ class IntroduceListItem extends ConsumerWidget {
                     Text(
                       introduce.nickname,
                       style: Fonts.semibold(
-                        fontSize: 16,
+                        fontSize: 16.sp,
                         color: const Color(0xFF1F1E23),
                       ),
                     ),
@@ -197,9 +190,9 @@ class IntroduceListItem extends ConsumerWidget {
                     Text(
                       introduce.title,
                       style: Fonts.regular(
-                        fontSize: 14,
+                        fontSize: 14.sp,
                         color: Palette.colorGrey600,
-                        lineHeight: 1.4,
+                        lineHeight: 1.4.h,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,

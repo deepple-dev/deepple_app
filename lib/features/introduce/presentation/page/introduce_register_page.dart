@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:deepple_app/app/router/router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:deepple_app/app/constants/constants.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
 class IntroduceRegisterPage extends ConsumerStatefulWidget {
@@ -104,10 +105,10 @@ class IntroduceRegisterPageState extends ConsumerState<IntroduceRegisterPage> {
                 ref.read(introduceAddProvider.notifier).setTitle(text),
             keyboardType: TextInputType.text,
             hintText: '제목을 입력해주세요',
-            style: Fonts.medium(fontSize: 16, lineHeight: 1.75),
+            style: Fonts.medium(fontSize: 16, lineHeight: 1.75.h),
             hintStyle: Fonts.medium(
-              fontSize: 16,
-              lineHeight: 1.75,
+              fontSize: 16.sp,
+              lineHeight: 1.75.h,
               color: Palette.colorGrey400,
             ),
           ),
@@ -131,10 +132,10 @@ class IntroduceRegisterPageState extends ConsumerState<IntroduceRegisterPage> {
               showCharacterCount: true,
               hintText:
                   '나이 : 28세\n\n선호 관계 : 서로에게 좋은 자극을 주는 관계\n\n하는 일 : 패션 디자이너로 일하고 있어요\n\n성격 : 밝고 자존감 있는편!\n\n어필:\n대화 나누는걸 좋아해서 대화가 잘 통하는분이 좋아요\n연락 빈도수를 크게 신경쓰진 않지만\n대화가 끊길 정도가 아니면 괜찮다 생각해요!\n리액션 좋다면 최곱니다ㅎㅎ',
-              style: Fonts.regular(fontSize: 14, lineHeight: 1.4),
+              style: Fonts.regular(fontSize: 14.sp, lineHeight: 1.4.h),
               hintStyle: Fonts.regular(
-                fontSize: 14,
-                lineHeight: 1.4,
+                fontSize: 14.sp,
+                lineHeight: 1.4.h,
                 color: Palette.colorGrey500,
               ),
             ),

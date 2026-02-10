@@ -68,23 +68,25 @@ class _MyAccountSettingPageState extends ConsumerState<MyAccountSettingPage> {
           ),
           _AccountSettingItem(
             children: [
-              GestureDetector(
-                onTap: () async {
-                  await _handleSignOut();
+              Expanded(
+                child: GestureDetector(
+                  onTap: () async {
+                    await _handleSignOut();
 
-                  if (!context.mounted) return;
+                    if (!context.mounted) return;
 
-                  navigate(
-                    context,
-                    route: AppRoute.onboard,
-                    method: NavigationMethod.go,
-                  );
-                },
-                child: Text(
-                  '로그아웃',
-                  style: Fonts.body02Medium().copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: Palette.colorBlack,
+                    navigate(
+                      context,
+                      route: AppRoute.onboard,
+                      method: NavigationMethod.go,
+                    );
+                  },
+                  child: Text(
+                    '로그아웃',
+                    style: Fonts.body02Medium().copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: Palette.colorBlack,
+                    ),
                   ),
                 ),
               ),
@@ -92,13 +94,16 @@ class _MyAccountSettingPageState extends ConsumerState<MyAccountSettingPage> {
           ),
           _AccountSettingItem(
             children: [
-              GestureDetector(
-                onTap: () => navigate(context, route: AppRoute.serviceWithdraw),
-                child: Text(
-                  '서비스 탈퇴',
-                  style: Fonts.body02Medium().copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: const Color(0xffbdbdbd),
+              Expanded(
+                child: GestureDetector(
+                  onTap: () =>
+                      navigate(context, route: AppRoute.serviceWithdraw),
+                  child: Text(
+                    '서비스 탈퇴',
+                    style: Fonts.body02Medium().copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: const Color(0xffbdbdbd),
+                    ),
                   ),
                 ),
               ),

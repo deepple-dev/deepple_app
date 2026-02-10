@@ -2,6 +2,7 @@ import 'package:deepple_app/app/constants/constants.dart';
 import 'package:deepple_app/features/home/home.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -56,9 +57,9 @@ class UserByCategoryListItem extends ConsumerWidget {
                   Text(
                     '${profile.nickname}, ${profile.age}',
                     style: Fonts.bold(
-                      fontSize: 16,
+                      fontSize: 16.sp,
                       color: Palette.colorBlack,
-                      lineHeight: 1.0,
+                      lineHeight: 1.0.h,
                     ),
                   ),
                   const Gap(2),

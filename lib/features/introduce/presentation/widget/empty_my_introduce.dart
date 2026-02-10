@@ -6,6 +6,7 @@ import 'package:deepple_app/app/widget/icon/default_icon.dart';
 import 'package:deepple_app/features/introduce/domain/provider/introduce_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
 class EmptyMyIntroduce extends ConsumerWidget {
@@ -22,7 +23,7 @@ class EmptyMyIntroduce extends ConsumerWidget {
           Text(
             '아직 작성하신 소개글이 없어요\n셀프소개로 당신의 진심을 건네보세요',
             textAlign: TextAlign.center,
-            style: Fonts.regular(fontSize: 14, lineHeight: 1.4),
+            style: Fonts.regular(fontSize: 14.sp, lineHeight: 1.4.h),
           ),
           const Gap(52.0),
           DefaultOutlinedButton(

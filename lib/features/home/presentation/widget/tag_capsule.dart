@@ -1,6 +1,7 @@
 import 'package:deepple_app/app/constants/fonts.dart';
 import 'package:deepple_app/app/constants/palette.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class TagCapsules extends StatelessWidget {
   final double capsuleVerticalPadding = 2.0;
@@ -34,7 +35,10 @@ class TagCapsules extends StatelessWidget {
 
   TextPainter _makeTextPainter(String text) {
     return TextPainter(
-      text: TextSpan(text: text, style: Fonts.medium(fontSize: 12.0)),
+      text: TextSpan(
+        text: text,
+        style: Fonts.medium(fontSize: 12.0.sp),
+      ),
       maxLines: 1,
       textDirection: TextDirection.ltr,
     )..layout();
@@ -108,7 +112,7 @@ class _TagCapsule extends StatelessWidget {
       ),
       child: Text(
         name,
-        style: Fonts.medium(fontSize: 12.0, color: Palette.colorWhite),
+        style: Fonts.medium(fontSize: 12.0.sp, color: Palette.colorWhite),
       ),
     );
   }

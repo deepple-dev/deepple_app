@@ -3,6 +3,7 @@ import 'package:deepple_app/app/widget/widget.dart';
 import 'package:deepple_app/core/extension/extended_context.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 class SingleBtnSelectDialg extends ConsumerStatefulWidget {
@@ -70,7 +71,7 @@ class _SingleBtnSelectDialogState extends ConsumerState<SingleBtnSelectDialg> {
                 Text(
                   widget.label,
                   style: Fonts.semibold(
-                    fontSize: 18,
+                    fontSize: 18.sp,
                     color: Palette.colorBlack,
                   ),
                 ),

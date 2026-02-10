@@ -158,9 +158,9 @@ class IntroduceHistoryListItem extends ConsumerWidget {
                     Text(
                       item.title,
                       style: Fonts.semibold(
-                        fontSize: 16,
+                        fontSize: 16.sp,
                         color: const Color(0xFF1F1E23),
-                        lineHeight: 1.4,
+                        lineHeight: 1.4.h,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -169,9 +169,9 @@ class IntroduceHistoryListItem extends ConsumerWidget {
                     Text(
                       item.content,
                       style: Fonts.regular(
-                        fontSize: 14,
+                        fontSize: 14.sp,
                         color: Palette.colorGrey600,
-                        lineHeight: 1.4,
+                        lineHeight: 1.4.h,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -180,9 +180,9 @@ class IntroduceHistoryListItem extends ConsumerWidget {
                     Text(
                       item.createdAt.toDateString,
                       style: Fonts.regular(
-                        fontSize: 12,
+                        fontSize: 12.sp,
                         color: Palette.colorGrey300,
-                        lineHeight: 1.4,
+                        lineHeight: 1.4.h,
                       ),
                     ),
                   ],

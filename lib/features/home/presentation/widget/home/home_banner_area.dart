@@ -18,7 +18,7 @@ class HomeBannerArea extends ConsumerWidget {
         .isDatingExamSubmitted;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 0),
+      padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
       child: GestureDetector(
         onTap: () {
           isDatingExamSubmitted

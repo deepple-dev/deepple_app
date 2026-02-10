@@ -205,7 +205,7 @@ class _IntroduceContentSection extends StatelessWidget {
                   introduceDetail.title,
                   style: Fonts.semibold(
                     color: Palette.colorBlack,
-                    fontSize: 16,
+                    fontSize: 16.sp,
                   ),
                 ),
                 const Gap(12),
@@ -213,8 +213,8 @@ class _IntroduceContentSection extends StatelessWidget {
                   introduceDetail.content,
                   style: Fonts.regular(
                     color: Palette.colorGrey600,
-                    fontSize: 14,
-                    lineHeight: 1.5,
+                    fontSize: 14.sp,
+                    lineHeight: 1.5.h,
                   ),
                 ),
               ],
