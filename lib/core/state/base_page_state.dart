@@ -49,6 +49,7 @@ abstract class BaseConsumerStatefulPageState<T extends ConsumerStatefulWidget>
   final bool isDefaultAppBarDivider;
   final Widget? defaultAppBarLeadingIcon;
   final void Function(BuildContext context)? defaultAppBarLeadingAction;
+  final bool showLeadingButton;
 
   // 기타
   final bool isResizeToAvoidBottomInset;
@@ -68,6 +69,7 @@ abstract class BaseConsumerStatefulPageState<T extends ConsumerStatefulWidget>
     this.isDefaultAppBarDivider = false,
     this.defaultAppBarLeadingIcon,
     this.defaultAppBarLeadingAction,
+    this.showLeadingButton = true,
     // 기타
     this.isResizeToAvoidBottomInset = true,
   });
@@ -93,6 +95,7 @@ abstract class BaseConsumerStatefulPageState<T extends ConsumerStatefulWidget>
                       isDivider: isDefaultAppBarDivider,
                       leading: defaultAppBarLeadingIcon,
                       leadingAction: defaultAppBarLeadingAction,
+                      showLeadingButton: showLeadingButton,
                     ))
               : null,
           body: Padding(
