@@ -1,59 +1,76 @@
 import 'dart:io';
+
 import 'package:deepple_app/core/util/log.dart';
-import 'package:flutter/material.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class PermissionHandler with WidgetsBindingObserver {
-  bool isReturningFromSettings = false;
+/// Explicit permission helper.
+///
+/// - Does NOT observe app lifecycle.
+/// - Only requests permissions when the caller explicitly invokes a method.
+class PermissionHandler {
+  PermissionHandler({DeviceInfoPlugin? deviceInfo})
+    : _deviceInfo = deviceInfo ?? DeviceInfoPlugin();
 
-  void init() {
-    WidgetsBinding.instance.addObserver(this);
-  }
+  final DeviceInfoPlugin _deviceInfo;
 
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed && isReturningFromSettings) {
-      isReturningFromSettings = false;
-      // Re-check permission status when returning from settings
-      checkPhotoPermissionStatus();
-    } else if (state == AppLifecycleState.inactive) {
-      isReturningFromSettings = true;
-    }
-  }
-
-  Future<bool> checkPhotoPermissionStatus() async {
+  /// Requests gallery permission and returns whether it is fully granted.
+  ///
+  /// Android: API 33+ uses [Permission.photos], <=32 uses [Permission.storage].
+  /// iOS: uses [Permission.photos].
+  ///
+  /// Note: iOS `limited` is treated as NOT fully granted.
+  Future<bool> requestFullGalleryPermission() async {
     try {
-      final permission = Platform.isIOS
-          ? Permission.photos
-          : Permission.storage;
-      final status = await permission.status;
-
-      return await switch (status) {
-        PermissionStatus.granted => () async {
-          Log.d('request photo permission granted');
-          return true;
-        }(),
-        PermissionStatus.denied => () async {
-          Log.d('request photo permission denied. Requesting permission...');
-          final newStatus = await permission.request();
-          return newStatus.isGranted;
-        }(),
-        PermissionStatus.permanentlyDenied => () async {
-          Log.d('request photo permission permanently denied. Opening app settings.');
-          openAppSettings();
-          return false;
-        }(),
-        _ => () async {
-          return false;
-        }(),
-      };
+      final permission = await _galleryPermission();
+      final status = await _requestPermission(permission);
+      return status.isGranted;
     } catch (e) {
-      Log.e('request photo permission failed: $e');
+      Log.e('request gallery permission failed: $e');
       return false;
     }
+  }
+
+  Future<bool> requestCameraPermission() async {
+    try {
+      final status = await _requestPermission(Permission.camera);
+      return status.isGranted;
+    } catch (e) {
+      Log.e('request camera permission failed: $e');
+      return false;
+    }
+  }
+
+  Future<PermissionStatus> _requestPermission(Permission permission) async {
+    PermissionStatus status = await permission.status;
+
+    if (status.isGranted) return status;
+
+    if (status.isPermanentlyDenied || status.isRestricted) {
+      await openAppSettings();
+      return status;
+    }
+
+    // Denied / limited: request once.
+    status = await permission.request();
+
+    if (status.isPermanentlyDenied || status.isRestricted) {
+      await openAppSettings();
+    }
+
+    return status;
+  }
+
+  Future<Permission> _galleryPermission() async {
+    if (Platform.isIOS) return Permission.photos;
+
+    if (Platform.isAndroid) {
+      final info = await _deviceInfo.androidInfo;
+      final sdkInt = info.version.sdkInt;
+      if (sdkInt <= 32) return Permission.storage;
+      return Permission.photos;
+    }
+
+    return Permission.photos;
   }
 }
