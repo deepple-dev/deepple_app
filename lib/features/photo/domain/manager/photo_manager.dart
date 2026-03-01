@@ -13,47 +13,18 @@ class PhotoManager {
   final ImagePicker _imagePicker;
   final DeviceInfoPlugin _deviceInfo;
 
-  Future<XFile?> pickFromGallery() => _pick(source: ImageSource.gallery);
+  Future<XFile?> pickFromGallery() => _pickFromGallery();
 
-  Future<XFile?> captureFromCamera() => _pick(source: ImageSource.camera);
-
-  Future<XFile?> _pick({required ImageSource source}) async {
+  Future<XFile?> _pickFromGallery() async {
     try {
-      final hasPermission = switch (source) {
-        ImageSource.gallery => await ensureFullGalleryPermission(),
-        ImageSource.camera => await ensureCameraPermission(),
-      };
-
+      final hasPermission = await ensureFullGalleryPermission();
       if (!hasPermission) return null;
 
-      return await _imagePicker.pickImage(source: source);
+      return await _imagePicker.pickImage(source: ImageSource.gallery);
     } catch (e) {
       Log.e('pick image failed: $e');
       return null;
     }
-  }
-
-  Future<bool> ensureCameraPermission() async {
-    PermissionStatus status = await Permission.camera.status;
-
-    if (status.isGranted) return true;
-
-    // Denied -> request again. Permanently denied/restricted -> settings.
-    for (int attempt = 0; attempt < 2; attempt++) {
-      if (status.isPermanentlyDenied || status.isRestricted) {
-        await openAppSettings();
-        return false;
-      }
-
-      status = await Permission.camera.request();
-      if (status.isGranted) return true;
-    }
-
-    if (status.isPermanentlyDenied || status.isRestricted) {
-      await openAppSettings();
-    }
-
-    return false;
   }
 
   /// Requests full gallery access.

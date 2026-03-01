@@ -31,16 +31,6 @@ class PermissionHandler {
     }
   }
 
-  Future<bool> requestCameraPermission() async {
-    try {
-      final status = await _requestPermission(Permission.camera);
-      return status.isGranted;
-    } catch (e) {
-      Log.e('request camera permission failed: $e');
-      return false;
-    }
-  }
-
   Future<PermissionStatus> _requestPermission(Permission permission) async {
     PermissionStatus status = await permission.status;
 
