@@ -6,6 +6,7 @@ import 'package:deepple_app/app/widget/overlay/tool_tip.dart';
 import 'package:deepple_app/app/widget/text/bullet_text.dart';
 import 'package:deepple_app/core/extension/extended_context.dart';
 import 'package:deepple_app/core/state/base_page_state.dart';
+import 'package:deepple_app/core/util/photo_utils.dart';
 import 'package:deepple_app/features/auth/presentation/widget/auth_step_indicator_widget.dart';
 import 'package:deepple_app/features/auth/presentation/widget/photo_guide_bottomsheet.dart';
 import 'package:deepple_app/app/router/route_arguments.dart';
@@ -18,7 +19,9 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
 class SignUpProfilePicturePage extends ConsumerStatefulWidget {
-  const SignUpProfilePicturePage({super.key});
+  final PhotoManager photoManager;
+  SignUpProfilePicturePage({super.key, PhotoManager? photoManager})
+    : photoManager = photoManager ?? PhotoManager();
 
   @override
   SignUpProfilePicturePageState createState() =>
@@ -29,7 +32,6 @@ class SignUpProfilePicturePageState
     extends BaseConsumerStatefulPageState<SignUpProfilePicturePage> {
   SignUpProfilePicturePageState() : super(defaultAppBarTitle: '프로필 사진');
 
-  final PhotoManager _photoManager = PhotoManager();
   List<XFile?> _photos = List.filled(Dimens.profileImageMaxCount, null);
 
   @override
@@ -94,7 +96,8 @@ class SignUpProfilePicturePageState
                                   onSubmit: () async {
                                     context.pop();
 
-                                    final pickedPhoto = await _photoManager
+                                    final pickedPhoto = await widget
+                                        .photoManager
                                         .pickFromGallery();
 
                                     if (pickedPhoto != null) {
@@ -159,13 +162,7 @@ class SignUpProfilePicturePageState
     updated[index] = photo;
 
     setState(() {
-      _photos = _compactPhotos(updated);
+      _photos = compactPhotos(updated);
     });
-  }
-
-  List<XFile?> _compactPhotos(List<XFile?> photos) {
-    final nonNullPhotos = photos.where((photo) => photo != null).toList();
-    final nullCount = photos.length - nonNullPhotos.length;
-    return [...nonNullPhotos, ...List.filled(nullCount, null)];
   }
 }

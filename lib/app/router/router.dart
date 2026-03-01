@@ -359,7 +359,7 @@ final allRoutes = [
           ),
           NamedGoRoute(
             name: AppRoute.signUpProfilePicture.name,
-            builder: (context, state) => const SignUpProfilePicturePage(),
+            builder: (context, state) => SignUpProfilePicturePage(),
           ),
           NamedGoRoute(
             name: AppRoute.signUpTerms.name,

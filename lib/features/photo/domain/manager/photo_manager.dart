@@ -49,8 +49,11 @@ class PhotoManager {
       if (_isFullGalleryGranted(status)) return true;
     }
 
-    // Still limited -> Settings for explicit full permission.
-    if (status.isLimited || status.isPermanentlyDenied || status.isRestricted) {
+    // Still denied/limited -> Settings for explicit full permission.
+    if (status.isDenied ||
+        status.isLimited ||
+        status.isPermanentlyDenied ||
+        status.isRestricted) {
       await openAppSettings();
     }
 

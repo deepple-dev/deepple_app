@@ -20,7 +20,12 @@ import 'package:image_picker/image_picker.dart';
 
 class MyProfileImageUpdatePage extends ConsumerStatefulWidget {
   final List<ProfilePhoto> profileImages;
-  const MyProfileImageUpdatePage({super.key, required this.profileImages});
+  final PhotoManager photoManager;
+  MyProfileImageUpdatePage({
+    super.key,
+    required this.profileImages,
+    PhotoManager? photoManager,
+  }) : photoManager = photoManager ?? PhotoManager();
 
   @override
   ConsumerState<MyProfileImageUpdatePage> createState() =>
@@ -29,23 +34,6 @@ class MyProfileImageUpdatePage extends ConsumerStatefulWidget {
 
 class _MyProfileImageUpdatePageState
     extends ConsumerState<MyProfileImageUpdatePage> {
-  final PhotoManager _photoManager = PhotoManager();
-  late List<XFile?> _photos;
-
-  @override
-  void initState() {
-    super.initState();
-
-    final xfilePhotos = widget.profileImages
-        .take(Dimens.profileImageMaxCount)
-        .map((e) => e.imageFile)
-        .toList();
-    _photos = [
-      ...xfilePhotos,
-      ...List.filled(Dimens.profileImageMaxCount - xfilePhotos.length, null),
-    ];
-  }
-
   @override
   Widget build(BuildContext context) {
     final imageUpdateState = ref.watch(
@@ -54,7 +42,13 @@ class _MyProfileImageUpdatePageState
     final imageUpdateNotifier = ref.read(
       profileImageUpdateProvider(widget.profileImages).notifier,
     );
-    final photos = _photos;
+
+    final photos = List<XFile?>.generate(
+      Dimens.profileImageMaxCount,
+      (index) => index < imageUpdateState.profileImages.length
+          ? imageUpdateState.profileImages[index].imageFile
+          : null,
+    );
 
     return GestureDetector(
       onTap: FocusScope.of(context).unfocus,
@@ -110,18 +104,20 @@ class _MyProfileImageUpdatePageState
                                 imageFile: photos[index],
                                 onPickImage: () async {
                                   // 갤러리에서 이미지 선택
-                                  final pickedPhoto = await _photoManager
+                                  final pickedPhoto = await widget.photoManager
                                       .pickFromGallery();
 
                                   // 선택된 이미지가 있으면 UI 업데이트
                                   if (pickedPhoto != null) {
                                     final effectiveIndex =
-                                        _addOrReplaceAndCompact(
-                                          index,
-                                          pickedPhoto,
-                                        );
+                                        index <
+                                            imageUpdateState
+                                                .profileImages
+                                                .length
+                                        ? index
+                                        : imageUpdateState.profileImages.length;
 
-                                    // ProfilePhoto 업데이트 (컴팩트된 인덱스 기준)
+                                    // ProfilePhoto 업데이트
                                     await imageUpdateNotifier
                                         .updateEditableProfileImages(
                                           index: effectiveIndex,
@@ -131,10 +127,13 @@ class _MyProfileImageUpdatePageState
                                 },
                                 // 사진 삭제
                                 onRemoveImage: () {
-                                  final removedIndex = _removeAndCompact(index);
-                                  if (removedIndex == null) return;
+                                  if (index >=
+                                      imageUpdateState.profileImages.length) {
+                                    return;
+                                  }
+
                                   imageUpdateNotifier
-                                      .deleteEditableProfileImage(removedIndex);
+                                      .deleteEditableProfileImage(index);
                                 },
                                 isRepresentative: index == 0,
                               );
@@ -263,45 +262,5 @@ class _MyProfileImageUpdatePageState
         ),
       ),
     );
-  }
-
-  int _addOrReplaceAndCompact(int index, XFile photo) {
-    final currentNonNullCount = _photos.whereType<XFile>().length;
-    final isReplacingExisting =
-        index < currentNonNullCount && _photos[index] != null;
-
-    final updated = [..._photos];
-    updated[index] = photo;
-
-    setState(() {
-      _photos = _compactPhotos(updated);
-    });
-
-    // After compaction, the photo will end up:
-    // - at the same index when replacing an existing non-null photo
-    // - appended to the end of current non-null list when adding into an empty slot
-    return isReplacingExisting ? index : currentNonNullCount;
-  }
-
-  int? _removeAndCompact(int index) {
-    final currentNonNullCount = _photos.whereType<XFile>().length;
-    final isRemovingExisting =
-        index < currentNonNullCount && _photos[index] != null;
-    if (!isRemovingExisting) return null;
-
-    final updated = [..._photos];
-    updated[index] = null;
-
-    setState(() {
-      _photos = _compactPhotos(updated);
-    });
-
-    return index;
-  }
-
-  List<XFile?> _compactPhotos(List<XFile?> photos) {
-    final nonNullPhotos = photos.where((photo) => photo != null).toList();
-    final nullCount = photos.length - nonNullPhotos.length;
-    return [...nonNullPhotos, ...List.filled(nullCount, null)];
   }
 }
