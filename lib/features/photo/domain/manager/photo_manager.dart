@@ -27,18 +27,12 @@ class PhotoManager {
     }
   }
 
-  /// Requests full gallery access.
-  ///
-  /// iOS: If user grants **limited** access, we retry once and then open Settings
-  /// (because there is no reliable way to force full access from the prompt).
-  /// Android: Uses READ_MEDIA_IMAGES (API 33+) or legacy storage permission.
   Future<bool> ensureFullGalleryPermission() async {
     final permission = await _galleryPermission();
 
     PermissionStatus status = await permission.status;
     if (_isFullGalleryGranted(status)) return true;
 
-    // Denied/limited -> request again (at most 2 attempts total).
     for (int attempt = 0; attempt < 2; attempt++) {
       if (status.isPermanentlyDenied || status.isRestricted) {
         await openAppSettings();
@@ -49,7 +43,6 @@ class PhotoManager {
       if (_isFullGalleryGranted(status)) return true;
     }
 
-    // Still denied/limited -> Settings for explicit full permission.
     if (status.isDenied ||
         status.isLimited ||
         status.isPermanentlyDenied ||
