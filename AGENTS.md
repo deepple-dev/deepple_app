@@ -4,7 +4,6 @@ This repo is a Flutter (Dart) app.
 
 ## Source Of Truth
 
-- Commands: `Makefile`
 - CI: `.github/workflows/flutter_test.yaml` (Flutter `3.35.4` stable, runs `flutter test --coverage`)
 - Lints: `analysis_options.yaml` (includes `package:flutter_lints/flutter.yaml`)
 - No Cursor/Copilot rules found (`.cursor/rules/`, `.cursorrules`, `.github/copilot-instructions.md`).
@@ -15,26 +14,13 @@ This repo is a Flutter (Dart) app.
 - App config loads early via `Config.initialize()` in `lib/main.dart`; missing env can break runtime
 
 ```bash
-make init
+flutter pub get
+dart run build_runner build --delete-conflicting-outputs
 ```
-
-`make init` runs: `flutter pub get`, splash/icons generation, then build_runner.
 
 ## Daily Commands
 
-Prefer Make targets:
-
-```bash
-make generate
-make analyze
-make test
-
-make run ENV_FILE=dev.env
-make android-build ENV_FILE=dev.env
-make ios-build ENV_FILE=prod.env
-```
-
-Direct equivalents (when not using Makefile):
+Preferred commands:
 
 ```bash
 dart run build_runner build --delete-conflicting-outputs
@@ -45,7 +31,6 @@ flutter run --dart-define-from-file=dev.env
 
 Notes:
 
-- `make build` does `flutter build apk --release` (no `--dart-define-from-file`); prefer `make android-build ENV_FILE=...` when env-dependent.
 - For Play Store builds, `README.md` documents `flutter build aab --release --dart-define-from-file=prod.env`.
 
 ## Tests (Single Test)

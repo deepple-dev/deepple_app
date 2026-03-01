@@ -193,8 +193,6 @@ class _OnboardingCertificationPageState
     if (!context.mounted) return;
 
     if (userData?.isProfileSettingNeeded ?? false) {
-      // We don't need to return to OTP; replace the stack so the OTP page
-      // (and its countdown timer/provider) can be disposed.
       navigate(
         context,
         route: AppRoute.signUp,
