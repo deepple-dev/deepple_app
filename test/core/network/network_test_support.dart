@@ -43,7 +43,10 @@ class LogoutOn401Widget extends ConsumerWidget {
             key: const Key('call'),
             onPressed: () async {
               try {
-                await dio.get('/resource');
+                await dio.get(
+                  '/resource',
+                  options: Options(headers: {'requiresAccessToken': true}),
+                );
               } catch (_) {}
             },
             child: const Text('call'),
@@ -228,13 +231,8 @@ void registerNetworkTestFallbacks() {
 
 Future<void> expectTokenSaved({
   required MockLocalStorage localStorage,
-  required String accessToken,
   required String refreshToken,
 }) async {
-  verify(
-    () =>
-        localStorage.saveEncrypted(SecureStorageItem.accessToken, accessToken),
-  ).called(1);
   verify(
     () => localStorage.saveEncrypted(
       SecureStorageItem.refreshToken,
@@ -248,7 +246,10 @@ Future<Map<String, dynamic>> runSimpleGet(ApiServiceImpl api) {
 }
 
 Future<Response<dynamic>> runDioGet(Dio dio) {
-  return dio.get('/resource');
+  return dio.get(
+    '/resource',
+    options: Options(headers: {'requiresAccessToken': true}),
+  );
 }
 
 void expectLogoutCalled(FakeAuthUseCase auth) {

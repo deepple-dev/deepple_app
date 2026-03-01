@@ -34,65 +34,82 @@ void main() {
       expect(res['ok'], true);
     });
 
-    test('토큰 재발급(205) + API 응답 확인 (TokenInterceptor retry)', () async {
-      // given
-      final dio = Dio(BaseOptions(baseUrl: 'https://mockserver'));
+    test(
+      '토큰 재발급(401006) + API 응답 확인 (TokenInterceptor refresh + retry)',
+      () async {
+        // given
+        final dio = Dio(BaseOptions(baseUrl: 'https://mockserver'));
 
-      final auth = MockAuthUseCase();
-      final localStorage = MockLocalStorage();
-      final cookieJar = MockPersistCookieJar();
+        final auth = MockAuthUseCase();
+        final localStorage = MockLocalStorage();
+        final cookieJar = MockPersistCookieJar();
 
-      when(() => auth.getAccessToken()).thenAnswer((_) async => 'old');
-      when(
-        () => localStorage.saveEncrypted(any(), any()),
-      ).thenAnswer((_) async => true);
-      when(
-        () => cookieJar.saveFromResponse(any(), any()),
-      ).thenAnswer((_) async {});
+        when(() => auth.getAccessToken()).thenAnswer((_) async => 'old');
+        when(
+          () => auth.getRefreshToken(),
+        ).thenAnswer((_) async => 'stored_refresh');
+        when(
+          () => localStorage.saveEncrypted(any(), any()),
+        ).thenAnswer((_) async => true);
+        when(() => cookieJar.loadForRequest(any())).thenAnswer((_) async => []);
+        when(
+          () => cookieJar.saveFromResponse(any(), any()),
+        ).thenAnswer((_) async {});
 
-      final container = createTestContainer(
-        authUseCase: auth,
-        localStorage: localStorage,
-      );
-      addTearDown(container.dispose);
+        final container = createTestContainer(
+          authUseCase: auth,
+          localStorage: localStorage,
+        );
+        addTearDown(container.dispose);
 
-      dio.httpClientAdapter = QueueHttpClientAdapter([
-        (_) => jsonResponseBody(
-          const {},
-          205,
-          headers: {
-            'authorization': ['Bearer new_access'],
-            'set-cookie': ['refresh_token=new_refresh; Path=/;'],
+        dio.httpClientAdapter = QueueHttpClientAdapter([
+          (_) => jsonResponseBody({'code': '401006'}, 401),
+          (options) {
+            expect(options.method, 'POST');
+            expect(options.path, '/member/refresh');
+            expect(options.extra['skipAuth'], true);
+            return jsonResponseBody(
+              {
+                'status': 0,
+                'code': 'OK',
+                'message': '',
+                'data': {'accessToken': 'new_access'},
+              },
+              200,
+              headers: {
+                'set-cookie': ['refresh_token=new_refresh; Path=/;'],
+              },
+            );
           },
-        ),
-        (options) {
-          expect(options.extra['retry'], true);
-          expect(options.headers['authorization'], 'Bearer new_access');
-          return jsonResponseBody({'ok': true}, 200);
-        },
-      ]);
-      dio.interceptors.add(
-        container.read(
-          tokenInterceptorProvider(
-            InterceptorArgs(dio: dio, cookieJar: cookieJar),
+          (options) {
+            expect(options.extra['retry'], true);
+            expect(options.headers['authorization'], 'Bearer new_access');
+            return jsonResponseBody({'ok': true}, 200);
+          },
+        ]);
+        dio.interceptors.add(
+          container.read(
+            tokenInterceptorProvider(
+              InterceptorArgs(dio: dio, cookieJar: cookieJar),
+            ),
           ),
-        ),
-      );
+        );
 
-      // when
-      final response = await runDioGet(dio);
+        // when
+        final response = await runDioGet(dio);
 
-      // then
-      expect(response.data, isA<Map>());
-      expect(response.data['ok'], true);
-      await expectTokenSaved(
-        localStorage: localStorage,
-        accessToken: 'new_access',
-        refreshToken: 'new_refresh',
-      );
-      verify(() => cookieJar.saveFromResponse(any(), any())).called(1);
-      expect(container.read(authExpiredProvider), false);
-    });
+        // then
+        expect(response.data, isA<Map>());
+        expect(response.data['ok'], true);
+        verify(() => auth.setAccessToken('new_access')).called(1);
+        await expectTokenSaved(
+          localStorage: localStorage,
+          refreshToken: 'new_refresh',
+        );
+        verify(() => cookieJar.saveFromResponse(any(), any())).called(2);
+        expect(container.read(authExpiredProvider), false);
+      },
+    );
 
     testWidgets('401 응답시 로그아웃 로직 확인', (tester) async {
       // given
@@ -113,6 +130,45 @@ void main() {
 
       // then
       expectLogoutCalled(auth);
+    });
+
+    test('토큰 재발급 실패 시(401006 -> refresh error) 로그아웃 플래그 설정', () async {
+      // given
+      final dio = Dio(BaseOptions(baseUrl: 'https://mockserver'));
+      final auth = FakeAuthUseCase();
+      final cookieJar = MockPersistCookieJar();
+
+      when(() => cookieJar.loadForRequest(any())).thenAnswer((_) async => []);
+      when(
+        () => cookieJar.saveFromResponse(any(), any()),
+      ).thenAnswer((_) async {});
+
+      final container = createTestContainer(authUseCase: auth);
+      addTearDown(container.dispose);
+
+      dio.httpClientAdapter = QueueHttpClientAdapter([
+        (_) => jsonResponseBody({'code': '401006'}, 401),
+        (options) {
+          expect(options.method, 'POST');
+          expect(options.path, '/member/refresh');
+          return jsonResponseBody({'message': 'refresh failed'}, 500);
+        },
+      ]);
+      dio.interceptors.add(
+        container.read(
+          tokenInterceptorProvider(
+            InterceptorArgs(dio: dio, cookieJar: cookieJar),
+          ),
+        ),
+      );
+
+      // when
+      try {
+        await runDioGet(dio);
+      } catch (_) {}
+
+      // then
+      expect(container.read(authExpiredProvider), true);
     });
   });
 }

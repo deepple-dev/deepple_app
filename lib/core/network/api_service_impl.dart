@@ -5,11 +5,9 @@ import 'package:deepple_app/core/network/logging_interceptor.dart';
 import 'package:deepple_app/core/storage/local_storage.dart';
 import 'package:deepple_app/core/storage/local_storage_item.dart';
 import 'package:deepple_app/core/util/log.dart';
-import 'package:deepple_app/features/auth/data/usecase/auth_usecase_impl.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -72,14 +70,12 @@ class ApiServiceImpl implements ApiService {
         ),
       );
 
+      _dioService.interceptors.add(LoggingInterceptor());
+
       if (enableAuth) {
         _dioService.interceptors.add(
           TokenInterceptor(ref: ref, dio: _dioService, cookieJar: cookieJar),
         );
-      }
-
-      if (!kReleaseMode) {
-        _dioService.interceptors.add(LoggingInterceptor());
       }
 
       _dioService.interceptors.add(CookieManager(_cookieJar));
@@ -104,12 +100,9 @@ class ApiServiceImpl implements ApiService {
     await _initCompleter.future;
     final finalHeaders = <String, dynamic>{'Accept': '*/*', ...?headers};
 
-    if (!requiresAccessToken) return finalHeaders;
-
-    final accessToken = await ref.read(authUsecaseProvider).getAccessToken();
-    if (accessToken == null) return finalHeaders;
-
-    finalHeaders['authorization'] = 'Bearer $accessToken';
+    if (requiresAccessToken) {
+      finalHeaders['requiresAccessToken'] = true;
+    }
 
     return finalHeaders;
   }
