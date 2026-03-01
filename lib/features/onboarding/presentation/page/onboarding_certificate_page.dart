@@ -172,6 +172,7 @@ class _OnboardingCertificationPageState
           context,
           route: AppRoute.temporalForbidden,
           extra: TemporalForbiddenArguments(time: notifier.suspensioinExpireAt),
+          method: NavigationMethod.go,
         );
         break;
 
@@ -192,7 +193,13 @@ class _OnboardingCertificationPageState
     if (!context.mounted) return;
 
     if (userData?.isProfileSettingNeeded ?? false) {
-      navigate(context, route: AppRoute.signUp);
+      // We don't need to return to OTP; replace the stack so the OTP page
+      // (and its countdown timer/provider) can be disposed.
+      navigate(
+        context,
+        route: AppRoute.signUp,
+        method: NavigationMethod.pushReplacement,
+      );
     } else if (userData?.activityStatus == 'WAITING_SCREENING') {
       navigate(
         context,
