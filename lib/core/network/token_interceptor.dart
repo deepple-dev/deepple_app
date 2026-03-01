@@ -3,22 +3,20 @@ import 'dart:async';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:deepple_app/core/mixin/log_mixin.dart';
 import 'package:deepple_app/core/network/enum/token_unauthorized_code.dart';
+import 'package:deepple_app/core/network/network_request_extras.dart';
 import 'package:deepple_app/core/provider/auth_expired_provider.dart';
 import 'package:deepple_app/core/storage/local_storage.dart';
 import 'package:deepple_app/core/storage/local_storage_item.dart';
 import 'package:deepple_app/core/util/log.dart';
 import 'package:deepple_app/features/auth/data/usecase/auth_usecase_impl.dart';
 import 'package:dio/dio.dart';
+import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class TokenInterceptor extends QueuedInterceptor with LogMixin {
-  static const String _requiresAccessTokenKey = 'requiresAccessToken';
   static const String _authorizationHeader = 'authorization';
   static const String _bearerPrefix = 'Bearer ';
   static const String _setCookieHeader = 'set-cookie';
-  static const String _retryExtraKey = 'retry';
-  static const String _skipAuthExtraKey = 'skipAuth';
-  static const String _requiresAccessTokenExtraKey = 'requiresAccessTokenExtra';
   static const int _unauthorizedStatusCode = 401;
   static const String _refreshPath = '/member/refresh';
   static const Duration _refreshTimeout = Duration(seconds: 15);
@@ -26,6 +24,8 @@ class TokenInterceptor extends QueuedInterceptor with LogMixin {
   final Ref _ref;
   final Dio _dio;
   final PersistCookieJar _cookieJar;
+
+  Dio? _refreshDio;
 
   Future<String?>? _refreshInFlight;
 
@@ -36,6 +36,18 @@ class TokenInterceptor extends QueuedInterceptor with LogMixin {
   }) : _ref = ref,
        _dio = dio,
        _cookieJar = cookieJar;
+
+  Dio get _dioForRefresh {
+    final existing = _refreshDio;
+    if (existing != null) return existing;
+
+    final newDio = Dio(_dio.options);
+    newDio.httpClientAdapter = _dio.httpClientAdapter;
+    newDio.transformer = _dio.transformer;
+    newDio.interceptors.add(CookieManager(_cookieJar));
+    _refreshDio = newDio;
+    return newDio;
+  }
 
   @override
   Future<void> onRequest(
@@ -64,7 +76,11 @@ class TokenInterceptor extends QueuedInterceptor with LogMixin {
   ) async {
     final headers = response.headers.map;
 
-    await _extractAndSaveTokens(headers, responseUri: response.realUri);
+    try {
+      await _extractAndSaveTokens(headers, responseUri: response.realUri);
+    } catch (e, st) {
+      Log.e('token extraction/save failed: $e', stackTrace: st);
+    }
     return super.onResponse(response, handler);
   }
 
@@ -77,8 +93,7 @@ class TokenInterceptor extends QueuedInterceptor with LogMixin {
       return super.onError(err, handler);
     }
 
-    final requiresAccessToken =
-        err.requestOptions.extra[_requiresAccessTokenExtraKey] == true;
+    final requiresAccessToken = _requiresAccessToken(err.requestOptions);
     if (!requiresAccessToken) {
       return super.onError(err, handler);
     }
@@ -86,7 +101,7 @@ class TokenInterceptor extends QueuedInterceptor with LogMixin {
     final code = _extractUnauthorizedCode(err);
 
     if (code != null && TokenUnauthorizedCode.isExpiredAccessToken(code)) {
-      if (!requiresAccessToken || _alreadyRetriedOptions(err.requestOptions)) {
+      if (_alreadyRetriedOptions(err.requestOptions)) {
         _ref.read(authExpiredProvider.notifier).execute();
         return super.onError(err, handler);
       }
@@ -118,7 +133,7 @@ class TokenInterceptor extends QueuedInterceptor with LogMixin {
   }
 
   Future<bool> _waitForRefreshIfNeeded(RequestOptions options) async {
-    final requiresToken = options.headers[_requiresAccessTokenKey] == true;
+    final requiresToken = _requiresAccessToken(options);
     if (!requiresToken) return true;
     if (_shouldSkipAuth(options) || _isRefreshRequest(options)) return true;
 
@@ -134,20 +149,21 @@ class TokenInterceptor extends QueuedInterceptor with LogMixin {
   }
 
   Future<void> _attachAccessTokenIfRequired(RequestOptions options) async {
-    final requiresToken = options.headers[_requiresAccessTokenKey];
-
-    if (requiresToken == true) {
-      options.extra[_requiresAccessTokenExtraKey] = true;
-    }
-
-    if (requiresToken == true) {
+    final requiresToken = _requiresAccessToken(options);
+    if (requiresToken) {
       final token = await _ref.read(authUsecaseProvider).getAccessToken();
       if (token != null) {
         options.headers[_authorizationHeader] = '$_bearerPrefix$token';
       }
     }
+  }
 
-    options.headers.remove(_requiresAccessTokenKey);
+  bool _requiresAccessToken(RequestOptions options) {
+    // default: true (most endpoints require auth)
+    if (options.extra.containsKey(requiresAccessTokenExtraKey)) {
+      return options.extra[requiresAccessTokenExtraKey] == true;
+    }
+    return true;
   }
 
   Future<String?> _extractAndSaveTokens(
@@ -189,7 +205,14 @@ class TokenInterceptor extends QueuedInterceptor with LogMixin {
     final cookies = setCookieList
         .map((cookie) => Cookie.fromSetCookieValue(cookie))
         .toList();
-    await _cookieJar.saveFromResponse(responseUri, cookies);
+
+    final refreshDio = _refreshDio;
+    final hasCookieManager =
+        _dio.interceptors.any((i) => i is CookieManager) ||
+        (refreshDio?.interceptors.any((i) => i is CookieManager) ?? false);
+    if (!hasCookieManager) {
+      await _cookieJar.saveFromResponse(responseUri, cookies);
+    }
 
     final refreshToken = _extractRefreshTokenFromCookies(setCookieList);
 
@@ -221,7 +244,7 @@ class TokenInterceptor extends QueuedInterceptor with LogMixin {
   }
 
   bool _alreadyRetriedOptions(RequestOptions options) {
-    return options.extra[_retryExtraKey] == true;
+    return options.extra[retryExtraKey] == true;
   }
 
   Future<Response> _retryRequestWithNewToken(
@@ -234,13 +257,22 @@ class TokenInterceptor extends QueuedInterceptor with LogMixin {
     newOptions.headers.remove('authorization');
     newOptions.headers[_authorizationHeader] = '$_bearerPrefix$accessToken';
 
-    return _dio.fetch(newOptions);
+    final response = await _dioForRefresh.fetch(newOptions);
+    try {
+      await _extractAndSaveTokens(
+        response.headers.map,
+        responseUri: response.realUri,
+      );
+    } catch (e, st) {
+      Log.e('token extraction/save failed: $e', stackTrace: st);
+    }
+    return response;
   }
 
   RequestOptions _buildRetryRequestOptions(RequestOptions original) {
     return original.copyWith(
       headers: Map<String, dynamic>.of(original.headers),
-      extra: {...original.extra, _retryExtraKey: true},
+      extra: {...original.extra, retryExtraKey: true},
     );
   }
 
@@ -257,7 +289,7 @@ class TokenInterceptor extends QueuedInterceptor with LogMixin {
   }
 
   bool _shouldSkipAuth(RequestOptions options) {
-    return options.extra[_skipAuthExtraKey] == true;
+    return options.extra[skipAuthExtraKey] == true;
   }
 
   bool _isRefreshRequest(RequestOptions options) {
@@ -274,16 +306,27 @@ class TokenInterceptor extends QueuedInterceptor with LogMixin {
     try {
       await _ensureRefreshTokenCookiePresent();
 
-      final response = await _dio
+      final response = await _dioForRefresh
           .post(
             _refreshPath,
             data: null,
             options: Options(
-              headers: {_requiresAccessTokenKey: false},
-              extra: {_skipAuthExtraKey: true},
+              extra: {
+                skipAuthExtraKey: true,
+                requiresAccessTokenExtraKey: false,
+              },
             ),
           )
           .timeout(_refreshTimeout);
+
+      try {
+        await _extractAndSaveTokens(
+          response.headers.map,
+          responseUri: response.realUri,
+        );
+      } catch (e, st) {
+        Log.e('token extraction/save failed: $e', stackTrace: st);
+      }
 
       final token = _extractAccessTokenFromRefreshBody(response.data);
       if (token != null && token.isNotEmpty) {

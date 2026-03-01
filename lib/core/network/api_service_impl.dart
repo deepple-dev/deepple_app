@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:deepple_app/core/config/config.dart';
 import 'package:deepple_app/core/network/logging_interceptor.dart';
+import 'package:deepple_app/core/network/network_request_extras.dart';
 import 'package:deepple_app/core/storage/local_storage.dart';
 import 'package:deepple_app/core/storage/local_storage_item.dart';
 import 'package:deepple_app/core/util/log.dart';
@@ -70,7 +71,9 @@ class ApiServiceImpl implements ApiService {
         ),
       );
 
-      _dioService.interceptors.add(LoggingInterceptor());
+      if (Config.enableLogRequestInfo) {
+        _dioService.interceptors.add(LoggingInterceptor());
+      }
 
       if (enableAuth) {
         _dioService.interceptors.add(
@@ -95,14 +98,9 @@ class ApiServiceImpl implements ApiService {
 
   Future<Map<String, dynamic>> _prepareHeaders({
     Map<String, dynamic>? headers,
-    bool requiresAccessToken = true,
   }) async {
     await _initCompleter.future;
     final finalHeaders = <String, dynamic>{'Accept': '*/*', ...?headers};
-
-    if (requiresAccessToken) {
-      finalHeaders['requiresAccessToken'] = true;
-    }
 
     return finalHeaders;
   }
@@ -151,10 +149,7 @@ class ApiServiceImpl implements ApiService {
   }) async {
     await _initCompleter.future;
     try {
-      final finalHeaders = await _prepareHeaders(
-        headers: headers,
-        requiresAccessToken: requiresAccessToken,
-      );
+      final finalHeaders = await _prepareHeaders(headers: headers);
 
       final response = await _dioService.request(
         path,
@@ -163,6 +158,7 @@ class ApiServiceImpl implements ApiService {
           method: method,
           contentType: contentType,
           headers: finalHeaders,
+          extra: {requiresAccessTokenExtraKey: requiresAccessToken},
         ),
         queryParameters: queryParameters,
         onSendProgress: onSendProgress,
