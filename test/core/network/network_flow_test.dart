@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:deepple_app/core/provider/auth_expired_provider.dart';
 import 'package:deepple_app/features/auth/data/usecase/auth_usecase_impl.dart';
+import 'package:deepple_app/core/network/network_request_extras.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -67,7 +70,7 @@ void main() {
           (options) {
             expect(options.method, 'POST');
             expect(options.path, '/member/refresh');
-            expect(options.extra['skipAuth'], true);
+            expect(options.extra[skipAuthExtraKey], true);
             return jsonResponseBody(
               {
                 'status': 0,
@@ -82,7 +85,7 @@ void main() {
             );
           },
           (options) {
-            expect(options.extra['retry'], true);
+            expect(options.extra[retryExtraKey], true);
             expect(options.headers['authorization'], 'Bearer new_access');
             return jsonResponseBody({'ok': true}, 200);
           },
@@ -110,6 +113,122 @@ void main() {
         expect(container.read(authExpiredProvider), false);
       },
     );
+
+    test('refresh 진행 중 신규 요청은 대기 후 새 토큰으로 요청 (single-flight)', () async {
+      // given
+      final dio = Dio(BaseOptions(baseUrl: 'https://mockserver'));
+
+      final auth = MockAuthUseCase();
+      final localStorage = MockLocalStorage();
+      final cookieJar = MockPersistCookieJar();
+
+      var currentAccessToken = 'old';
+      when(
+        () => auth.getAccessToken(),
+      ).thenAnswer((_) async => currentAccessToken);
+      when(() => auth.setAccessToken(any())).thenAnswer((invocation) {
+        currentAccessToken = invocation.positionalArguments.first as String;
+      });
+      when(
+        () => auth.getRefreshToken(),
+      ).thenAnswer((_) async => 'stored_refresh');
+      when(
+        () => localStorage.saveEncrypted(any(), any()),
+      ).thenAnswer((_) async => true);
+      when(() => cookieJar.loadForRequest(any())).thenAnswer((_) async => []);
+      when(
+        () => cookieJar.saveFromResponse(any(), any()),
+      ).thenAnswer((_) async {});
+
+      final container = createTestContainer(
+        authUseCase: auth,
+        localStorage: localStorage,
+      );
+      addTearDown(container.dispose);
+
+      final refreshStarted = Completer<void>();
+      final allowRefreshComplete = Completer<void>();
+      var refreshCalls = 0;
+      var retryCalls = 0;
+      var waitedCalls = 0;
+
+      dio.httpClientAdapter = QueueHttpClientAdapter([
+        (_) => jsonResponseBody({'code': '401006'}, 401),
+        (options) async {
+          refreshCalls++;
+          expect(options.method, 'POST');
+          expect(options.path, '/member/refresh');
+          expect(options.extra[skipAuthExtraKey], true);
+          expect(options.extra[requiresAccessTokenExtraKey], false);
+
+          if (!refreshStarted.isCompleted) {
+            refreshStarted.complete();
+          }
+          await allowRefreshComplete.future;
+
+          return jsonResponseBody(
+            {
+              'status': 0,
+              'code': 'OK',
+              'message': '',
+              'data': {'accessToken': 'new_access'},
+            },
+            200,
+            headers: {
+              'set-cookie': ['refresh_token=new_refresh; Path=/;'],
+            },
+          );
+        },
+        (options) {
+          expect(options.headers['authorization'], 'Bearer new_access');
+          if (options.extra[retryExtraKey] == true) {
+            retryCalls++;
+          } else {
+            waitedCalls++;
+          }
+          return jsonResponseBody({'ok': true}, 200);
+        },
+        (options) {
+          expect(options.headers['authorization'], 'Bearer new_access');
+          if (options.extra[retryExtraKey] == true) {
+            retryCalls++;
+          } else {
+            waitedCalls++;
+          }
+          return jsonResponseBody({'ok': true}, 200);
+        },
+      ]);
+      dio.interceptors.add(
+        container.read(
+          tokenInterceptorProvider(
+            InterceptorArgs(dio: dio, cookieJar: cookieJar),
+          ),
+        ),
+      );
+
+      // when
+      final first = runDioGet(dio);
+      await refreshStarted.future;
+
+      final second = runDioGet(dio);
+      allowRefreshComplete.complete();
+
+      final responses = await Future.wait([first, second]);
+
+      // then
+      expect(responses[0].data['ok'], true);
+      expect(responses[1].data['ok'], true);
+      expect(refreshCalls, 1);
+      expect(retryCalls, 1);
+      expect(waitedCalls, 1);
+      verify(() => auth.setAccessToken('new_access')).called(1);
+      await expectTokenSaved(
+        localStorage: localStorage,
+        refreshToken: 'new_refresh',
+      );
+      verify(() => cookieJar.saveFromResponse(any(), any())).called(2);
+      expect(container.read(authExpiredProvider), false);
+    });
 
     testWidgets('401 응답시 로그아웃 로직 확인', (tester) async {
       // given

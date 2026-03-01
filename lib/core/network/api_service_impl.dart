@@ -71,9 +71,7 @@ class ApiServiceImpl implements ApiService {
         ),
       );
 
-      if (Config.enableLogRequestInfo) {
-        _dioService.interceptors.add(LoggingInterceptor());
-      }
+      _dioService.interceptors.add(LoggingInterceptor());
 
       if (enableAuth) {
         _dioService.interceptors.add(

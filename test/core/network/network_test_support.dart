@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:deepple_app/core/network/api_service_impl.dart';
+import 'package:deepple_app/core/network/network_request_extras.dart';
 import 'package:deepple_app/core/network/token_interceptor.dart';
 import 'package:deepple_app/core/provider/auth_expired_provider.dart';
 import 'package:deepple_app/core/storage/local_storage.dart';
@@ -45,7 +45,7 @@ class LogoutOn401Widget extends ConsumerWidget {
               try {
                 await dio.get(
                   '/resource',
-                  options: Options(headers: {'requiresAccessToken': true}),
+                  options: Options(extra: {requiresAccessTokenExtraKey: true}),
                 );
               } catch (_) {}
             },
@@ -60,7 +60,7 @@ class LogoutOn401Widget extends ConsumerWidget {
 class QueueHttpClientAdapter implements HttpClientAdapter {
   QueueHttpClientAdapter(this._stubs);
 
-  final List<ResponseBody Function(RequestOptions)> _stubs;
+  final List<FutureOr<ResponseBody> Function(RequestOptions)> _stubs;
   var _i = 0;
 
   @override
@@ -72,7 +72,7 @@ class QueueHttpClientAdapter implements HttpClientAdapter {
     if (_i >= _stubs.length) {
       throw StateError('No stub left for ${options.method} ${options.uri}');
     }
-    return _stubs[_i++](options);
+    return await _stubs[_i++](options);
   }
 
   @override
@@ -248,7 +248,7 @@ Future<Map<String, dynamic>> runSimpleGet(ApiServiceImpl api) {
 Future<Response<dynamic>> runDioGet(Dio dio) {
   return dio.get(
     '/resource',
-    options: Options(headers: {'requiresAccessToken': true}),
+    options: Options(extra: {requiresAccessTokenExtraKey: true}),
   );
 }
 
