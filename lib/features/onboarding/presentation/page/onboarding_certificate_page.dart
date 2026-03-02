@@ -218,7 +218,7 @@ class _OnboardingCertificationPageState
       if (isDatingExamSubmitted) {
         ref.read(routerProvider).goNamed(AppRoute.mainTab.name);
       } else {
-        ref.read(routerProvider).goNamed(AppRoute.exam.name);
+        ref.read(routerProvider).pushNamed(AppRoute.exam.name);
       }
     }
   }
