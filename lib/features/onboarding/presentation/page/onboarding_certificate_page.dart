@@ -4,6 +4,7 @@ import 'package:deepple_app/app/constants/constants.dart';
 import 'package:deepple_app/app/provider/global_notifier.dart';
 import 'package:deepple_app/app/router/route_arguments.dart';
 import 'package:deepple_app/app/router/router.dart';
+import 'package:deepple_app/app/router/routing.dart';
 import 'package:deepple_app/app/widget/button/default_elevated_button.dart';
 import 'package:deepple_app/app/widget/button/default_outlined_button.dart';
 import 'package:deepple_app/app/widget/dialogue/confirm_dialogue.dart';
@@ -192,11 +193,6 @@ class _OnboardingCertificationPageState
 
     if (!context.mounted) return;
 
-    final isDatingExamSubmitted = ref
-        .read(globalProvider)
-        .profile
-        .isDatingExamSubmitted;
-
     if (userData?.isProfileSettingNeeded ?? false) {
       navigate(context, route: AppRoute.signUp);
     } else if (userData?.activityStatus == 'WAITING_SCREENING') {
@@ -212,10 +208,17 @@ class _OnboardingCertificationPageState
         method: NavigationMethod.go,
       );
     } else {
+      // activityStatus "ACTIVE"
+      await ref.read(globalProvider.notifier).initProfile();
+      final isDatingExamSubmitted = ref
+          .read(globalProvider)
+          .profile
+          .isDatingExamSubmitted;
+
       if (isDatingExamSubmitted) {
-        navigate(context, route: AppRoute.mainTab, method: NavigationMethod.go);
+        ref.read(routerProvider).goNamed(AppRoute.mainTab.name);
       } else {
-        navigate(context, route: AppRoute.exam, method: NavigationMethod.go);
+        ref.read(routerProvider).goNamed(AppRoute.exam.name);
       }
     }
   }
