@@ -38,7 +38,7 @@ class SignUpProfileReviewPage extends ConsumerWidget {
                         navigate(context, route: AppRoute.signUpProfileReject);
 
                       case ActivityStatus.active:
-                        navigate(context, route: AppRoute.mainTab);
+                        navigate(context, route: AppRoute.exam);
                       default:
                         return;
                     }
