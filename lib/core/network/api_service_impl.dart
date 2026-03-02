@@ -71,15 +71,16 @@ class ApiServiceImpl implements ApiService {
         ),
       );
 
-      _dioService.interceptors.add(LoggingInterceptor());
-
       if (enableAuth) {
         _dioService.interceptors.add(
           TokenInterceptor(ref: ref, dio: _dioService, cookieJar: cookieJar),
         );
       }
 
-      _dioService.interceptors.add(CookieManager(_cookieJar));
+      _dioService.interceptors.addAll([
+        CookieManager(_cookieJar),
+        LoggingInterceptor(),
+      ]);
     } catch (e, st) {
       Log.e('초기화 실패: $e', stackTrace: st);
       if (!_initCompleter.isCompleted) {
