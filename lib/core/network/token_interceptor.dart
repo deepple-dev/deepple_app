@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:deepple_app/core/mixin/log_mixin.dart';
+import 'package:deepple_app/core/network/logging_interceptor.dart';
 import 'package:deepple_app/core/network/enum/token_unauthorized_code.dart';
 import 'package:deepple_app/core/network/network_request_extras.dart';
 import 'package:deepple_app/core/provider/auth_expired_provider.dart';
@@ -18,7 +19,7 @@ class TokenInterceptor extends QueuedInterceptor with LogMixin {
   static const String _bearerPrefix = 'Bearer ';
   static const String _setCookieHeader = 'set-cookie';
   static const int _unauthorizedStatusCode = 401;
-  static const String _refreshPath = '/member/refresh';
+  static const String _refreshPath = 'member/refresh';
   static const Duration _refreshTimeout = Duration(seconds: 15);
 
   final Ref _ref;
@@ -44,9 +45,21 @@ class TokenInterceptor extends QueuedInterceptor with LogMixin {
     final newDio = Dio(_dio.options);
     newDio.httpClientAdapter = _dio.httpClientAdapter;
     newDio.transformer = _dio.transformer;
+    newDio.interceptors.add(LoggingInterceptor());
     newDio.interceptors.add(CookieManager(_cookieJar));
     _refreshDio = newDio;
     return newDio;
+  }
+
+  Uri? _buildRefreshUri() {
+    final baseUrl = _dio.options.baseUrl;
+    if (baseUrl.isEmpty) return null;
+
+    final base = Uri.parse(baseUrl);
+    final normalizedBase = base.replace(
+      path: base.path.endsWith('/') ? base.path : '${base.path}/',
+    );
+    return normalizedBase.resolve(_refreshPath);
   }
 
   @override
@@ -57,12 +70,11 @@ class TokenInterceptor extends QueuedInterceptor with LogMixin {
     final ok = await _waitForRefreshIfNeeded(options);
     if (!ok) {
       _ref.read(authExpiredProvider.notifier).execute();
+      Log.i(
+        'api call terminated: refresh failed; ${options.method} ${options.uri}',
+      );
       return handler.reject(
-        DioException(
-          requestOptions: options,
-          error: StateError('Token refresh failed'),
-          type: DioExceptionType.unknown,
-        ),
+        _buildUnauthorizedException(options, reason: 'refresh failed'),
       );
     }
     await _attachAccessTokenIfRequired(options);
@@ -106,8 +118,8 @@ class TokenInterceptor extends QueuedInterceptor with LogMixin {
         return super.onError(err, handler);
       }
 
-      final newAccessToken = await _refreshAccessTokenSingleFlight();
-      if (newAccessToken == null || newAccessToken.isEmpty) {
+      final tokenForRetry = await _getTokenForRetry(err.requestOptions);
+      if (tokenForRetry == null || tokenForRetry.isEmpty) {
         _ref.read(authExpiredProvider.notifier).execute();
         return super.onError(err, handler);
       }
@@ -115,7 +127,7 @@ class TokenInterceptor extends QueuedInterceptor with LogMixin {
       try {
         final retryResponse = await _retryRequestWithNewToken(
           err.requestOptions,
-          newAccessToken,
+          tokenForRetry,
         );
         return handler.resolve(retryResponse);
       } on DioException catch (e, st) {
@@ -132,10 +144,59 @@ class TokenInterceptor extends QueuedInterceptor with LogMixin {
     return super.onError(err, handler);
   }
 
+  Future<String?> _getTokenForRetry(RequestOptions originalRequest) async {
+    if (_ref.read(authExpiredProvider)) {
+      Log.i('refresh already failed; skip refresh and propagate 401');
+      return null;
+    }
+
+    final inFlight = _refreshInFlight;
+    if (inFlight != null) {
+      Log.i('refresh already in-flight; waiting for token');
+      try {
+        return await inFlight.timeout(_refreshTimeout);
+      } catch (_) {
+        return null;
+      }
+    }
+
+    final currentToken = await _ref.read(authUsecaseProvider).getAccessToken();
+    final usedToken = _extractBearerTokenFromRequestOptions(originalRequest);
+
+    if (currentToken != null && currentToken.isNotEmpty) {
+      if (usedToken != null &&
+          usedToken.isNotEmpty &&
+          usedToken != currentToken) {
+        Log.i('access token already updated; retrying without refresh');
+        return currentToken;
+      }
+    }
+
+    Log.i(
+      '401006 detected: starting refresh; original=${originalRequest.method} ${originalRequest.uri}',
+    );
+    return await _refreshAccessTokenSingleFlight();
+  }
+
+  String? _extractBearerTokenFromRequestOptions(RequestOptions options) {
+    final dynamic headerValue =
+        options.headers[_authorizationHeader] ??
+        options.headers['Authorization'];
+    if (headerValue is! String) return null;
+
+    final value = headerValue.trim();
+    if (!value.startsWith(_bearerPrefix)) return null;
+    return value.substring(_bearerPrefix.length).trim();
+  }
+
   Future<bool> _waitForRefreshIfNeeded(RequestOptions options) async {
     final requiresToken = _requiresAccessToken(options);
     if (!requiresToken) return true;
     if (_shouldSkipAuth(options) || _isRefreshRequest(options)) return true;
+
+    if (_ref.read(authExpiredProvider)) {
+      return false;
+    }
 
     final inFlight = _refreshInFlight;
     if (inFlight == null) return true;
@@ -146,6 +207,24 @@ class TokenInterceptor extends QueuedInterceptor with LogMixin {
     } catch (_) {
       return false;
     }
+  }
+
+  DioException _buildUnauthorizedException(
+    RequestOptions options, {
+    required String reason,
+  }) {
+    final response = Response<dynamic>(
+      requestOptions: options,
+      statusCode: _unauthorizedStatusCode,
+      statusMessage: 'Unauthorized',
+    );
+
+    return DioException(
+      requestOptions: options,
+      response: response,
+      type: DioExceptionType.badResponse,
+      error: reason,
+    );
   }
 
   Future<void> _attachAccessTokenIfRequired(RequestOptions options) async {
@@ -159,7 +238,6 @@ class TokenInterceptor extends QueuedInterceptor with LogMixin {
   }
 
   bool _requiresAccessToken(RequestOptions options) {
-    // default: true (most endpoints require auth)
     if (options.extra.containsKey(requiresAccessTokenExtraKey)) {
       return options.extra[requiresAccessTokenExtraKey] == true;
     }
@@ -293,7 +371,9 @@ class TokenInterceptor extends QueuedInterceptor with LogMixin {
   }
 
   bool _isRefreshRequest(RequestOptions options) {
-    return options.path == _refreshPath || options.path.endsWith(_refreshPath);
+    final path = options.path;
+    final uriPath = options.uri.path;
+    return path.endsWith(_refreshPath) || uriPath.endsWith('/$_refreshPath');
   }
 
   Future<String?> _refreshAccessTokenSingleFlight() async {
@@ -306,11 +386,19 @@ class TokenInterceptor extends QueuedInterceptor with LogMixin {
     try {
       await _ensureRefreshTokenCookiePresent();
 
+      final refreshUri = _buildRefreshUri();
+      if (refreshUri == null) {
+        Log.e('token refresh failed: missing baseUrl');
+        completer.complete(null);
+        return completer.future;
+      }
+
       final response = await _dioForRefresh
-          .post(
-            _refreshPath,
+          .postUri(
+            refreshUri,
             data: null,
             options: Options(
+              validateStatus: (status) => status != null && status < 500,
               extra: {
                 skipAuthExtraKey: true,
                 requiresAccessTokenExtraKey: false,
@@ -318,6 +406,14 @@ class TokenInterceptor extends QueuedInterceptor with LogMixin {
             ),
           )
           .timeout(_refreshTimeout);
+
+      if (response.statusCode != 200) {
+        Log.e(
+          'token refresh rejected: status=${response.statusCode} uri=${response.realUri} body=${_redactSensitiveBody(response.data)}',
+        );
+        completer.complete(null);
+        return completer.future;
+      }
 
       try {
         await _extractAndSaveTokens(
@@ -347,7 +443,8 @@ class TokenInterceptor extends QueuedInterceptor with LogMixin {
     final baseUrl = _dio.options.baseUrl;
     if (baseUrl.isEmpty) return;
 
-    final refreshUri = Uri.parse(baseUrl).resolve(_refreshPath);
+    final refreshUri = _buildRefreshUri();
+    if (refreshUri == null) return;
     final cookies = await _cookieJar.loadForRequest(refreshUri);
     final hasRefreshCookie = cookies.any(
       (c) => c.name == 'refresh_token' && c.value.isNotEmpty,
@@ -368,5 +465,30 @@ class TokenInterceptor extends QueuedInterceptor with LogMixin {
     final accessToken = data['accessToken'];
     if (accessToken is! String || accessToken.isEmpty) return null;
     return accessToken;
+  }
+
+  Object? _redactSensitiveBody(dynamic body) {
+    if (body is Map) {
+      final copy = <String, dynamic>{};
+      for (final entry in body.entries) {
+        final key = entry.key?.toString() ?? '';
+        final value = entry.value;
+
+        if (key == 'accessToken' || key == 'refreshToken' || key == 'token') {
+          copy[key] = '***';
+        } else if (value is Map || value is List) {
+          copy[key] = _redactSensitiveBody(value);
+        } else {
+          copy[key] = value;
+        }
+      }
+      return copy;
+    }
+
+    if (body is List) {
+      return body.map(_redactSensitiveBody).toList();
+    }
+
+    return body;
   }
 }
