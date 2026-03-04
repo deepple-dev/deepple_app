@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:deepple_app/core/network/api_service_impl.dart';
+import 'package:deepple_app/core/network/network_request_extras.dart';
 import 'package:deepple_app/core/network/token_interceptor.dart';
 import 'package:deepple_app/core/provider/auth_expired_provider.dart';
 import 'package:deepple_app/core/storage/local_storage.dart';
@@ -43,7 +43,10 @@ class LogoutOn401Widget extends ConsumerWidget {
             key: const Key('call'),
             onPressed: () async {
               try {
-                await dio.get('/resource');
+                await dio.get(
+                  '/resource',
+                  options: Options(extra: {requiresAccessTokenExtraKey: true}),
+                );
               } catch (_) {}
             },
             child: const Text('call'),
@@ -57,7 +60,7 @@ class LogoutOn401Widget extends ConsumerWidget {
 class QueueHttpClientAdapter implements HttpClientAdapter {
   QueueHttpClientAdapter(this._stubs);
 
-  final List<ResponseBody Function(RequestOptions)> _stubs;
+  final List<FutureOr<ResponseBody> Function(RequestOptions)> _stubs;
   var _i = 0;
 
   @override
@@ -69,7 +72,7 @@ class QueueHttpClientAdapter implements HttpClientAdapter {
     if (_i >= _stubs.length) {
       throw StateError('No stub left for ${options.method} ${options.uri}');
     }
-    return _stubs[_i++](options);
+    return await _stubs[_i++](options);
   }
 
   @override
@@ -228,13 +231,8 @@ void registerNetworkTestFallbacks() {
 
 Future<void> expectTokenSaved({
   required MockLocalStorage localStorage,
-  required String accessToken,
   required String refreshToken,
 }) async {
-  verify(
-    () =>
-        localStorage.saveEncrypted(SecureStorageItem.accessToken, accessToken),
-  ).called(1);
   verify(
     () => localStorage.saveEncrypted(
       SecureStorageItem.refreshToken,
@@ -248,7 +246,10 @@ Future<Map<String, dynamic>> runSimpleGet(ApiServiceImpl api) {
 }
 
 Future<Response<dynamic>> runDioGet(Dio dio) {
-  return dio.get('/resource');
+  return dio.get(
+    '/resource',
+    options: Options(extra: {requiresAccessTokenExtraKey: true}),
+  );
 }
 
 void expectLogoutCalled(FakeAuthUseCase auth) {
