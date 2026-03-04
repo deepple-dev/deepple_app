@@ -30,14 +30,10 @@
 		<false/>
 		<key>LSRequiresIPhoneOS</key>
 		<true/>
-		<key>NSCameraUsageDescription</key>
-		<string>앱에서 카메라를 사용하여 사진을 촬영합니다.</string>
 		<key>NSLocationWhenInUseUsageDescription</key>
-		<string>이 앱이 실행되는 동안 위치 정보를 사용합니다.</string>
-		<key>NSPhotoLibraryAddUsageDescription</key>
-		<string>앱에서 사진을 저장하기 위해 사진 라이브러리에 접근합니다.</string>
+		<string>회원가입/프로필 수정에서 현재 위치로 활동 지역(시/군/구)을 자동 입력하기 위해 위치 정보를 사용합니다. 예: '서울 강남구' 자동 설정</string>
 		<key>NSPhotoLibraryUsageDescription</key>
-		<string>앱에서 사진 라이브러리에 접근합니다.</string>
+		<string>프로필 사진을 등록/수정할 때 앨범에서 사진을 선택해 업로드하기 위해 사진 보관함 접근이 필요합니다. 예: 대표 프로필 사진 설정</string>
 		<key>UIApplicationSupportsIndirectInputEvents</key>
 		<true/>
 		<key>UIBackgroundModes</key>

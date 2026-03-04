@@ -11,7 +11,7 @@ import 'package:deepple_app/core/extension/extended_context.dart';
 import 'package:deepple_app/features/auth/presentation/widget/auth_photo_guide_widget.dart';
 import 'package:deepple_app/features/photo/domain/model/profile_photo.dart';
 import 'package:deepple_app/features/my/presentation/provider/profile_image_update_notifier.dart';
-import 'package:deepple_app/features/photo/domain/provider/photo_provider.dart';
+import 'package:deepple_app/features/photo/domain/manager/photo_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
@@ -20,7 +20,12 @@ import 'package:image_picker/image_picker.dart';
 
 class MyProfileImageUpdatePage extends ConsumerStatefulWidget {
   final List<ProfilePhoto> profileImages;
-  const MyProfileImageUpdatePage({super.key, required this.profileImages});
+  final PhotoManager photoManager;
+  MyProfileImageUpdatePage({
+    super.key,
+    required this.profileImages,
+    PhotoManager? photoManager,
+  }) : photoManager = photoManager ?? PhotoManager();
 
   @override
   ConsumerState<MyProfileImageUpdatePage> createState() =>
@@ -30,20 +35,6 @@ class MyProfileImageUpdatePage extends ConsumerStatefulWidget {
 class _MyProfileImageUpdatePageState
     extends ConsumerState<MyProfileImageUpdatePage> {
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final xfilePhotos = widget.profileImages.map((e) => e.imageFile).toList();
-
-      final photoProviderNotifier = ref.read(photoProvider.notifier);
-
-      for (int i = 0; i < xfilePhotos.length; i++) {
-        photoProviderNotifier.updateState(i, xfilePhotos[i]);
-      }
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     final imageUpdateState = ref.watch(
       profileImageUpdateProvider(widget.profileImages),
@@ -51,7 +42,13 @@ class _MyProfileImageUpdatePageState
     final imageUpdateNotifier = ref.read(
       profileImageUpdateProvider(widget.profileImages).notifier,
     );
-    final photos = ref.watch(photoProvider);
+
+    final photos = List<XFile?>.generate(
+      Dimens.profileImageMaxCount,
+      (index) => index < imageUpdateState.profileImages.length
+          ? imageUpdateState.profileImages[index].imageFile
+          : null,
+    );
 
     return GestureDetector(
       onTap: FocusScope.of(context).unfocus,
@@ -107,29 +104,33 @@ class _MyProfileImageUpdatePageState
                                 imageFile: photos[index],
                                 onPickImage: () async {
                                   // 갤러리에서 이미지 선택
-                                  final pickedPhoto = await ref
-                                      .read(photoProvider.notifier)
-                                      .pickPhoto(ImageSource.gallery);
+                                  final pickedPhoto = await widget.photoManager
+                                      .pickFromGallery();
 
                                   // 선택된 이미지가 있으면 UI 업데이트
                                   if (pickedPhoto != null) {
-                                    ref
-                                        .read(photoProvider.notifier)
-                                        .updateState(index, pickedPhoto);
+                                    final effectiveIndex =
+                                        index <
+                                            imageUpdateState
+                                                .profileImages
+                                                .length
+                                        ? index
+                                        : imageUpdateState.profileImages.length;
 
                                     // ProfilePhoto 업데이트
-                                    imageUpdateNotifier
+                                    await imageUpdateNotifier
                                         .updateEditableProfileImages(
-                                          index: index,
+                                          index: effectiveIndex,
                                           image: pickedPhoto,
                                         );
                                   }
                                 },
                                 // 사진 삭제
                                 onRemoveImage: () {
-                                  ref
-                                      .read(photoProvider.notifier)
-                                      .updateState(index, null);
+                                  if (index >=
+                                      imageUpdateState.profileImages.length) {
+                                    return;
+                                  }
 
                                   imageUpdateNotifier
                                       .deleteEditableProfileImage(index);

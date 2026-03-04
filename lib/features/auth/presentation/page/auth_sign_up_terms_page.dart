@@ -9,7 +9,7 @@ import 'package:deepple_app/core/state/base_page_state.dart';
 import 'package:deepple_app/features/auth/domain/provider/sign_up_process_notifier.dart';
 import 'package:deepple_app/features/auth/presentation/widget/auth_step_indicator_widget.dart';
 import 'package:deepple_app/features/photo/domain/model/profile_photo.dart';
-import 'package:deepple_app/features/photo/domain/provider/photo_provider.dart';
+import 'package:deepple_app/features/photo/domain/usecase/upload_photos_use_case.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -18,7 +18,9 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AuthSignUpTermsPage extends ConsumerStatefulWidget {
-  const AuthSignUpTermsPage({super.key});
+  const AuthSignUpTermsPage({super.key, required this.photos});
+
+  final List<XFile?> photos;
 
   @override
   AuthSignUpTermsPageState createState() => AuthSignUpTermsPageState();
@@ -68,9 +70,7 @@ class AuthSignUpTermsPageState
               onPressed: isButtonEnabled
                   ? () async {
                       // 프로필 이미지 등록
-                      final List<XFile?> photos = ref.read(photoProvider);
-
-                      final profilePhotos = photos
+                      final profilePhotos = widget.photos
                           .whereType<XFile>()
                           .map(
                             (e) => ProfilePhoto(imageFile: e, isUpdated: true),
@@ -78,8 +78,8 @@ class AuthSignUpTermsPageState
                           .toList();
 
                       final profileImageUploaded = await ref
-                          .read(photoProvider.notifier)
-                          .uploadPhotos(profilePhotos);
+                          .read(uploadPhotosUsecaseProvider)
+                          .execute(profilePhotos);
 
                       if (!context.mounted) return;
 
