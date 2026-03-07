@@ -14,6 +14,7 @@ class DefaultAppBar extends ConsumerWidget implements PreferredSizeWidget {
     this.isDivider = false,
     this.leading,
     this.leadingAction,
+    this.showLeadingButton = true,
   });
 
   final String? title;
@@ -22,6 +23,7 @@ class DefaultAppBar extends ConsumerWidget implements PreferredSizeWidget {
   final bool isDivider;
   final Widget? leading;
   final void Function(BuildContext context)? leadingAction;
+  final bool showLeadingButton;
 
   @override
   Size get preferredSize =>
@@ -33,7 +35,7 @@ class DefaultAppBar extends ConsumerWidget implements PreferredSizeWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         AppBar(
-          leading: _buildLeadingAppBar(context),
+          leading: showLeadingButton ? _buildLeadingAppBar(context) : null,
           leadingWidth: 60.0,
           toolbarHeight: 80 - 1,
           centerTitle: true,
@@ -45,7 +47,7 @@ class DefaultAppBar extends ConsumerWidget implements PreferredSizeWidget {
           automaticallyImplyLeading: true,
         ),
         if (isDivider) const DefaultDivider(),
-        if (bottom != null) bottom!,
+        ?bottom,
       ],
     );
   }
