@@ -208,7 +208,6 @@ class _OnboardingCertificationPageState
         method: NavigationMethod.go,
       );
     } else {
-      // activityStatus "ACTIVE"
       await ref.read(globalProvider.notifier).initProfile();
       final isDatingExamSubmitted = ref
           .read(globalProvider)
