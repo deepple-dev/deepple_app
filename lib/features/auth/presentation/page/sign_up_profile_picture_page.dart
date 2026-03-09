@@ -6,9 +6,11 @@ import 'package:deepple_app/app/widget/overlay/tool_tip.dart';
 import 'package:deepple_app/app/widget/text/bullet_text.dart';
 import 'package:deepple_app/core/extension/extended_context.dart';
 import 'package:deepple_app/core/state/base_page_state.dart';
+import 'package:deepple_app/core/util/photo_utils.dart';
 import 'package:deepple_app/features/auth/presentation/widget/auth_step_indicator_widget.dart';
 import 'package:deepple_app/features/auth/presentation/widget/photo_guide_bottomsheet.dart';
-import 'package:deepple_app/features/photo/domain/provider/photo_provider.dart';
+import 'package:deepple_app/app/router/route_arguments.dart';
+import 'package:deepple_app/features/photo/domain/manager/photo_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,7 +19,9 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
 class SignUpProfilePicturePage extends ConsumerStatefulWidget {
-  const SignUpProfilePicturePage({super.key});
+  final PhotoManager photoManager;
+  SignUpProfilePicturePage({super.key, PhotoManager? photoManager})
+    : photoManager = photoManager ?? PhotoManager();
 
   @override
   SignUpProfilePicturePageState createState() =>
@@ -28,10 +32,11 @@ class SignUpProfilePicturePageState
     extends BaseConsumerStatefulPageState<SignUpProfilePicturePage> {
   SignUpProfilePicturePageState() : super(defaultAppBarTitle: '프로필 사진');
 
+  List<XFile?> _photos = List.filled(Dimens.profileImageMaxCount, null);
+
   @override
   Widget buildPage(BuildContext context) {
-    final List<XFile?> photos = ref.watch(photoProvider);
-    final bool isPrimaryPhotoSelected = photos.firstOrNull != null;
+    final bool isPrimaryPhotoSelected = _photos.firstOrNull != null;
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -81,33 +86,29 @@ class SignUpProfilePicturePageState
                                 crossAxisSpacing: 8,
                                 mainAxisSpacing: 8,
                               ),
-                          itemCount: photos.length,
+                          itemCount: _photos.length,
                           itemBuilder: (context, index) {
                             return ProfileImageWidget(
-                              imageFile: photos[index],
+                              imageFile: _photos[index],
                               onPickImage: () async {
                                 PhotoGuideBottomSheet.open(
                                   context,
                                   onSubmit: () async {
                                     context.pop();
 
-                                    final pickedPhoto = await ref
-                                        .read(photoProvider.notifier)
-                                        .pickPhoto(ImageSource.gallery);
+                                    final pickedPhoto = await widget
+                                        .photoManager
+                                        .pickFromGallery();
 
                                     if (pickedPhoto != null) {
-                                      ref
-                                          .read(photoProvider.notifier)
-                                          .updateState(index, pickedPhoto);
+                                      _updateState(index, pickedPhoto);
                                     }
                                   },
                                 );
                               },
                               // 사진 삭제
                               onRemoveImage: () {
-                                ref
-                                    .read(photoProvider.notifier)
-                                    .updateState(index, null);
+                                _updateState(index, null);
                               },
                               isRepresentative: index == 0,
                             );
@@ -133,7 +134,11 @@ class SignUpProfilePicturePageState
               child: DefaultElevatedButton(
                 onPressed: isPrimaryPhotoSelected
                     ? () async {
-                        navigate(context, route: AppRoute.signUpTerms);
+                        await navigate(
+                          context,
+                          route: AppRoute.signUpTerms,
+                          extra: SignUpProfilePhotosArguments(photos: _photos),
+                        );
                       }
                     : null,
                 child: Text(
@@ -150,5 +155,14 @@ class SignUpProfilePicturePageState
         ),
       ),
     );
+  }
+
+  void _updateState(int index, XFile? photo) {
+    final updated = [..._photos];
+    updated[index] = photo;
+
+    setState(() {
+      _photos = compactPhotos(updated);
+    });
   }
 }

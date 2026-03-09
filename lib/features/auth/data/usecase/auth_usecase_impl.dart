@@ -30,8 +30,11 @@ class AuthUseCaseImpl with LogMixin implements AuthUseCase {
   AuthUseCaseImpl(this._ref);
 
   UserRepository get _userRepository => _ref.read(userRepositoryProvider);
+
   LocalStorage get _localStorage => _ref.read(localStorageProvider);
+
   ApiServiceImpl get _apiService => _ref.read(apiServiceProvider);
+
   GlobalNotifier get _globalNotifier => _ref.read(globalProvider.notifier);
 
   @override

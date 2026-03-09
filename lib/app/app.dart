@@ -102,6 +102,7 @@ class _AppState extends ConsumerState<App> {
   void _navigateToInitialRoute() {
     final router = ref.read(routerProvider);
     final profile = ref.read(globalProvider).profile;
+    final isDatingExamSubmitted = profile.isDatingExamSubmitted;
 
     if (profile.isDefault) {
       router.goNamed(AppRoute.onboard.name);
@@ -118,7 +119,11 @@ class _AppState extends ConsumerState<App> {
         router.goNamed(AppRoute.signUpProfileReject.name);
         break;
       case ActivityStatus.active:
-        router.goNamed(AppRoute.mainTab.name);
+        if (isDatingExamSubmitted) {
+          router.goNamed(AppRoute.mainTab.name);
+        } else {
+          router.goNamed(AppRoute.exam.name);
+        }
         break;
       case null:
         router.goNamed(AppRoute.onboard.name);

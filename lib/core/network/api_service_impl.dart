@@ -2,14 +2,13 @@ import 'dart:async';
 
 import 'package:deepple_app/core/config/config.dart';
 import 'package:deepple_app/core/network/logging_interceptor.dart';
+import 'package:deepple_app/core/network/network_request_extras.dart';
 import 'package:deepple_app/core/storage/local_storage.dart';
 import 'package:deepple_app/core/storage/local_storage_item.dart';
 import 'package:deepple_app/core/util/log.dart';
-import 'package:deepple_app/features/auth/data/usecase/auth_usecase_impl.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -78,11 +77,10 @@ class ApiServiceImpl implements ApiService {
         );
       }
 
-      if (!kReleaseMode) {
-        _dioService.interceptors.add(LoggingInterceptor());
-      }
-
-      _dioService.interceptors.add(CookieManager(_cookieJar));
+      _dioService.interceptors.addAll([
+        CookieManager(_cookieJar),
+        LoggingInterceptor(),
+      ]);
     } catch (e, st) {
       Log.e('초기화 실패: $e', stackTrace: st);
       if (!_initCompleter.isCompleted) {
@@ -99,17 +97,9 @@ class ApiServiceImpl implements ApiService {
 
   Future<Map<String, dynamic>> _prepareHeaders({
     Map<String, dynamic>? headers,
-    bool requiresAccessToken = true,
   }) async {
     await _initCompleter.future;
     final finalHeaders = <String, dynamic>{'Accept': '*/*', ...?headers};
-
-    if (!requiresAccessToken) return finalHeaders;
-
-    final accessToken = await ref.read(authUsecaseProvider).getAccessToken();
-    if (accessToken == null) return finalHeaders;
-
-    finalHeaders['authorization'] = 'Bearer $accessToken';
 
     return finalHeaders;
   }
@@ -158,10 +148,7 @@ class ApiServiceImpl implements ApiService {
   }) async {
     await _initCompleter.future;
     try {
-      final finalHeaders = await _prepareHeaders(
-        headers: headers,
-        requiresAccessToken: requiresAccessToken,
-      );
+      final finalHeaders = await _prepareHeaders(headers: headers);
 
       final response = await _dioService.request(
         path,
@@ -170,6 +157,7 @@ class ApiServiceImpl implements ApiService {
           method: method,
           contentType: contentType,
           headers: finalHeaders,
+          extra: {requiresAccessTokenExtraKey: requiresAccessToken},
         ),
         queryParameters: queryParameters,
         onSendProgress: onSendProgress,

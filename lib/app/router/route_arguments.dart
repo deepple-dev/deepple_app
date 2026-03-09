@@ -2,6 +2,7 @@ import 'package:deepple_app/app/constants/enum.dart';
 import 'package:deepple_app/features/introduce/domain/model/introduce_info.dart';
 import 'package:deepple_app/features/photo/domain/model/profile_photo.dart';
 import 'package:deepple_app/features/my/my.dart';
+import 'package:image_picker/image_picker.dart';
 
 sealed class RouteArguments {
   const RouteArguments();
@@ -21,6 +22,12 @@ class OnboardCertificationArguments extends RouteArguments {
   const OnboardCertificationArguments({required this.phoneNumber});
 
   final String phoneNumber;
+}
+
+class SignUpProfilePhotosArguments extends RouteArguments {
+  const SignUpProfilePhotosArguments({required this.photos});
+
+  final List<XFile?> photos;
 }
 
 class UserByCategoryArguments extends RouteArguments {

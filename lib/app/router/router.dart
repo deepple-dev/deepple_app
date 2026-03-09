@@ -43,6 +43,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:deepple_app/app/router/route_arguments.dart';
 import 'package:deepple_app/app/router/named_go_route.dart';
+import 'package:image_picker/image_picker.dart';
 
 // Global Navigator Keys
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -358,11 +359,17 @@ final allRoutes = [
           ),
           NamedGoRoute(
             name: AppRoute.signUpProfilePicture.name,
-            builder: (context, state) => const SignUpProfilePicturePage(),
+            builder: (context, state) => SignUpProfilePicturePage(),
           ),
           NamedGoRoute(
             name: AppRoute.signUpTerms.name,
-            builder: (context, state) => const AuthSignUpTermsPage(),
+            builder: (context, state) {
+              final args = state.extra;
+              if (args is SignUpProfilePhotosArguments) {
+                return AuthSignUpTermsPage(photos: args.photos);
+              }
+              return const AuthSignUpTermsPage(photos: <XFile?>[]);
+            },
           ),
           NamedGoRoute(
             name: AppRoute.signUpProfileUpdate.name,
