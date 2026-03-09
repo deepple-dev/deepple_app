@@ -4,7 +4,6 @@ import 'package:deepple_app/app/router/route_arguments.dart';
 import 'package:deepple_app/app/router/router.dart';
 import 'package:deepple_app/core/util/toast.dart';
 import 'package:deepple_app/features/home/presentation/provider/provider.dart';
-import 'package:deepple_app/features/home/presentation/widget/home/home_banner_area.dart';
 import 'package:deepple_app/features/home/presentation/widget/home/home_category_buttons_area.dart';
 import 'package:deepple_app/features/home/presentation/widget/home/home_navbar_area.dart';
 import 'package:deepple_app/features/home/presentation/widget/home/home_profile_card_area.dart';
@@ -77,8 +76,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                         }
                       },
                     ),
-                    const Gap(24),
-                    HomeBannerArea(horizontalPadding: horizontalPadding),
                   ],
                 ),
               ),
