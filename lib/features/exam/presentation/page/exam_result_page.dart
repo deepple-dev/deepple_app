@@ -17,9 +17,7 @@ import 'package:deepple_app/core/state/base_page_state.dart';
 import 'package:gap/gap.dart';
 
 class ExamResultPage extends ConsumerStatefulWidget {
-  final bool isFromDirectAccess;
-
-  const ExamResultPage({super.key, required this.isFromDirectAccess});
+  const ExamResultPage({super.key});
 
   @override
   ExamResultPageState createState() => ExamResultPageState();
@@ -35,14 +33,9 @@ class ExamResultPageState
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final examState = ref.read(examProvider);
-      final notifier = ref.read(examProvider.notifier);
 
-      if (examState.isSubjectOptional && !examState.isDone) {
-        showToastMessage('연애 모의고사 참여 완료! 하트 15개를 받았어요');
-      }
-
-      if (widget.isFromDirectAccess) {
-        notifier.handleDirectAccessResult();
+      if (!examState.isDone) {
+        showToastMessage('연애가치관 테스트 참여 완료! 하트 15개를 받았어요');
       }
     });
   }
@@ -55,7 +48,7 @@ class ExamResultPageState
 
     return Scaffold(
       appBar: DefaultAppBar(
-        title: examState.isSubjectOptional ? '매칭 결과' : '매칭 현황',
+        title: '테스트 결과',
         leadingAction: (_) => _showLeaveExamDialogue(context, notifier),
       ),
       body: Padding(
@@ -63,21 +56,18 @@ class ExamResultPageState
         child: Column(
           children: [
             _ResultHeader(
-              isSubjectOptional: examState.isSubjectOptional,
               hasSoulmate: examState.hasSoulmate,
               soulmateCount: examState.soulmateList.soulmateList.length,
             ),
             Expanded(
               child: _ResultList(
-                isSubjectOptional: examState.isSubjectOptional,
                 hasSoulmate: examState.hasSoulmate,
                 profiles: examState.soulmateList.soulmateList,
                 userProfile: userProfile,
                 fetchHeartBalance: () => notifier.fetchUserHeartBalance(),
                 onOpenProfile: (memberId) => notifier.openProfile(
                   memberId: memberId,
-                  isSoulmate:
-                      examState.hasSoulmate && examState.isSubjectOptional,
+                  isSoulmate: examState.hasSoulmate,
                 ),
                 onTapProfile: (memberId) {
                   navigate(
@@ -89,14 +79,6 @@ class ExamResultPageState
               ),
             ),
             _ResultBottomButton(
-              isSubjectOptional: examState.isSubjectOptional,
-              isDone: examState.isDone,
-              onPressOptionalSubject: () async {
-                await notifier.fetchOptionalQuestionList();
-                notifier.setCurrentSubjectIndex(0);
-                if (!context.mounted) return;
-                navigate(context, route: AppRoute.examQuestion);
-              },
               onPressContinueSubject: () {
                 notifier.nextSubject();
                 navigate(context, route: AppRoute.examQuestion);
@@ -112,12 +94,9 @@ class ExamResultPageState
   void _showLeaveExamDialogue(BuildContext context, ExamNotifier notifier) {
     CustomDialogue.showTwoChoiceDialogue(
       context: context,
-      content: '연애 모의고사를 종료 하시겠어요?\n페이지를 벗어날경우, 저장되지 않아요',
+      content: '테스트를 종료 하시겠어요?\n페이지를 벗어날경우, 저장되지 않아요',
       onElevatedButtonPressed: () {
-        notifier.setSubjectOptional(false);
         notifier.resetCurrentSubjectIndex();
-
-        // navigate(context, route: AppRoute.mainTab, method: NavigationMethod.go);
         context.popUntil(AppRoute.mainTab);
       },
     );
@@ -125,25 +104,18 @@ class ExamResultPageState
 }
 
 class _ResultHeader extends StatelessWidget {
-  final bool isSubjectOptional;
   final bool hasSoulmate;
   final int soulmateCount;
 
-  const _ResultHeader({
-    required this.isSubjectOptional,
-    required this.hasSoulmate,
-    required this.soulmateCount,
-  });
+  const _ResultHeader({required this.hasSoulmate, required this.soulmateCount});
 
   @override
   Widget build(BuildContext context) {
-    final title = isSubjectOptional
-        ? (hasSoulmate ? '나의 소울메이트를 찾았어요' : '아쉽게도 소울메이트를 찾지 못했어요')
-        : '현재 $soulmateCount명이 동일한 답을 선택했어요';
+    final title = hasSoulmate ? '나의 소울메이트를 찾았어요' : '아쉽게도 소울메이트를 찾지 못했어요';
 
-    final subtitle = isSubjectOptional
-        ? (hasSoulmate ? '상대방과 모두 같은 답을 선택하셨어요!' : '참여완료에 대한 하트를 지급해드렸어요')
-        : '필수과목 30문제를 풀고 모두 동일한 답을 선택해야 해요';
+    final subtitle = hasSoulmate
+        ? '상대방과 모두 같은 답을 선택하셨어요!'
+        : '참여완료에 대한 하트를 지급해드렸어요';
 
     return Align(
       alignment: Alignment.centerLeft,
@@ -170,7 +142,6 @@ class _ResultHeader extends StatelessWidget {
 }
 
 class _ResultList extends StatelessWidget {
-  final bool isSubjectOptional;
   final bool hasSoulmate;
   final List<IntroducedProfile> profiles;
   final CachedUserProfile userProfile;
@@ -179,7 +150,6 @@ class _ResultList extends StatelessWidget {
   final void Function(int memberId) onTapProfile;
 
   const _ResultList({
-    required this.isSubjectOptional,
     required this.hasSoulmate,
     required this.profiles,
     required this.userProfile,
@@ -204,7 +174,7 @@ class _ResultList extends StatelessWidget {
           profile: profile,
           onTap: () async {
             if (!profile.isIntroduced) {
-              if (isSubjectOptional && hasSoulmate) {
+              if (hasSoulmate) {
                 await onOpenProfile(profile.memberId);
 
                 return;
@@ -244,16 +214,10 @@ class _ResultList extends StatelessWidget {
 }
 
 class _ResultBottomButton extends StatelessWidget {
-  final bool isSubjectOptional;
-  final bool isDone;
-  final VoidCallback onPressOptionalSubject;
   final VoidCallback onPressContinueSubject;
   final double screenHeight;
 
   const _ResultBottomButton({
-    required this.isSubjectOptional,
-    required this.isDone,
-    required this.onPressOptionalSubject,
     required this.onPressContinueSubject,
     required this.screenHeight,
   });
@@ -262,22 +226,12 @@ class _ResultBottomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: Dimens.bottomPadding),
-      child: isSubjectOptional
-          ? isDone
-                ? DefaultElevatedButton(
-                    onPressed: () {
-                      context.popUntil(AppRoute.mainTab);
-                    },
-                    child: const Text('연애 모의고사 종료하기'),
-                  )
-                : DefaultElevatedButton(
-                    onPressed: onPressOptionalSubject,
-                    child: const Text('선택과목 풀기'),
-                  )
-          : DefaultElevatedButton(
-              onPressed: onPressContinueSubject,
-              child: const Text('다음과목 이어서 풀기'),
-            ),
+      child: DefaultElevatedButton(
+        onPressed: () {
+          context.popUntil(AppRoute.mainTab);
+        },
+        child: const Text('테스트를 기반으로 이상형 찾기'),
+      ),
     );
   }
 }

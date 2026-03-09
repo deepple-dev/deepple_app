@@ -20,7 +20,7 @@ class ExamCoverPage extends ConsumerStatefulWidget {
 class ExamCoverPageState extends BaseConsumerStatefulPageState<ExamCoverPage> {
   ExamCoverPageState()
     : super(
-        defaultAppBarTitle: '연애 모의고사',
+        defaultAppBarTitle: '연애가치관 테스트',
         defaultAppBarLeadingAction: (context) {
           Navigator.of(context).pop();
         },
@@ -126,7 +126,7 @@ class ExamCoverPageState extends BaseConsumerStatefulPageState<ExamCoverPage> {
               navigate(context, route: AppRoute.examQuestion);
             },
             child: Text(
-              '연애 모의고사 시작하기',
+              '테스트하고 하트 15개 받기',
               style: Fonts.body01Medium().copyWith(color: Palette.colorWhite),
             ),
           ),

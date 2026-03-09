@@ -1,6 +1,5 @@
 import 'package:deepple_app/app/provider/global_notifier.dart';
 import 'package:deepple_app/core/util/log.dart';
-import 'package:deepple_app/features/exam/domain/usecase/exam_optional_fetch_usecase.dart';
 import 'package:deepple_app/features/exam/domain/usecase/exam_create_submit_usecase.dart';
 import 'package:deepple_app/features/exam/domain/usecase/exam_remove_blur_usecase.dart';
 import 'package:deepple_app/features/exam/domain/usecase/exam_required_fetch_usecase.dart';
@@ -12,7 +11,7 @@ import 'package:deepple_app/features/exam/domain/provider/exam_state.dart';
 
 part 'exam_notifier.g.dart';
 
-enum ExamSubmitResult { nextSubject, examFinished, showResult, error }
+enum ExamSubmitResult { nextSubject, examFinished, error }
 
 @Riverpod(keepAlive: true)
 class ExamNotifier extends _$ExamNotifier {
@@ -30,12 +29,6 @@ class ExamNotifier extends _$ExamNotifier {
     state = state.copyWith(currentAnswerMap: updatedAnswers);
   }
 
-  Future<void> handleDirectAccessResult() async {
-    state = state.copyWith(isSubjectOptional: true, isDone: true);
-
-    await fetchSoulmateList();
-  }
-
   Future<ExamSubmitResult> submitCurrentSubject() async {
     try {
       final profileNotifier = ref.read(globalProvider.notifier);
@@ -51,24 +44,18 @@ class ExamNotifier extends _$ExamNotifier {
 
       state = state.copyWith(isLoaded: false);
       await _submitAnswers(payload);
-      await fetchSoulmateList();
 
       if (isLastSubject) {
+        await fetchSoulmateList();
         profileNotifier.profile = await profileNotifier
             .fetchProfileToHiveFromServer();
 
         state = state.copyWith(
-          isSubjectOptional: true,
-          isDone: state.isSubjectOptional ? true : false,
+          isDone: true,
           currentAnswerMap: {},
           isLoaded: true,
         );
         return ExamSubmitResult.examFinished;
-      }
-
-      if (state.hasResultData && !state.isSubjectOptional) {
-        state = state.copyWith(isLoaded: true);
-        return ExamSubmitResult.showResult;
       }
 
       nextSubject();
@@ -119,31 +106,8 @@ class ExamNotifier extends _$ExamNotifier {
     );
   }
 
-  void setSubjectOptional(bool isOptional) {
-    state = state.copyWith(isSubjectOptional: isOptional);
-  }
-
   void setExamDone() {
     state = state.copyWith(isDone: true);
-  }
-
-  Future<void> fetchOptionalQuestionList() async {
-    state = state.copyWith(isLoaded: false);
-    try {
-      final optionalQuestionList = await ExamOptionalFetchUseCase(ref).call();
-
-      state = state.copyWith(
-        questionList: QuestionData(questionList: optionalQuestionList),
-        isLoaded: true,
-        error: null,
-      );
-    } catch (e) {
-      Log.e(e);
-      state = state.copyWith(
-        isLoaded: true,
-        error: QuestionListErrorType.network,
-      );
-    }
   }
 
   Future<void> fetchSoulmateList() async {
