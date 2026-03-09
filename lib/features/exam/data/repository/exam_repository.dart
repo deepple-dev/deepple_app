@@ -29,21 +29,6 @@ class ExamRepository extends BaseRepository {
     }
   }
 
-  Future<List<SubjectItem>> getOptionalQuestionList() async {
-    try {
-      final response = await apiService.getJson<Map<String, dynamic>>(
-        '$path/optional',
-      );
-
-      final result = ExamQuestionResponse.fromJson(response);
-
-      return result.data.subjects;
-    } catch (e) {
-      Log.e(e);
-      return [];
-    }
-  }
-
   Future<void> submitAnswerList({required SubjectAnswer request}) async {
     final dto = SubjectAnswerItem.fromDomain(request);
 
