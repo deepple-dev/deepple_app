@@ -8,6 +8,7 @@ import 'package:deepple_app/features/auth/presentation/page/sign_up_profile_pict
 import 'package:deepple_app/features/auth/presentation/page/sign_up_profile_update_page.dart';
 import 'package:deepple_app/features/auth/presentation/page/sign_up_profile_review_page.dart';
 import 'package:deepple_app/features/auth/presentation/page/sign_up_profile_reject_page.dart';
+import 'package:deepple_app/features/exam/presentation/page/soulmate_page.dart';
 import 'package:deepple_app/features/onboarding/presentation/page/dormant_release_page.dart';
 import 'package:deepple_app/features/contact_setting/presentation/page/contact_setting_page.dart';
 import 'package:deepple_app/features/exam/presentation/page/exam_cover_page.dart';
@@ -82,6 +83,7 @@ enum AppRoute {
   exam('exam'),
   examQuestion('exam-question'),
   examResult('exam-result'),
+  soulmate('soulmate'),
 
   // Notification
   notification('notification'),
@@ -189,9 +191,7 @@ final allRoutes = [
       if (args is! IntroduceEditArguments) {
         return const SizedBox.shrink();
       }
-      return IntroduceEditPage(
-        introduce: args.introduce,
-      );
+      return IntroduceEditPage(introduce: args.introduce);
     },
   ),
   NamedGoRoute(
@@ -267,13 +267,11 @@ final allRoutes = [
       ),
       NamedGoRoute(
         name: AppRoute.examResult.name,
-        builder: (context, state) {
-          final args = state.extra;
-          if (args is! ExamResultArguments) {
-            return const SizedBox.shrink();
-          }
-          return ExamResultPage(isFromDirectAccess: args.isFromDirectAccess);
-        },
+        builder: (context, state) => const ExamResultPage(),
+      ),
+      NamedGoRoute(
+        name: AppRoute.soulmate.name,
+        builder: (context, state) => const SoulmatePage(),
       ),
     ],
   ),
