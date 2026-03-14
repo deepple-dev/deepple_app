@@ -139,7 +139,7 @@ class ExamQuestionPageState
         _pageController.jumpToPage(0);
         notifier.resetCurrentSubjectIndex();
 
-        context.popUntil(AppRoute.mainTab);
+        context.popUntil(AppRoute.exam);
       },
     );
   }
