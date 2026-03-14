@@ -1,6 +1,7 @@
 import 'package:deepple_app/core/network/base_repository.dart';
 import 'package:deepple_app/core/util/util.dart';
 import 'package:deepple_app/features/exam/data/dto/exam_answer_request.dart';
+import 'package:deepple_app/features/exam/data/dto/exam_result_response.dart';
 import 'package:deepple_app/features/home/data/dto/introduced_profile_dto.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:deepple_app/core/network/network_exception.dart';
@@ -52,6 +53,18 @@ class ExamRepository extends BaseRepository {
       Log.e(e);
       return [];
     }
+  }
+
+  Future<ExamResultResponse> getExamResult() async {
+    final res = await apiService.getJson<Map<String, dynamic>>(
+      '$path/personality-type',
+    );
+
+    if (res['data'] is! Map<String, Object?>) {
+      throw const NetworkException.formatException();
+    }
+
+    return ExamResultResponse.fromJson(res['data']);
   }
 
   Future<void> removeSoulmateProfileBlur({required int memberId}) async {
