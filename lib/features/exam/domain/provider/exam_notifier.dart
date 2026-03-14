@@ -4,6 +4,7 @@ import 'package:deepple_app/features/exam/domain/usecase/exam_create_submit_usec
 import 'package:deepple_app/features/exam/domain/usecase/exam_remove_blur_usecase.dart';
 import 'package:deepple_app/features/exam/domain/usecase/exam_required_fetch_usecase.dart';
 import 'package:deepple_app/features/exam/domain/usecase/exam_soulmate_fetch_usecase.dart';
+import 'package:deepple_app/features/exam/domain/usecase/exam_result_fetch_usecase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:deepple_app/features/exam/domain/model/subject_answer.dart';
 
@@ -46,6 +47,7 @@ class ExamNotifier extends _$ExamNotifier {
       await _submitAnswers(payload);
 
       if (isLastSubject) {
+        await fetchExamResult();
         await fetchSoulmateList();
         profileNotifier.profile = await profileNotifier
             .fetchProfileToHiveFromServer();
@@ -108,6 +110,25 @@ class ExamNotifier extends _$ExamNotifier {
 
   void setExamDone() {
     state = state.copyWith(isDone: true);
+  }
+
+  Future<void> fetchExamResult() async {
+    state = state.copyWith(isLoaded: false);
+    try {
+      final examResult = await ExamResultFetchUseCase(ref).call();
+
+      state = state.copyWith(
+        personalityType: examResult,
+        isLoaded: true,
+        error: null,
+      );
+    } catch (e) {
+      Log.e(e);
+      state = state.copyWith(
+        isLoaded: true,
+        error: QuestionListErrorType.network,
+      );
+    }
   }
 
   Future<void> fetchSoulmateList() async {
