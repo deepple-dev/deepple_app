@@ -64,16 +64,7 @@ class SoulmatePageState extends BaseConsumerStatefulPageState<SoulmatePage> {
                 },
               ),
             ),
-            _ResultBottomButton(
-              onPressContinueSubject: () {
-                navigate(
-                  context,
-                  route: AppRoute.mainTab,
-                  method: NavigationMethod.go,
-                );
-              },
-              screenHeight: screenHeight,
-            ),
+            _ResultBottomButton(),
           ],
         ),
       ),
@@ -155,13 +146,7 @@ class _ResultList extends StatelessWidget {
 }
 
 class _ResultBottomButton extends StatelessWidget {
-  final VoidCallback onPressContinueSubject;
-  final double screenHeight;
-
-  const _ResultBottomButton({
-    required this.onPressContinueSubject,
-    required this.screenHeight,
-  });
+  const _ResultBottomButton();
 
   @override
   Widget build(BuildContext context) {
