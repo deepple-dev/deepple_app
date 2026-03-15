@@ -29,14 +29,6 @@ class SoulmatePageState extends BaseConsumerStatefulPageState<SoulmatePage> {
   @override
   void initState() {
     super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final examState = ref.read(examProvider);
-
-      if (!examState.isDone) {
-        showToastMessage('연애가치관 테스트 참여 완료! 하트 15개를 받았어요');
-      }
-    });
   }
 
   @override
@@ -46,21 +38,16 @@ class SoulmatePageState extends BaseConsumerStatefulPageState<SoulmatePage> {
     final userProfile = ref.watch(globalProvider).profile;
 
     return Scaffold(
-      appBar: DefaultAppBar(
-        title: '테스트 결과',
-        leadingAction: (_) => _showLeaveExamDialogue(context, notifier),
-      ),
+      appBar: DefaultAppBar(title: '매칭 결과'),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
         child: Column(
           children: [
             _ResultHeader(
-              hasSoulmate: examState.hasSoulmate,
               soulmateCount: examState.soulmateList.soulmateList.length,
             ),
             Expanded(
               child: _ResultList(
-                hasSoulmate: examState.hasSoulmate,
                 profiles: examState.soulmateList.soulmateList,
                 userProfile: userProfile,
                 fetchHeartBalance: () => notifier.fetchUserHeartBalance(),
@@ -79,8 +66,11 @@ class SoulmatePageState extends BaseConsumerStatefulPageState<SoulmatePage> {
             ),
             _ResultBottomButton(
               onPressContinueSubject: () {
-                notifier.nextSubject();
-                navigate(context, route: AppRoute.examQuestion);
+                navigate(
+                  context,
+                  route: AppRoute.mainTab,
+                  method: NavigationMethod.go,
+                );
               },
               screenHeight: screenHeight,
             ),
@@ -89,40 +79,22 @@ class SoulmatePageState extends BaseConsumerStatefulPageState<SoulmatePage> {
       ),
     );
   }
-
-  void _showLeaveExamDialogue(BuildContext context, ExamNotifier notifier) {
-    CustomDialogue.showTwoChoiceDialogue(
-      context: context,
-      content: '테스트를 종료 하시겠어요?\n페이지를 벗어날경우, 저장되지 않아요',
-      onElevatedButtonPressed: () {
-        notifier.resetCurrentSubjectIndex();
-        context.popUntil(AppRoute.mainTab);
-      },
-    );
-  }
 }
 
 class _ResultHeader extends StatelessWidget {
-  final bool hasSoulmate;
   final int soulmateCount;
 
-  const _ResultHeader({required this.hasSoulmate, required this.soulmateCount});
+  const _ResultHeader({required this.soulmateCount});
 
   @override
   Widget build(BuildContext context) {
-    final title = hasSoulmate ? '나의 소울메이트를 찾았어요' : '아쉽게도 소울메이트를 찾지 못했어요';
-
-    final subtitle = hasSoulmate
-        ? '상대방과 모두 같은 답을 선택하셨어요!'
-        : '참여완료에 대한 하트를 지급해드렸어요';
-
     return Align(
       alignment: Alignment.centerLeft,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            title,
+            '나의 소울메이트를 찾았어요',
             style: Fonts.header02().copyWith(
               color: Palette.colorBlack,
               fontWeight: FontWeight.w700,
@@ -130,7 +102,7 @@ class _ResultHeader extends StatelessWidget {
           ),
           const Gap(6),
           Text(
-            subtitle,
+            '상대방과 모두 같은 답을 선택하셨어요!',
             style: Fonts.body02Regular().copyWith(color: Palette.colorGrey500),
           ),
           const Gap(12),
@@ -141,7 +113,6 @@ class _ResultHeader extends StatelessWidget {
 }
 
 class _ResultList extends StatelessWidget {
-  final bool hasSoulmate;
   final List<IntroducedProfile> profiles;
   final CachedUserProfile userProfile;
   final int Function() fetchHeartBalance;
@@ -149,7 +120,6 @@ class _ResultList extends StatelessWidget {
   final void Function(int memberId) onTapProfile;
 
   const _ResultList({
-    required this.hasSoulmate,
     required this.profiles,
     required this.userProfile,
     required this.fetchHeartBalance,
@@ -173,34 +143,6 @@ class _ResultList extends StatelessWidget {
           profile: profile,
           onTap: () async {
             if (!profile.isIntroduced) {
-              if (hasSoulmate) {
-                await onOpenProfile(profile.memberId);
-
-                return;
-              }
-
-              final heartBalance = fetchHeartBalance();
-
-              if (heartBalance < Dimens.examProfileOpenHeartCount) {
-                showDialog(
-                  context: context,
-                  builder: (_) =>
-                      HeartShortageDialog(heartBalance: heartBalance),
-                );
-                return;
-              }
-
-              final pressed = await showDialog<bool>(
-                context: context,
-                builder: (_) => UnlockWithHeartDialog(
-                  description: '프로필을 미리보기 하시겠습니까?',
-                  heartBalance: heartBalance,
-                  isMale: userProfile.isMale,
-                ),
-              );
-
-              if (pressed != true) return;
-
               await onOpenProfile(profile.memberId);
             }
 
@@ -227,9 +169,13 @@ class _ResultBottomButton extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: Dimens.bottomPadding),
       child: DefaultElevatedButton(
         onPressed: () {
-          context.popUntil(AppRoute.mainTab);
+          navigate(
+            context,
+            route: AppRoute.mainTab,
+            method: NavigationMethod.go,
+          );
         },
-        child: const Text('테스트를 기반으로 이상형 찾기'),
+        child: const Text('이 결과와 딱 맞는 사람 추천받기'),
       ),
     );
   }
