@@ -60,11 +60,19 @@ class ExamRepository extends BaseRepository {
       '$path/personality-type',
     );
 
-    if (res['data'] is! Map<String, Object?>) {
+    final data = res['data'];
+
+    if (data is! Map<String, Object?>) {
       throw const NetworkException.formatException();
     }
 
-    return ExamResultResponse.fromJson(res['data']);
+    try {
+      return ExamResultResponse.fromJson(Map<String, dynamic>.from(data));
+    } catch (e) {
+      Log.e('exam result parse failed: $e');
+
+      throw const NetworkException.formatException();
+    }
   }
 
   Future<void> removeSoulmateProfileBlur({required int memberId}) async {
