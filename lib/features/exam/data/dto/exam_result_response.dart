@@ -1,5 +1,5 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:deepple_app/features/exam/domain/model/personality_type.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'exam_result_response.freezed.dart';
 part 'exam_result_response.g.dart';
