@@ -66,7 +66,7 @@ class ExamResultPageState
       content: '테스트를 종료 하시겠어요?\n페이지를 벗어날 경우, 저장되지 않아요',
       onElevatedButtonPressed: () {
         notifier.resetCurrentSubjectIndex();
-        navigate(context, route: AppRoute.mainTab);
+        navigate(context, route: AppRoute.mainTab, method: NavigationMethod.go);
       },
     );
   }
