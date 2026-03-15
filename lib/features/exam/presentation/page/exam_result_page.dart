@@ -63,7 +63,7 @@ class ExamResultPageState
   void _showLeaveExamDialogue(BuildContext context, ExamNotifier notifier) {
     CustomDialogue.showTwoChoiceDialogue(
       context: context,
-      content: '테스트를 종료 하시겠어요?\n페이지를 벗어날경우, 저장되지 않아요',
+      content: '테스트를 종료 하시겠어요?\n페이지를 벗어날 경우, 저장되지 않아요',
       onElevatedButtonPressed: () {
         notifier.resetCurrentSubjectIndex();
         navigate(context, route: AppRoute.mainTab);
