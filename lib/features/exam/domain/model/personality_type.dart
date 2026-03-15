@@ -1,7 +1,16 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+
 enum PersonalityType {
+  @JsonValue('DECISIVE_INDEPENDENT')
   decisiveIndependent('DECISIVE_INDEPENDENT'),
+
+  @JsonValue('GROWING_RUNNING_MATE')
   growingRunningMate('GROWING_RUNNING_MATE'),
+
+  @JsonValue('DEVOTED_ROMANTIC')
   devotedRomantic('DEVOTED_ROMANTIC'),
+
+  @JsonValue('REALISTIC_SHELTER')
   realisticShelter('REALISTIC_SHELTER');
 
   final String label;

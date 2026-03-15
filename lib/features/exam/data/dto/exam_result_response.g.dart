@@ -20,8 +20,8 @@ Map<String, dynamic> _$ExamResultResponseToJson(_ExamResultResponse instance) =>
     };
 
 const _$PersonalityTypeEnumMap = {
-  PersonalityType.decisiveIndependent: 'decisiveIndependent',
-  PersonalityType.growingRunningMate: 'growingRunningMate',
-  PersonalityType.devotedRomantic: 'devotedRomantic',
-  PersonalityType.realisticShelter: 'realisticShelter',
+  PersonalityType.decisiveIndependent: 'DECISIVE_INDEPENDENT',
+  PersonalityType.growingRunningMate: 'GROWING_RUNNING_MATE',
+  PersonalityType.devotedRomantic: 'DEVOTED_ROMANTIC',
+  PersonalityType.realisticShelter: 'REALISTIC_SHELTER',
 };
