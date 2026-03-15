@@ -5,6 +5,7 @@ import 'package:deepple_app/app/widget/icon/default_icon.dart';
 import 'package:deepple_app/app/widget/image/default_image.dart';
 import 'package:deepple_app/app/widget/overlay/bubble.dart';
 import 'package:deepple_app/core/state/base_page_state.dart';
+import 'package:deepple_app/core/util/toast.dart';
 import 'package:deepple_app/features/exam/domain/provider/exam_notifier.dart';
 import 'package:deepple_app/features/exam/presentation/widget/bullet_text.dart';
 import 'package:deepple_app/features/exam/presentation/widget/subject_item.dart';
@@ -113,6 +114,13 @@ class ExamCoverPageState extends BaseConsumerStatefulPageState<ExamCoverPage> {
                   onPressed: () async {
                     await notifier.fetchRequiredQuestions();
                     if (!context.mounted) return;
+                    final examState = ref.read(examProvider);
+                    final hasNoQuestions =
+                        examState.questionList.questionList.isEmpty;
+                    if (hasNoQuestions) {
+                      showToastMessage('문제를 불러오지 못했어요. 잠시 후 다시 시도해 주세요.');
+                      return;
+                    }
                     navigate(context, route: AppRoute.examQuestion);
                   },
                   child: Text(
