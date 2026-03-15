@@ -1,3 +1,4 @@
+import 'package:deepple_app/core/util/log.dart';
 import 'package:deepple_app/features/exam/data/repository/exam_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -13,6 +14,7 @@ class ExamRemoveBlurUsecase {
           .removeSoulmateProfileBlur(memberId: memberId);
       return true;
     } catch (e) {
+      Log.e('removeSoulmateProfileBlur failed: $e');
       return false;
     }
   }
