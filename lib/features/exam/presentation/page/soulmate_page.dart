@@ -3,6 +3,7 @@ import 'package:deepple_app/app/provider/provider.dart';
 import 'package:deepple_app/app/router/route_arguments.dart';
 import 'package:deepple_app/app/router/router.dart';
 import 'package:deepple_app/app/widget/widget.dart';
+import 'package:deepple_app/core/util/toast.dart';
 import 'package:deepple_app/features/exam/domain/provider/domain.dart';
 import 'package:deepple_app/features/home/domain/model/cached_user_profile.dart';
 import 'package:deepple_app/features/home/domain/model/introduced_profile.dart';
@@ -58,7 +59,7 @@ class SoulmatePageState extends BaseConsumerStatefulPageState<SoulmatePage> {
                 },
               ),
             ),
-            _ResultBottomButton(),
+            const _ResultBottomButton(),
           ],
         ),
       ),
@@ -127,7 +128,10 @@ class _ResultList extends StatelessWidget {
           onTap: () async {
             if (!profile.isIntroduced) {
               final opened = await onOpenProfile(profile.memberId);
-              if (!opened) return;
+              if (!opened) {
+                showToastMessage('비활성화 회원이에요');
+                return;
+              }
             }
 
             onTapProfile(profile.memberId);
