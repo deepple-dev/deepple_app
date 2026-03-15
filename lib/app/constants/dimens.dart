@@ -63,9 +63,6 @@ class Dimens {
   // 여성 소개 프로필 오픈 하트 수
   static const int femaleIntroducedProfileOpenHeartCount = 4;
 
-  // 연애모의고사 프로필 오픈 하트 수
-  static const int examProfileOpenHeartCount = 4;
-
   // 이상형 설정 최소 나이 수
   static const int minSelectableAge = 20;
 

@@ -60,12 +60,6 @@ class ProfilePreviewArguments extends RouteArguments {
   final MyProfile profile;
 }
 
-class ExamResultArguments extends RouteArguments {
-  const ExamResultArguments({required this.isFromDirectAccess});
-
-  final bool isFromDirectAccess;
-}
-
 class InterviewRegisterArguments extends RouteArguments {
   const InterviewRegisterArguments({
     required this.question,

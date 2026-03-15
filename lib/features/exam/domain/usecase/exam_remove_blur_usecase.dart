@@ -1,3 +1,4 @@
+import 'package:deepple_app/core/util/log.dart';
 import 'package:deepple_app/features/exam/data/repository/exam_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -6,20 +7,14 @@ class ExamRemoveBlurUsecase {
 
   const ExamRemoveBlurUsecase(this.ref);
 
-  Future<bool> call({required int memberId, required bool isSoulmate}) async {
+  Future<bool> call({required int memberId}) async {
     try {
-      if (isSoulmate) {
-        await ref
-            .read(examRepositoryProvider)
-            .removeSoulmateProfileBlur(memberId: memberId);
-      }
-      if (!isSoulmate) {
-        await ref
-            .read(examRepositoryProvider)
-            .removeSameAnswerProfileBlur(memberId: memberId);
-      }
+      await ref
+          .read(examRepositoryProvider)
+          .removeSoulmateProfileBlur(memberId: memberId);
       return true;
     } catch (e) {
+      Log.e('removeSoulmateProfileBlur failed: $e');
       return false;
     }
   }
