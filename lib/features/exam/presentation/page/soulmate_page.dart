@@ -4,7 +4,6 @@ import 'package:deepple_app/app/router/route_arguments.dart';
 import 'package:deepple_app/app/router/router.dart';
 import 'package:deepple_app/app/widget/widget.dart';
 import 'package:deepple_app/features/exam/domain/provider/domain.dart';
-import 'package:deepple_app/features/exam/presentation/widget/empty_list.dart';
 import 'package:deepple_app/features/home/domain/model/cached_user_profile.dart';
 import 'package:deepple_app/features/home/domain/model/introduced_profile.dart';
 import 'package:deepple_app/features/home/presentation/widget/category/user_by_category_list_item.dart';
@@ -48,10 +47,8 @@ class SoulmatePageState extends BaseConsumerStatefulPageState<SoulmatePage> {
                 profiles: examState.soulmateList.soulmateList,
                 userProfile: userProfile,
                 fetchHeartBalance: () => notifier.fetchUserHeartBalance(),
-                onOpenProfile: (memberId) => notifier.openProfile(
-                  memberId: memberId,
-                  isSoulmate: examState.hasSoulmate,
-                ),
+                onOpenProfile: (memberId) =>
+                    notifier.openProfile(memberId: memberId),
                 onTapProfile: (memberId) {
                   navigate(
                     context,
@@ -104,7 +101,7 @@ class _ResultList extends StatelessWidget {
   final List<IntroducedProfile> profiles;
   final CachedUserProfile userProfile;
   final int Function() fetchHeartBalance;
-  final Future<void> Function(int memberId) onOpenProfile;
+  final Future<bool> Function(int memberId) onOpenProfile;
   final void Function(int memberId) onTapProfile;
 
   const _ResultList({
@@ -117,8 +114,6 @@ class _ResultList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (profiles.isEmpty) return const EmptyList();
-
     return ListView.separated(
       itemCount: profiles.length,
       separatorBuilder: (_, _) => const Gap(8),
@@ -131,7 +126,8 @@ class _ResultList extends StatelessWidget {
           profile: profile,
           onTap: () async {
             if (!profile.isIntroduced) {
-              await onOpenProfile(profile.memberId);
+              final opened = await onOpenProfile(profile.memberId);
+              if (!opened) return;
             }
 
             onTapProfile(profile.memberId);

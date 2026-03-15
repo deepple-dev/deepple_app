@@ -73,11 +73,4 @@ class ExamRepository extends BaseRepository {
       data: {'introducedMemberId': memberId},
     );
   }
-
-  Future<void> removeSameAnswerProfileBlur({required int memberId}) async {
-    await apiService.postJson(
-      '/member/introduction/same-answer',
-      data: {'introducedMemberId': memberId},
-    );
-  }
 }

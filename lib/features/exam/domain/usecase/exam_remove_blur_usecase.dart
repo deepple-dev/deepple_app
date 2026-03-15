@@ -6,18 +6,11 @@ class ExamRemoveBlurUsecase {
 
   const ExamRemoveBlurUsecase(this.ref);
 
-  Future<bool> call({required int memberId, required bool isSoulmate}) async {
+  Future<bool> call({required int memberId}) async {
     try {
-      if (isSoulmate) {
-        await ref
-            .read(examRepositoryProvider)
-            .removeSoulmateProfileBlur(memberId: memberId);
-      }
-      if (!isSoulmate) {
-        await ref
-            .read(examRepositoryProvider)
-            .removeSameAnswerProfileBlur(memberId: memberId);
-      }
+      await ref
+          .read(examRepositoryProvider)
+          .removeSoulmateProfileBlur(memberId: memberId);
       return true;
     } catch (e) {
       return false;

@@ -153,16 +153,11 @@ class ExamNotifier extends _$ExamNotifier {
     }
   }
 
-  Future<void> openProfile({
-    required int memberId,
-    required bool isSoulmate,
-  }) async {
+  Future<bool> openProfile({required int memberId}) async {
     try {
-      final success = await ExamRemoveBlurUsecase(
-        ref,
-      ).call(memberId: memberId, isSoulmate: isSoulmate);
+      final success = await ExamRemoveBlurUsecase(ref).call(memberId: memberId);
 
-      if (!success) return;
+      if (!success) return false;
 
       final updatedList = state.soulmateList.soulmateList
           .map(
@@ -172,14 +167,13 @@ class ExamNotifier extends _$ExamNotifier {
           )
           .toList();
 
-      // 하트 사용하여 프로필 열람 시 보유 하트 수 갱신
-      await ref.read(globalProvider.notifier).fetchHeartBalance();
-
       state = state.copyWith(
         soulmateList: state.soulmateList.copyWith(soulmateList: updatedList),
       );
+      return true;
     } catch (e) {
       Log.e('프로필 블러 제거 실패: $e');
+      return false;
     }
   }
 
