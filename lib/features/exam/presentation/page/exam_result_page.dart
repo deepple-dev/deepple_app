@@ -113,13 +113,18 @@ class _ResultBottomButton extends StatelessWidget {
       child: DefaultElevatedButton(
         onPressed: () {
           if (hasSoulmate) {
-            context.popUntil(AppRoute.soulmate);
+            navigate(context, route: AppRoute.soulmate);
+            return;
           }
-          context.popUntil(AppRoute.mainTab);
+          navigate(
+            context,
+            route: AppRoute.mainTab,
+            method: NavigationMethod.go,
+          );
         },
         child: hasSoulmate
             ? const Text('소울메이트 발견! 확인하러 가기')
-            : const Text('테스트 완료! 이상형 만나러 가기'),
+            : const Text('이 결과와 딱 맞는 사람 추천받기'),
       ),
     );
   }
