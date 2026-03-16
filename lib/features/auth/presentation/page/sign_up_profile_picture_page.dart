@@ -11,6 +11,7 @@ import 'package:deepple_app/features/auth/presentation/widget/auth_step_indicato
 import 'package:deepple_app/features/auth/presentation/widget/photo_guide_bottomsheet.dart';
 import 'package:deepple_app/app/router/route_arguments.dart';
 import 'package:deepple_app/features/photo/domain/manager/photo_manager.dart';
+import 'package:deepple_app/features/photo/presentation/helper/gallery_photo_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -96,9 +97,11 @@ class SignUpProfilePicturePageState
                                   onSubmit: () async {
                                     context.pop();
 
-                                    final pickedPhoto = await widget
-                                        .photoManager
-                                        .pickFromGallery();
+                                    final pickedPhoto =
+                                        await pickGalleryPhotoWithPermission(
+                                          context: context,
+                                          photoManager: widget.photoManager,
+                                        );
 
                                     if (pickedPhoto != null) {
                                       _updateState(index, pickedPhoto);

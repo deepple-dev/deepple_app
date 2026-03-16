@@ -12,6 +12,7 @@ import 'package:deepple_app/features/auth/presentation/widget/auth_photo_guide_w
 import 'package:deepple_app/features/photo/domain/model/profile_photo.dart';
 import 'package:deepple_app/features/my/presentation/provider/profile_image_update_notifier.dart';
 import 'package:deepple_app/features/photo/domain/manager/photo_manager.dart';
+import 'package:deepple_app/features/photo/presentation/helper/gallery_photo_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
@@ -103,9 +104,11 @@ class _MyProfileImageUpdatePageState
                               return ProfileImageWidget(
                                 imageFile: photos[index],
                                 onPickImage: () async {
-                                  // 갤러리에서 이미지 선택
-                                  final pickedPhoto = await widget.photoManager
-                                      .pickFromGallery();
+                                  final pickedPhoto =
+                                      await pickGalleryPhotoWithPermission(
+                                        context: context,
+                                        photoManager: widget.photoManager,
+                                      );
 
                                   // 선택된 이미지가 있으면 UI 업데이트
                                   if (pickedPhoto != null) {
