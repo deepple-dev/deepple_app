@@ -1,6 +1,6 @@
+import 'package:deepple_app/app/widget/button/default_elevated_button.dart';
 import 'package:flutter/material.dart';
 import 'package:deepple_app/app/constants/constants.dart';
-import 'package:deepple_app/app/widget/icon/default_icon.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
@@ -14,68 +14,94 @@ class EventHeartCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: SizedBox(
-        height: 170.h,
+        height: 97.h,
         child: Stack(
           children: [
-            const Positioned(
-              top: 0, // 아이콘을 상단 20픽셀 위치
-              right: 0, // 아이콘을 오른쪽 20픽셀 위치
-              child: DefaultIcon(IconPath.celebrate, size: 124),
-            ),
-            Positioned(
-              top: 80,
-              left: 0,
-              right: 0,
+            Align(
+              alignment: Alignment.bottomCenter,
               child: Container(
+                height: 80.h,
                 decoration: BoxDecoration(
-                  color: Palette.colorPrimary50,
                   borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    const BoxShadow(
-                      color: Palette.colorPrimary100,
-                      offset: Offset(4, 4),
-                      blurRadius: 13.1,
-                      spreadRadius: 4,
-                    ),
-                  ],
+                  gradient: const LinearGradient(
+                    colors: [
+                      Palette.colorPrimary500,
+                      Color(0xFF715AFF),
+                      Color(0xFF4B5DFF),
+                    ],
+                  ),
                 ),
-                padding: EdgeInsets.symmetric(horizontal: 28.w, vertical: 18.h),
+                padding: EdgeInsets.symmetric(horizontal: 12.w),
                 child: GestureDetector(
                   onTap: () => onCreate(code),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
+                      Image.asset(
+                        '${ImagePath.imagesPath}/heart90.png',
+                        color: const Color(0xFFFCEEFE),
+                        width: 40,
+                        height: 40,
+                      ),
+                      const Gap(10),
+                      Text(
+                        '90',
+                        style: Fonts.numeric01Bold().copyWith(
+                          fontSize: 28.sp,
+                          color: Palette.colorWhite,
+                        ),
+                      ),
+                      const Gap(10),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const DefaultIcon(IconPath.storeHeart),
-                          const Gap(2),
+                          Row(
+                            children: [
+                              Text(
+                                '15,000',
+                                style: Fonts.numeric01Bold().copyWith(
+                                  fontSize: 20,
+                                  color: Palette.colorWhite,
+                                ),
+                              ),
+                              Text(
+                                '원',
+                                style: Fonts.numeric01Bold().copyWith(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 14,
+                                  color: Palette.colorWhite,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const Gap(4),
                           Text(
-                            '90',
-                            style: Fonts.header01().copyWith(
-                              fontWeight: FontWeight.w700,
+                            '18,000원',
+                            style: Fonts.numeric01Medium().copyWith(
+                              fontSize: 14,
+                              color: const Color(0xFFC8C8C8),
+                              decoration: TextDecoration.lineThrough,
+                              decorationColor: const Color(0xFFC8C8C8),
                             ),
                           ),
                         ],
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            '₩15,000',
-                            style: Fonts.header02().copyWith(
-                              fontWeight: FontWeight.w700,
-                            ),
+                      const Spacer(),
+                      DefaultElevatedButton(
+                        onPressed: () => onCreate(code),
+                        height: 32.0,
+                        width: 100,
+                        primary: Palette.colorWhite,
+                        padding: const EdgeInsets.only(top: 3.0),
+                        expandedWidth: false,
+                        borderRadius: BorderRadiusGeometry.circular(99),
+                        child: Text(
+                          '구매하기',
+                          style: Fonts.body03Regular().copyWith(
+                            fontSize: 14,
+                            color: Palette.colorPrimary500,
                           ),
-                          const Gap(6),
-                          Text(
-                            'W18,000',
-                            style: Fonts.body03Regular().copyWith(
-                              color: Palette.colorGrey500,
-                              decoration: TextDecoration.lineThrough,
-                              decorationColor: Palette.colorGrey500,
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
                     ],
                   ),
@@ -83,19 +109,24 @@ class EventHeartCard extends StatelessWidget {
               ),
             ),
             Positioned(
-              top: 50,
+              top: 0,
               left: 12,
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 0,
+                ),
+                height: 34,
+                alignment: Alignment.center,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(24),
-                  color: Palette.colorPrimary500,
+                  color: const Color(0xFF0B0436),
                 ),
                 child: Text(
                   'EVENT🎉',
-                  style: Fonts.body03Regular().copyWith(
-                    fontWeight: FontWeight.w700,
+                  style: Fonts.semibold(
                     color: Palette.colorWhite,
+                    fontSize: 12,
                   ),
                 ),
               ),
