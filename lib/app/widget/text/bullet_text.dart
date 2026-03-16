@@ -7,6 +7,7 @@ class BulletText extends StatelessWidget {
   final TextStyle textStyle;
   final double bulletSize;
   final double spacing;
+  final double bottomPadding;
 
   const BulletText({
     super.key,
@@ -15,6 +16,7 @@ class BulletText extends StatelessWidget {
     this.bulletSize = 20.0,
     required this.textStyle,
     this.spacing = 4.0,
+    this.bottomPadding = 4.0,
   });
 
   @override
@@ -23,7 +25,9 @@ class BulletText extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: texts.map((text) {
         return Padding(
-          padding: EdgeInsets.only(bottom: text != texts.last ? 4.0 : 0),
+          padding: EdgeInsets.only(
+            bottom: text != texts.last ? bottomPadding : 0,
+          ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

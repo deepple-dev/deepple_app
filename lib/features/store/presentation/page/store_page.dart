@@ -10,6 +10,7 @@ import 'package:deepple_app/app/widget/icon/default_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:deepple_app/app/constants/constants.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
 class StorePage extends ConsumerWidget {
@@ -46,24 +47,9 @@ class StorePage extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '보유한 하트',
-                          style: Fonts.header03().copyWith(
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        const Gap(8),
-                        Text(
-                          '하트는 셀프소개, 좋아요, 모의고사 등 \n여러 기능을 사용할 때 필요한 화폐입니다',
-                          style: Fonts.body02Regular().copyWith(
-                            color: Palette.colorGrey600,
-                            height: 1.2,
-                          ),
-                        ),
-                      ],
+                    Text(
+                      '내 보유하트',
+                      style: Fonts.header01().copyWith(fontSize: 18.0.sp),
                     ),
                     SizedBox(
                       height: 32,
@@ -92,11 +78,12 @@ class StorePage extends ConsumerWidget {
                                       IconPath.storeHeart,
                                       size: 16,
                                     ),
-                                    const Gap(4),
+                                    const Gap(10),
                                     Text(
                                       storeState.totalHeartBalance.toString(),
-                                      style: Fonts.body03Regular(
-                                        Palette.colorGrey900,
+                                      style: Fonts.semibold(
+                                        fontSize: 18.0.sp,
+                                        color: const Color(0xFF222529),
                                       ),
                                     ),
                                   ],
@@ -123,49 +110,34 @@ class StorePage extends ConsumerWidget {
                   ],
                 ),
               ),
+              const Gap(12.0),
               Expanded(
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: contentPadding,
-                      child: Wrap(
-                        spacing: tagSpacing,
-                        runSpacing: tagSpacing - 4,
-                        children: _heartItems.map<Widget>((product) {
-                          return SizedBox(
-                            width:
-                                (screenWidth -
-                                    horizontalPadding * 2 -
-                                    tagSpacing) /
-                                2,
-                            child: DefaultHeartCard(
-                              heart: product.heartAmount.toString(),
-                              price: product.price.toString(),
-                              code: product.code,
-                              onCreate: (code) => ref
-                                  .read(storeProvider.notifier)
-                                  .buyProduct(code),
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                    const Gap(12),
-                    Padding(
-                      padding: contentPadding,
-                      child: BulletText(
+                child: Padding(
+                  padding: contentPadding,
+                  child: Column(
+                    spacing: 12.0,
+                    children: [
+                      ..._heartItems.map<Widget>((product) {
+                        return DefaultHeartCard(
+                          heart: product.heartAmount.toString(),
+                          price: product.price.toString(),
+                          code: product.code,
+                          onCreate: (code) =>
+                              ref.read(storeProvider.notifier).buyProduct(code),
+                        );
+                      }),
+                      BulletText(
                         texts: [
-                          '청약철회는 구매일로부터 7일 이내 가능합니다',
+                          '청약철회는 구매일로부터 7일 이내 가능합니다.',
                           'iOS 회원의 경우 청약철회는 Apple 고객센터로 문의해주세요.',
-                          '미션으로 받은 하트는 환불이 불가합니다',
+                          '미션으로 받은 하트는 환불이 불가합니다.',
                           '미션으로 받은 하트의 유효기간은 90일간 유효합니다.',
                         ],
-                        textStyle: Fonts.body03Regular(
-                          const Color.fromRGBO(155, 160, 171, 1),
-                        ),
+                        textStyle: Fonts.body03Regular(Palette.colorGrey500),
+                        bottomPadding: 0,
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],
