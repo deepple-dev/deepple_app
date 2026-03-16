@@ -89,6 +89,33 @@ void main() {
       },
     );
 
+    test('Android 14+ bridge failure fails closed', () async {
+      var statusReadCount = 0;
+      var requestCallCount = 0;
+
+      final manager = PhotoManager(
+        platform: PhotoManagerPlatform.android,
+        androidSdkIntResolver: () async => 34,
+        permissionStatusReader: (_) async {
+          statusReadCount++;
+          return PermissionStatus.granted;
+        },
+        permissionRequester: (_) async {
+          requestCallCount++;
+          return PermissionStatus.granted;
+        },
+        android14FullGalleryPermissionRequester: () async {
+          throw Exception('boom');
+        },
+      );
+
+      final result = await manager.ensureFullGalleryPermission();
+
+      expect(result, false);
+      expect(statusReadCount, 0);
+      expect(requestCallCount, 0);
+    });
+
     test('Android 13 uses photo permission from permission_handler', () async {
       Permission? requestedPermission;
 

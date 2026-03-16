@@ -62,13 +62,17 @@ class PhotoManager {
   }
 
   Future<bool> ensureFullGalleryPermission() async {
-    final usesAndroid14Bridge = await _shouldUseAndroid14GalleryBridge();
-    if (usesAndroid14Bridge) {
-      final nativeResult = await _requestAndroid14FullGalleryPermission();
-      if (nativeResult != null) return nativeResult;
-    }
+    try {
+      final usesAndroid14Bridge = await _shouldUseAndroid14GalleryBridge();
+      if (usesAndroid14Bridge) {
+        return await _requestAndroid14FullGalleryPermission() ?? false;
+      }
 
-    return _ensureGalleryPermissionWithPermissionHandler();
+      return await _ensureGalleryPermissionWithPermissionHandler();
+    } catch (e, st) {
+      Log.e('ensure full gallery permission failed: $e', stackTrace: st);
+      return false;
+    }
   }
 
   Future<bool> _ensureGalleryPermissionWithPermissionHandler() async {
