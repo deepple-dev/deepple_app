@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:deepple_app/app/constants/constants.dart';
 import 'package:deepple_app/app/router/router.dart';
 import 'package:deepple_app/app/widget/button/default_elevated_button.dart';
+import 'package:deepple_app/app/widget/dialogue/custom_dialogue.dart';
 import 'package:deepple_app/app/widget/dialogue/error_dialog.dart';
 import 'package:deepple_app/app/widget/error/dialogue_error.dart';
 import 'package:deepple_app/app/widget/image/profile_image_widget.dart';
@@ -103,6 +106,16 @@ class _MyProfileImageUpdatePageState
                               return ProfileImageWidget(
                                 imageFile: photos[index],
                                 onPickImage: () async {
+                                  final hasPermission = await widget
+                                      .photoManager
+                                      .ensureFullGalleryPermission();
+                                  if (!context.mounted) return;
+
+                                  if (!hasPermission) {
+                                    await _showGalleryPermissionDialog();
+                                    return;
+                                  }
+
                                   // 갤러리에서 이미지 선택
                                   final pickedPhoto = await widget.photoManager
                                       .pickFromGallery();
@@ -263,4 +276,14 @@ class _MyProfileImageUpdatePageState
       ),
     );
   }
+
+  Future<void> _showGalleryPermissionDialog() =>
+      CustomDialogue.showTwoChoiceDialogue(
+        context: context,
+        content: '갤러리 조회 권한이 필요한 기능입니다.\n허용을 위해 세팅으로 이동하시겠습니까?',
+        onElevatedButtonPressed: () {
+          Navigator.of(context).pop();
+          unawaited(widget.photoManager.openGalleryPermissionSettings());
+        },
+      );
 }
