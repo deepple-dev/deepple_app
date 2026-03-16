@@ -47,6 +47,21 @@ void main() {
     );
 
     test(
+      'iOS denied access that resolves to limited still returns false',
+      () async {
+        final manager = PhotoManager(
+          platform: PhotoManagerPlatform.ios,
+          permissionStatusReader: (_) async => PermissionStatus.denied,
+          permissionRequester: (_) async => PermissionStatus.limited,
+        );
+
+        final result = await manager.ensureFullGalleryPermission();
+
+        expect(result, false);
+      },
+    );
+
+    test(
       'Android 14+ uses native full-gallery check instead of permission_handler',
       () async {
         var statusReadCount = 0;

@@ -54,9 +54,6 @@ class PhotoManager {
 
   Future<XFile?> _pickFromGallery() async {
     try {
-      final hasPermission = await ensureFullGalleryPermission();
-      if (!hasPermission) return null;
-
       return await _imagePicker.pickImage(source: ImageSource.gallery);
     } catch (e) {
       Log.e('pick image failed: $e');

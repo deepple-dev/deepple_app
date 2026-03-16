@@ -1,9 +1,6 @@
-import 'dart:async';
-
 import 'package:deepple_app/app/constants/constants.dart';
 import 'package:deepple_app/app/router/router.dart';
 import 'package:deepple_app/app/widget/button/default_elevated_button.dart';
-import 'package:deepple_app/app/widget/dialogue/custom_dialogue.dart';
 import 'package:deepple_app/app/widget/dialogue/error_dialog.dart';
 import 'package:deepple_app/app/widget/error/dialogue_error.dart';
 import 'package:deepple_app/app/widget/image/profile_image_widget.dart';
@@ -15,6 +12,7 @@ import 'package:deepple_app/features/auth/presentation/widget/auth_photo_guide_w
 import 'package:deepple_app/features/photo/domain/model/profile_photo.dart';
 import 'package:deepple_app/features/my/presentation/provider/profile_image_update_notifier.dart';
 import 'package:deepple_app/features/photo/domain/manager/photo_manager.dart';
+import 'package:deepple_app/features/photo/presentation/helper/gallery_photo_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
@@ -106,19 +104,11 @@ class _MyProfileImageUpdatePageState
                               return ProfileImageWidget(
                                 imageFile: photos[index],
                                 onPickImage: () async {
-                                  final hasPermission = await widget
-                                      .photoManager
-                                      .ensureFullGalleryPermission();
-                                  if (!context.mounted) return;
-
-                                  if (!hasPermission) {
-                                    await _showGalleryPermissionDialog();
-                                    return;
-                                  }
-
-                                  // 갤러리에서 이미지 선택
-                                  final pickedPhoto = await widget.photoManager
-                                      .pickFromGallery();
+                                  final pickedPhoto =
+                                      await pickGalleryPhotoWithPermission(
+                                        context: context,
+                                        photoManager: widget.photoManager,
+                                      );
 
                                   // 선택된 이미지가 있으면 UI 업데이트
                                   if (pickedPhoto != null) {
@@ -276,14 +266,4 @@ class _MyProfileImageUpdatePageState
       ),
     );
   }
-
-  Future<void> _showGalleryPermissionDialog() =>
-      CustomDialogue.showTwoChoiceDialogue(
-        context: context,
-        content: '갤러리 조회 권한이 필요한 기능입니다.\n허용을 위해 세팅으로 이동하시겠습니까?',
-        onElevatedButtonPressed: () {
-          Navigator.of(context).pop();
-          unawaited(widget.photoManager.openGalleryPermissionSettings());
-        },
-      );
 }
