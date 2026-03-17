@@ -63,7 +63,7 @@ class ExamResultPageState
   void _showLeaveExamDialogue(BuildContext context, ExamNotifier notifier) {
     CustomDialogue.showTwoChoiceDialogue(
       context: context,
-      content: '테스트를 종료 하시겠어요?\n홈화면으로 이동합니다.',
+      content: '테스트를 종료 하시겠어요?\n홈 화면으로 이동합니다.',
       onElevatedButtonPressed: () {
         notifier.resetCurrentSubjectIndex();
         navigate(context, route: AppRoute.mainTab, method: NavigationMethod.go);
