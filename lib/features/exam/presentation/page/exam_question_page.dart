@@ -109,15 +109,8 @@ class ExamQuestionPageState
 
                 switch (result) {
                   case ExamSubmitResult.examFinished:
-                  case ExamSubmitResult.showResult:
                     if (!context.mounted) break;
-                    navigate(
-                      context,
-                      route: AppRoute.examResult,
-                      extra: const ExamResultArguments(
-                        isFromDirectAccess: false,
-                      ),
-                    );
+                    navigate(context, route: AppRoute.examResult);
                     break;
                   case ExamSubmitResult.nextSubject:
                     break;
@@ -129,7 +122,6 @@ class ExamQuestionPageState
               isSelectAll:
                   examState.currentAnswerMap.length !=
                   currentSubject.questions.length,
-              isSubjectOptional: examState.isSubjectOptional,
               isLastSubject: notifier.isLastSubject,
               screenHeight: screenHeight,
             ),
@@ -142,13 +134,12 @@ class ExamQuestionPageState
   void _showLeaveExamDialogue(BuildContext context, ExamNotifier notifier) {
     CustomDialogue.showTwoChoiceDialogue(
       context: context,
-      content: '연애 모의고사를 종료 하시겠어요?\n페이지를 벗어날경우, 저장되지 않아요',
+      content: '테스트를 종료 하시겠어요?\n페이지를 벗어날 경우, 저장되지 않아요',
       onElevatedButtonPressed: () {
         _pageController.jumpToPage(0);
-        notifier.setSubjectOptional(false);
         notifier.resetCurrentSubjectIndex();
 
-        context.popUntil(AppRoute.mainTab);
+        context.popUntil(AppRoute.exam);
       },
     );
   }
@@ -258,7 +249,6 @@ class _QuestionBottomButton extends StatelessWidget {
   final VoidCallback onPrevPage;
   final VoidCallback onNextPage;
   final bool isSelectAll;
-  final bool isSubjectOptional;
   final bool isLastSubject;
   final double screenHeight;
 
@@ -268,7 +258,6 @@ class _QuestionBottomButton extends StatelessWidget {
     required this.onPrevPage,
     required this.onNextPage,
     required this.isSelectAll,
-    required this.isSubjectOptional,
     required this.isLastSubject,
     required this.screenHeight,
   });
@@ -291,15 +280,7 @@ class _QuestionBottomButton extends StatelessWidget {
           Expanded(
             child: DefaultElevatedButton(
               onPressed: isSelectAll ? null : onNextPage,
-              child: Text(
-                isSubjectOptional
-                    ? isLastSubject
-                          ? '저장하기'
-                          : '다음'
-                    : isLastSubject
-                    ? '제출하기'
-                    : '저장하기',
-              ),
+              child: Text(isLastSubject ? '제출하기' : '다음'),
             ),
           ),
         ],

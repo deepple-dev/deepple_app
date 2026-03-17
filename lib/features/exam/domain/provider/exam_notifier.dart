@@ -1,10 +1,10 @@
 import 'package:deepple_app/app/provider/global_notifier.dart';
 import 'package:deepple_app/core/util/log.dart';
-import 'package:deepple_app/features/exam/domain/usecase/exam_optional_fetch_usecase.dart';
 import 'package:deepple_app/features/exam/domain/usecase/exam_create_submit_usecase.dart';
 import 'package:deepple_app/features/exam/domain/usecase/exam_remove_blur_usecase.dart';
 import 'package:deepple_app/features/exam/domain/usecase/exam_required_fetch_usecase.dart';
 import 'package:deepple_app/features/exam/domain/usecase/exam_soulmate_fetch_usecase.dart';
+import 'package:deepple_app/features/exam/domain/usecase/exam_result_fetch_usecase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:deepple_app/features/exam/domain/model/subject_answer.dart';
 
@@ -12,7 +12,7 @@ import 'package:deepple_app/features/exam/domain/provider/exam_state.dart';
 
 part 'exam_notifier.g.dart';
 
-enum ExamSubmitResult { nextSubject, examFinished, showResult, error }
+enum ExamSubmitResult { nextSubject, examFinished, error }
 
 @Riverpod(keepAlive: true)
 class ExamNotifier extends _$ExamNotifier {
@@ -30,12 +30,6 @@ class ExamNotifier extends _$ExamNotifier {
     state = state.copyWith(currentAnswerMap: updatedAnswers);
   }
 
-  Future<void> handleDirectAccessResult() async {
-    state = state.copyWith(isSubjectOptional: true, isDone: true);
-
-    await fetchSoulmateList();
-  }
-
   Future<ExamSubmitResult> submitCurrentSubject() async {
     try {
       final profileNotifier = ref.read(globalProvider.notifier);
@@ -51,24 +45,19 @@ class ExamNotifier extends _$ExamNotifier {
 
       state = state.copyWith(isLoaded: false);
       await _submitAnswers(payload);
-      await fetchSoulmateList();
 
       if (isLastSubject) {
+        await fetchExamResult();
+        await fetchSoulmateList();
         profileNotifier.profile = await profileNotifier
             .fetchProfileToHiveFromServer();
 
         state = state.copyWith(
-          isSubjectOptional: true,
-          isDone: state.isSubjectOptional ? true : false,
+          isDone: true,
           currentAnswerMap: {},
           isLoaded: true,
         );
         return ExamSubmitResult.examFinished;
-      }
-
-      if (state.hasResultData && !state.isSubjectOptional) {
-        state = state.copyWith(isLoaded: true);
-        return ExamSubmitResult.showResult;
       }
 
       nextSubject();
@@ -119,21 +108,13 @@ class ExamNotifier extends _$ExamNotifier {
     );
   }
 
-  void setSubjectOptional(bool isOptional) {
-    state = state.copyWith(isSubjectOptional: isOptional);
-  }
-
-  void setExamDone() {
-    state = state.copyWith(isDone: true);
-  }
-
-  Future<void> fetchOptionalQuestionList() async {
+  Future<void> fetchExamResult() async {
     state = state.copyWith(isLoaded: false);
     try {
-      final optionalQuestionList = await ExamOptionalFetchUseCase(ref).call();
+      final examResult = await ExamResultFetchUseCase(ref).call();
 
       state = state.copyWith(
-        questionList: QuestionData(questionList: optionalQuestionList),
+        personalityType: examResult,
         isLoaded: true,
         error: null,
       );
@@ -168,16 +149,11 @@ class ExamNotifier extends _$ExamNotifier {
     }
   }
 
-  Future<void> openProfile({
-    required int memberId,
-    required bool isSoulmate,
-  }) async {
+  Future<bool> openProfile({required int memberId}) async {
     try {
-      final success = await ExamRemoveBlurUsecase(
-        ref,
-      ).call(memberId: memberId, isSoulmate: isSoulmate);
+      final success = await ExamRemoveBlurUsecase(ref).call(memberId: memberId);
 
-      if (!success) return;
+      if (!success) return false;
 
       final updatedList = state.soulmateList.soulmateList
           .map(
@@ -187,14 +163,13 @@ class ExamNotifier extends _$ExamNotifier {
           )
           .toList();
 
-      // 하트 사용하여 프로필 열람 시 보유 하트 수 갱신
-      await ref.read(globalProvider.notifier).fetchHeartBalance();
-
       state = state.copyWith(
         soulmateList: state.soulmateList.copyWith(soulmateList: updatedList),
       );
+      return true;
     } catch (e) {
       Log.e('프로필 블러 제거 실패: $e');
+      return false;
     }
   }
 

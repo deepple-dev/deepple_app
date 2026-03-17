@@ -27,6 +27,7 @@ class IconPath {
   static const String idealSetting = '$iconsPath/my_ideal_setting.svg';
   static const String blockFriend = '$iconsPath/my_block_friend.svg';
   static const String store = '$iconsPath/my_store.svg';
+  static const String star = '$iconsPath/star.svg';
   static const String customerCenter = '$iconsPath/my_customer_center.svg';
   static const String setting = '$iconsPath/my_setting.svg';
   static const String letter = '$iconsPath/letter.svg';

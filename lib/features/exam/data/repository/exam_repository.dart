@@ -1,6 +1,7 @@
 import 'package:deepple_app/core/network/base_repository.dart';
 import 'package:deepple_app/core/util/util.dart';
 import 'package:deepple_app/features/exam/data/dto/exam_answer_request.dart';
+import 'package:deepple_app/features/exam/data/dto/exam_result_response.dart';
 import 'package:deepple_app/features/home/data/dto/introduced_profile_dto.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:deepple_app/core/network/network_exception.dart';
@@ -18,21 +19,6 @@ class ExamRepository extends BaseRepository {
     try {
       final response = await apiService.getJson<Map<String, dynamic>>(
         '$path/required',
-      );
-
-      final result = ExamQuestionResponse.fromJson(response);
-
-      return result.data.subjects;
-    } catch (e) {
-      Log.e(e);
-      return [];
-    }
-  }
-
-  Future<List<SubjectItem>> getOptionalQuestionList() async {
-    try {
-      final response = await apiService.getJson<Map<String, dynamic>>(
-        '$path/optional',
       );
 
       final result = ExamQuestionResponse.fromJson(response);
@@ -69,16 +55,29 @@ class ExamRepository extends BaseRepository {
     }
   }
 
+  Future<ExamResultResponse> getExamResult() async {
+    final res = await apiService.getJson<Map<String, dynamic>>(
+      '$path/personality-type',
+    );
+
+    final data = res['data'];
+
+    if (data is! Map<String, Object?>) {
+      throw const NetworkException.formatException();
+    }
+
+    try {
+      return ExamResultResponse.fromJson(Map<String, dynamic>.from(data));
+    } catch (e) {
+      Log.e('exam result parse failed: $e');
+
+      throw const NetworkException.formatException();
+    }
+  }
+
   Future<void> removeSoulmateProfileBlur({required int memberId}) async {
     await apiService.postJson(
       '/member/introduction/soulmate',
-      data: {'introducedMemberId': memberId},
-    );
-  }
-
-  Future<void> removeSameAnswerProfileBlur({required int memberId}) async {
-    await apiService.postJson(
-      '/member/introduction/same-answer',
       data: {'introducedMemberId': memberId},
     );
   }
