@@ -108,10 +108,6 @@ class ExamNotifier extends _$ExamNotifier {
     );
   }
 
-  void setExamDone() {
-    state = state.copyWith(isDone: true);
-  }
-
   Future<void> fetchExamResult() async {
     state = state.copyWith(isLoaded: false);
     try {

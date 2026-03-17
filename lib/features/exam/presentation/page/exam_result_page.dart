@@ -28,8 +28,8 @@ class ExamResultPageState
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final examState = ref.read(examProvider);
 
-      if (!examState.isDone) {
-        showToastMessage('연애가치관 테스트 참여 완료! 하트 15개를 받았어요');
+      if (examState.isDone) {
+        showToastMessage('테스트 참여 완료! 하트 15개를 받았어요');
       }
     });
   }
@@ -63,7 +63,7 @@ class ExamResultPageState
   void _showLeaveExamDialogue(BuildContext context, ExamNotifier notifier) {
     CustomDialogue.showTwoChoiceDialogue(
       context: context,
-      content: '테스트를 종료 하시겠어요?\n페이지를 벗어날 경우, 저장되지 않아요',
+      content: '테스트를 종료 하시겠어요?\n홈화면으로 이동합니다.',
       onElevatedButtonPressed: () {
         notifier.resetCurrentSubjectIndex();
         navigate(context, route: AppRoute.mainTab, method: NavigationMethod.go);
