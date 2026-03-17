@@ -129,7 +129,7 @@ class _ResultList extends StatelessWidget {
             if (!profile.isIntroduced) {
               final opened = await onOpenProfile(profile.memberId);
               if (!opened) {
-                showToastMessage('비활성화 회원이에요');
+                showToastMessage('오류가 발생했어요. 잠시 후 다시 시도해 주세요');
                 return;
               }
             }
